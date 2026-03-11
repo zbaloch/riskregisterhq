@@ -1,0 +1,18 @@
+[
+    {
+        "id": "0e597559-8cdd-4f80-a05e-4c5101e57652",
+        "name": "Mobile App",
+        "description": "",
+        "asset_type": "software",
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "active",
+        "confidentiality": 5,
+        "integrity": 3,
+        "availability": 3,
+        "location": "",
+        "notes": "",
+        "created_at": "2026-02-22T21:47:59.589864+00:00",
+        "updated_at": "2026-02-22T21:47:59.589864+00:00"
+    }
+]

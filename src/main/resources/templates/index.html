@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <title>Dashboard – RiskRegisterHQ</title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='dashboard')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Risk &amp; Compliance Dashboard</h1>
+            <!-- <p class="mt-1 text-sm text-gray-500">Banking risk management, TODO: what are the regulations that this bank
+              must comply with?</p> -->
+          </div>
+          <a href="/risks/new"
+            class="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            New Risk
+          </a>
+        </div>
+
+        <div th:if="${success}" class="mt-4 rounded-md bg-green-50 border border-green-200 p-4">
+          <p class="text-sm font-medium text-green-800" th:text="${success}"></p>
+        </div>
+        <div th:if="${error}" class="mt-4 rounded-md bg-red-50 border border-red-200 p-4">
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
+
+        <!-- Risk Management Effectiveness Section -->
+        <div class="mt-8" x-data="{ ...effectivenessChart(), showInfo: false }" x-init="initChart()">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <h3 class="text-base font-semibold text-gray-900">Risk Management Effectiveness</h3>
+                <button @click="showInfo = true" class="text-gray-400 hover:text-sky-600 transition" title="Learn more">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+              </div>
+              <th:block th:if="${latestEffectivenessScore}">
+                <div class="text-right">
+                  <div th:with="scoreLevel=${latestEffectivenessScore.getScoreLevel()}">
+                    <span class="text-3xl font-bold" th:classappend="${scoreLevel == 'Excellent' ? 'text-green-600' : scoreLevel == 'Good' ? 'text-yellow-600' : 'text-red-600'}"
+                          th:text="${#numbers.formatDecimal(latestEffectivenessScore.score, 1, 1)}"></span>
+                    <span class="text-gray-500">%</span>
+                  </div>
+                  <p class="text-sm text-gray-500 mt-1" th:with="scoreLevel=${latestEffectivenessScore.getScoreLevel()}" th:text="${scoreLevel}"></p>
+                </div>
+              </th:block>
+            </div>
+
+            <!-- Time Period Buttons -->
+            <div class="flex gap-2 mb-6">
+              <button @click="changePeriod('90days')" :class="period === '90days' ? 'bg-sky-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                      class="px-4 py-2 rounded-md text-sm font-medium transition">90 Days</button>
+              <button @click="changePeriod('1year')" :class="period === '1year' ? 'bg-sky-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                      class="px-4 py-2 rounded-md text-sm font-medium transition">1 Year</button>
+              <button @click="changePeriod('2years')" :class="period === '2years' ? 'bg-sky-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                      class="px-4 py-2 rounded-md text-sm font-medium transition">2 Years</button>
+            </div>
+
+            <!-- Chart -->
+            <div class="mb-8">
+              <canvas id="effectivenessChart" class="max-h-80"></canvas>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-200 pt-6">
+              <div>
+                <h4 class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
+                  <svg class="w-5 h-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd" />
+                  </svg>
+                  What This Shows
+                </h4>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  <strong>Effectiveness Score:</strong> Overall risk management performance based on how well your controls reduce risk across all approved risks.
+                </p>
+                <p class="text-xs text-gray-600 mt-3">
+                  <strong>100% =</strong> All risks reduced to 0 (perfect controls)<br>
+                  <strong>0% =</strong> No controls in place
+                </p>
+              </div>
+              <div>
+                <h4 class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
+                  <svg class="w-5 h-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                  </svg>
+                  How to Read
+                </h4>
+                <p class="text-xs text-gray-600 mb-2">
+                  <strong class="text-green-600">80-100%: Excellent</strong> – Controls are highly effective
+                </p>
+                <p class="text-xs text-gray-600 mb-2">
+                  <strong class="text-yellow-600">50-79%: Good</strong> – Controls provide solid risk reduction
+                </p>
+                <p class="text-xs text-gray-600">
+                  <strong class="text-red-600">&lt;50%: Needs Improvement</strong> – Consider additional controls
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-200">
+              <p class="text-xs text-gray-500 italic">
+                ⚠️ <strong>Disclaimer:</strong> This score is informative only and should be used as one of many indicators in your risk management program. It does not replace professional risk assessment or compliance requirements.
+              </p>
+            </div>
+          </div>
+
+          <!-- Info Modal -->
+          <div x-show="showInfo" class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center z-50" @click="showInfo = false" x-cloak>
+            <div @click.stop class="bg-white rounded-xl shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto p-8">
+              <div class="flex items-center gap-3 mb-6">
+                <svg class="w-8 h-8 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-900">Risk Effectiveness Score</h2>
+              </div>
+
+              <div class="space-y-6">
+                <!-- What It Measures -->
+                <div>
+                  <h3 class="text-lg font-semibold text-sky-600 mb-2">What It Measures</h3>
+                  <p class="text-gray-700">This score shows how effectively your controls reduce risk across all approved risks.</p>
+                </div>
+
+                <!-- Calculation Formula -->
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">Calculation Formula</h3>
+                  <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm text-gray-700 mb-3">
+                    <p class="mb-3">Effectiveness = (1 - Total Residual / Total Inherent) × 100%</p>
+                    <p class="mb-2"><strong>Total Inherent:</strong> Sum of (Likelihood × Impact) for all approved risks</p>
+                    <p><strong>Total Residual:</strong> Sum of (Residual Likelihood × Residual Impact) for approved risks</p>
+                  </div>
+                </div>
+
+                <!-- Example -->
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-2">Example</h3>
+                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-gray-700 space-y-1">
+                    <p><strong>Risk 1:</strong> Inherent = 5×5 = 25, Residual = 2×2 = 4</p>
+                    <p><strong>Risk 2:</strong> Inherent = 4×4 = 16, Residual = 2×3 = 6</p>
+                    <p><strong>Total Inherent:</strong> 25 + 16 = 41</p>
+                    <p><strong>Total Residual:</strong> 4 + 6 = 10</p>
+                    <p class="mt-2"><strong class="text-green-600">Effectiveness: (1 - 10/41) × 100% = 75.6%</strong></p>
+                  </div>
+                </div>
+
+                <!-- Score Interpretation -->
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900 mb-3">Score Interpretation</h3>
+                  <div class="space-y-2">
+                    <div class="flex items-start gap-3">
+                      <span class="inline-block w-3 h-3 bg-green-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                      <div>
+                        <span class="font-semibold text-green-600">80-100%: Excellent</span>
+                        <p class="text-sm text-gray-600">Controls are highly effective</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <span class="inline-block w-3 h-3 bg-yellow-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                      <div>
+                        <span class="font-semibold text-yellow-600">50-79%: Good</span>
+                        <p class="text-sm text-gray-600">Controls provide solid risk reduction</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <span class="inline-block w-3 h-3 bg-red-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                      <div>
+                        <span class="font-semibold text-red-600">&lt;50%: Needs Improvement</span>
+                        <p class="text-sm text-gray-600">Consider additional controls</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div class="flex gap-3">
+                    <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <div class="text-sm text-yellow-800">
+                      <strong>Disclaimer:</strong> This score is informative only and should be used as one of many indicators in your risk management program. It does not replace professional risk assessment or compliance requirements.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Close Button -->
+              <div class="mt-8 flex justify-end">
+                <button @click="showInfo = false" class="px-6 py-2 bg-sky-600 text-white rounded-lg font-medium hover:bg-sky-500 transition">
+                  Got It
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk Heatmap & My Tasks Section -->
+        <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Risk Heatmap Section (2/3 width on large screens) -->
+          <div class="" x-data="{ activeTab: 'residual' }">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-6 pt-6 pb-4">
+              <h3 class="text-base font-semibold text-gray-900">Risk Heatmap</h3>
+              <!-- Tab Pills -->
+              <div class="flex gap-2">
+                <button @click="activeTab = 'inherent'"
+                        :class="activeTab === 'inherent' ? 'bg-sky-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                        class="px-4 py-2 rounded-full text-sm font-medium transition">
+                  Inherent
+                </button>
+                <button @click="activeTab = 'residual'"
+                        :class="activeTab === 'residual' ? 'bg-sky-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                        class="px-4 py-2 rounded-full text-sm font-medium transition">
+                  Residual
+                </button>
+              </div>
+            </div>
+
+            <div class="p-6">
+
+              <!-- Inherent Risk Heatmap -->
+              <div x-show="activeTab === 'inherent'" class="space-y-4">
+                <div class="overflow-x-auto">
+                  <div class="flex gap-4">
+                    <!-- Y-axis label -->
+                    <div class="flex items-center justify-center" style="min-width: 40px;">
+                      <div class="text-xs font-semibold text-gray-600 rotate-270">Impact →</div>
+                    </div>
+                    <div class="flex-1">
+
+                      <!-- X-axis label -->
+                      <div class="text-center text-xs font-semibold text-gray-600 mb-3 ">Likelihood →</div>
+
+                      <!-- Column Headers -->
+                      <div class="flex gap-2 mb-3">
+                        <div class="w-12"></div>
+                        <div th:each="impact : ${#numbers.sequence(1, 5)}" class="flex-1 text-center">
+                          <span class="text-xs font-semibold text-gray-600" th:text="${impact}"></span>
+                        </div>
+                      </div>
+
+                      <!-- Matrix Grid -->
+                      <div class="grid gap-2" style="grid-template-columns: 48px repeat(5, minmax(0, 1fr));">
+                        <th:block th:each="likelihood : ${#numbers.sequence(5, 1, -1)}">
+                          <!-- Row Header -->
+                          <div class="h-12 flex items-center justify-center text-center text-xs font-semibold text-gray-600 bg-gray-50 rounded"
+                               th:text="${likelihood}"></div>
+                          <!-- Cells -->
+                          <th:block th:each="impact : ${#numbers.sequence(1, 5)}">
+                            <div th:with="score=${likelihood * impact},
+                                         colorClass=${riskHeatmaps.inherent.scoreColors.get(score)},
+                                         count=${riskHeatmaps.inherent.matrix[likelihood - 1][impact - 1]}"
+                                 class="h-12 rounded flex items-center justify-center cursor-help hover:shadow-md transition font-bold text-sm"
+                                 th:classappend="${count > 0 ? colorClass : 'bg-gray-100'}">
+                              <span th:if="${count > 0}" th:text="${count}"></span>
+                            </div>
+                          </th:block>
+                        </th:block>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Residual Risk Heatmap -->
+              <div x-show="activeTab === 'residual'" class="space-y-4">
+                <div class="overflow-x-auto">
+                  <div class="flex gap-4">
+                    <!-- Y-axis label -->
+                    <div class="flex items-center justify-center" style="min-width: 40px;">
+                      <div class="text-xs font-semibold text-gray-600 rotate-270">Impact →</div>
+                    </div>
+                    <div class="flex-1">
+
+                      <!-- X-axis label -->
+                      <div class="text-center text-xs font-semibold text-gray-600 mb-3">Likelihood →</div>
+
+                      <!-- Column Headers -->
+                      <div class="flex gap-2 mb-3">
+                        <div class="w-12"></div>
+                        <div th:each="impact : ${#numbers.sequence(1, 5)}" class="flex-1 text-center">
+                          <span class="text-xs font-semibold text-gray-600" th:text="${impact}"></span>
+                        </div>
+                      </div>
+
+                      <!-- Matrix Grid -->
+                      <div class="grid gap-2" style="grid-template-columns: 48px repeat(5, minmax(0, 1fr));">
+                        <th:block th:each="likelihood : ${#numbers.sequence(5, 1, -1)}">
+                          <!-- Row Header -->
+                          <div class="h-12 flex items-center justify-center text-center text-xs font-semibold text-gray-600 bg-gray-50 rounded"
+                               th:text="${likelihood}"></div>
+                          <!-- Cells -->
+                          <th:block th:each="impact : ${#numbers.sequence(1, 5)}">
+                            <div th:with="score=${likelihood * impact},
+                                         colorClass=${riskHeatmaps.residual.scoreColors.get(score)},
+                                         count=${riskHeatmaps.residual.matrix[likelihood - 1][impact - 1]}"
+                                 class="h-12 rounded flex items-center justify-center cursor-help hover:shadow-md transition font-bold text-sm"
+                                 th:classappend="${count > 0 ? colorClass : 'bg-gray-100'}">
+                              <span th:if="${count > 0}" th:text="${count}"></span>
+                            </div>
+                          </th:block>
+                        </th:block>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Legend -->
+              <div class="mt-6 pt-6 border-t border-gray-200">
+                <p class="text-xs text-gray-600 font-semibold mb-3">Risk Level Legend:</p>
+                <div class="flex flex-wrap gap-4 text-xs">
+                  <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 bg-green-50 border border-green-600 rounded"></span> Very Low (1-2)</span>
+                  <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 bg-yellow-50 border border-yellow-600 rounded"></span> Low (3-4)</span>
+                  <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 bg-orange-50 border border-orange-600 rounded"></span> Medium (5-9)</span>
+                  <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 bg-rose-50 border border-rose-600 rounded"></span> High (10-16)</span>
+                  <span class="flex items-center gap-2"><span class="inline-block w-4 h-4 bg-red-50 border border-red-600 rounded"></span> Very High (17-25)</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <p class="text-xs text-gray-500 italic">
+                  <strong>Note:</strong> Shows risks with status Assessed, Mitigated, or Accepted. Identified and Closed risks are excluded.
+                </p>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <!-- My Tasks Section (1/3 width on large screens) -->
+          <div class="lg:col-span-1">
+            <h3 class="text-base font-semibold text-gray-900 mb-5">My Tasks</h3>
+          <div th:if="${#lists.isEmpty(myTasks)}" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <p class="text-sm text-gray-500 text-center">No tasks assigned</p>
+          </div>
+          <div th:unless="${#lists.isEmpty(myTasks)}" class="bg-white shadow-sm rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Title</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Risk</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Priority</th>
+                  <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Assignee</th> -->
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Due Date</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr th:each="task : ${myTasks}" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900" th:text="${task.title}"></td>
+                  <td class="px-6 py-4 text-sm">
+                    <a th:if="${task.risk != null}" th:href="@{/risks/{id}(id=${task.riskId})}"
+                       class="text-sky-600 hover:text-sky-700 font-medium" th:text="'RISK-' + ${task.riskId} + ': ' + ${task.risk.title}"></a>
+                    <a th:if="${task.riskId != null && task.risk == null}" th:href="@{/risks/{id}(id=${task.riskId})}"
+                       class="text-sky-600 hover:text-sky-700 font-medium" th:text="'RISK-' + ${task.riskId}"></a>
+                    <span th:unless="${task.riskId != null}" class="text-gray-400">—</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    <span th:with="statusColor=${task.status.name() == 'COMPLETED' ? 'bg-green-100 text-green-700' : task.status.name() == 'IN_PROGRESS' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}"
+                          class="inline-flex items-center px-2 py-1 rounded text-xs font-medium"
+                          th:classappend="${statusColor}"
+                          th:text="${task.getStatusLabel()}"></span>
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    <span th:with="priorityColor=${task.priority.name() == 'CRITICAL' ? 'bg-red-100 text-red-700' : task.priority.name() == 'HIGH' ? 'bg-orange-100 text-orange-700' : task.priority.name() == 'MEDIUM' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}"
+                          class="inline-flex items-center px-2 py-1 rounded text-xs font-medium"
+                          th:classappend="${priorityColor}"
+                          th:text="${task.getPriorityLabel()}"></span>
+                  </td>
+                  <!-- <td class="px-6 py-4 text-sm text-gray-600" th:text="${task.assigneeName ?: 'Unassigned'}"></td> -->
+                  <td class="px-6 py-4 text-sm text-gray-600" th:text="${task.getDueDateFormatted() ?: 'No due date'}"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+        </div>
+
+        <!-- Overdue Tasks Section -->
+        <div class="mt-8" th:if="${not #lists.isEmpty(overdueTasksList)}">
+          <h3 class="text-base font-semibold text-gray-900 mb-5">Overdue Mitigation Tasks</h3>
+          <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-red-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Task</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Due Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Assignee</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr th:each="task : ${overdueTasksList}" class="hover:bg-red-50">
+                  <td class="px-6 py-4 text-sm font-medium text-gray-900" th:text="${task.title}"></td>
+                  <td class="px-6 py-4 text-sm text-red-600 font-semibold" th:text="${task.getDueDateFormatted()}"></td>
+                  <td class="px-6 py-4 text-sm">
+                    <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
+                          th:text="${task.getStatusLabel()}"></span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-600" th:text="${task.assigneeName ?: 'Unassigned'}"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+
+    </main>
+  </div>
+
+  <script>
+    function effectivenessChart() {
+      return {
+        period: '90days',
+        chart: null,
+        isRendering: false,
+
+        initChart() {
+          const scores90Days = this.parseScores(document.getElementById('scores-90days')?.textContent || '[]');
+          this.renderChart(scores90Days);
+        },
+
+        parseScores(jsonString) {
+          try {
+            return JSON.parse(jsonString);
+          } catch (e) {
+            return [];
+          }
+        },
+
+        changePeriod(newPeriod) {
+          if (this.isRendering) return;
+          this.period = newPeriod;
+          const scores = this.getScoresForPeriod();
+          this.renderChart(scores);
+        },
+
+        getScoresForPeriod() {
+          const scoresEl = document.getElementById(`scores-${this.period}`);
+          if (!scoresEl) return [];
+          return this.parseScores(scoresEl.textContent);
+        },
+
+        renderChart(scores) {
+          if (this.isRendering) return;
+          this.isRendering = true;
+
+          // Destroy old chart first and reset canvas
+          if (this.chart) {
+            try {
+              this.chart.destroy();
+              this.chart = null;
+            } catch (e) {
+              console.warn('Error destroying chart:', e);
+            }
+          }
+
+          // Small delay to ensure cleanup
+          setTimeout(() => {
+            try {
+              const canvas = document.getElementById('effectivenessChart');
+              if (!canvas) {
+                console.warn('Chart canvas not found');
+                this.isRendering = false;
+                return;
+              }
+
+              // Reset canvas to clear any previous state
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                console.warn('Could not get canvas context');
+                this.isRendering = false;
+                return;
+              }
+
+              // Prepare chart data
+              const labels = scores.map(s => new Date(s.calculatedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
+              const data = scores.map(s => parseFloat(s.score.toFixed(1)));
+
+              this.chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Effectiveness %',
+                    data: data,
+                    borderColor: '#0ea5e9',
+                    backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#0ea5e9',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: {
+                    legend: {
+                      display: false
+                    }
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      max: 100,
+                      ticks: {
+                        callback: function(value) {
+                          return value + '%';
+                        }
+                      },
+                      grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                      }
+                    },
+                    x: {
+                      grid: {
+                        display: false
+                      }
+                    }
+                  }
+                }
+              });
+            } catch (e) {
+              console.error('Error rendering chart:', e);
+            } finally {
+              this.isRendering = false;
+            }
+          }, 50);
+        }
+      };
+    }
+  </script>
+
+  <!-- Hidden data elements for scores -->
+  <script type="application/json" id="scores-90days" th:inline="javascript">
+    /*[[${effectivenessScores90Days}]]*/ []
+  </script>
+  <script type="application/json" id="scores-1year" th:inline="javascript">
+    /*[[${effectivenessScores1Year}]]*/ []
+  </script>
+  <script type="application/json" id="scores-2years" th:inline="javascript">
+    /*[[${effectivenessScores2Years}]]*/ []
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+{
+    "tasks": [
+        {
+            "id": "6664c5f9-6315-41ef-a773-46736e34a4c5",
+            "organization_id": 22,
+            "title": "Test task",
+            "description": "",
+            "status": "open",
+            "priority": "medium",
+            "due_date": null,
+            "assigned_to": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "created_by": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "control_id": null,
+            "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+            "watchers": [],
+            "completed_at": null,
+            "created_at": "2026-02-25T15:45:32.454306+00:00",
+            "updated_at": "2026-02-25T15:45:32.454306+00:00"
+        }
+    ]
+}

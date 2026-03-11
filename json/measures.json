@@ -1,0 +1,89 @@
+{
+    "measures": [
+        {
+            "id": "2420f351-c3a6-4df6-9bed-32cd9601d0a0",
+            "name": "Acceptable Use Policy",
+            "description": "Define acceptable use of company IT resources and data",
+            "category": "administrative",
+            "library_measure_id": "d8a0d9c6-2377-4e1b-98ab-57bd1d5418d3",
+            "organization_id": 22,
+            "archived": false,
+            "created_at": "2026-02-22T21:49:18.733466+00:00",
+            "updated_at": "2026-02-22T21:49:18.733466+00:00",
+            "library_measures": {
+                "name": "Acceptable Use Policy"
+            }
+        },
+        {
+            "id": "1f53b315-3d7d-44e0-8a30-61447a267d4d",
+            "name": "Intrusion Detection System",
+            "description": "Monitor network traffic for suspicious activity and threats",
+            "category": "technical",
+            "library_measure_id": "c2810838-d0c3-4a2d-b540-9ccc744db0a5",
+            "organization_id": 22,
+            "archived": false,
+            "created_at": "2026-02-22T00:46:51.221791+00:00",
+            "updated_at": "2026-02-22T00:46:51.221791+00:00",
+            "library_measures": {
+                "name": "Intrusion Detection System"
+            }
+        },
+        {
+            "id": "4bad5434-a764-4836-843c-dbfc688e3bf7",
+            "name": "Multi-Factor Authentication",
+            "description": "Implement MFA for all user accounts to prevent unauthorized access",
+            "category": "technical",
+            "library_measure_id": "d6dc5a95-ddcb-4573-96ce-eb44af6d0ce8",
+            "organization_id": 22,
+            "archived": false,
+            "created_at": "2026-02-22T00:46:47.949058+00:00",
+            "updated_at": "2026-02-22T00:46:47.949058+00:00",
+            "library_measures": {
+                "name": "Multi-Factor Authentication"
+            }
+        },
+        {
+            "id": "72795572-52e0-4743-a05a-b57b7b7597a7",
+            "name": "Patch Management",
+            "description": "Regular security updates and patch deployment within 30 days",
+            "category": "technical",
+            "library_measure_id": "491cc548-02c0-48fc-9b52-ca939d3ef81d",
+            "organization_id": 22,
+            "archived": false,
+            "created_at": "2026-02-22T00:46:55.264027+00:00",
+            "updated_at": "2026-02-22T00:46:55.264027+00:00",
+            "library_measures": {
+                "name": "Patch Management"
+            }
+        },
+        {
+            "id": "d4a7a535-4c4c-404d-8f1b-bf540e881608",
+            "name": "Security Awareness Training",
+            "description": "Quarterly security training for all employees on threats and best practices",
+            "category": "administrative",
+            "library_measure_id": "5f25014f-7995-405e-adac-d4e4c021058a",
+            "organization_id": 22,
+            "archived": false,
+            "created_at": "2026-02-22T00:46:58.539175+00:00",
+            "updated_at": "2026-02-22T00:46:58.539175+00:00",
+            "library_measures": {
+                "name": "Security Awareness Training"
+            }
+        },
+        {
+            "id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f",
+            "name": "Web Application Firewall",
+            "description": "Deploy WAF to protect web applications from common attacks",
+            "category": "technical",
+            "library_measure_id": "fd1c7cd8-dcf0-42b7-8c59-801a679eedf1",
+            "organization_id": 22,
+            "archived": false,
+            "created_at": "2026-02-22T00:46:43.18068+00:00",
+            "updated_at": "2026-02-22T00:46:43.18068+00:00",
+            "library_measures": {
+                "name": "Web Application Firewall"
+            }
+        }
+    ]
+}
+

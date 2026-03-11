@@ -1,0 +1,258 @@
+[
+    {
+        "id": "fe532051-ab33-45b4-8d4f-f4552d84f4cb",
+        "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+        "organization_id": 22,
+        "snapshot_date": "2026-02-25T15:36:41.511534+00:00",
+        "snapshot_type": "manual",
+        "snapshot_name": null,
+        "version_number": 2,
+        "risk_data": {
+            "id": "637b6db1-deba-4831-89a3-90062783120a",
+            "name": "Risk of app being hacked xx",
+            "impact": 2,
+            "status": "pending_approval",
+            "risk_id": "RISK-001",
+            "category": "Operational",
+            "owner_id": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "created_at": "2026-02-22T00:37:59.810124+00:00",
+            "created_by": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "likelihood": 2,
+            "risk_score": 4,
+            "updated_at": "2026-02-25T15:36:39.504085+00:00",
+            "description": "This is a risk description\n\nThis is another description to get v3\n\nDoes updating the description change the description",
+            "archive_reason": null,
+            "measures_count": 5,
+            "organizationId": 22,
+            "risk_treatment": "mitigate",
+            "residual_impact": 5,
+            "next_review_date": null,
+            "open_tasks_count": 0,
+            "review_frequency": "quarterly",
+            "residual_likelihood": 3,
+            "residual_risk_score": 15
+        },
+        "risk_count": null,
+        "status": "pending_approval",
+        "likelihood": 2,
+        "impact": 2,
+        "risk_score": 4,
+        "residual_likelihood": 3,
+        "residual_impact": 5,
+        "residual_score": 15,
+        "risk_treatment": "mitigate",
+        "measures_count": 5,
+        "implemented_measures_count": 0,
+        "linked_measures": [
+            {
+                "measures": {
+                    "name": "Web Application Firewall",
+                    "category": "technical",
+                    "description": "Deploy WAF to protect web applications from common attacks",
+                    "library_measure_id": "fd1c7cd8-dcf0-42b7-8c59-801a679eedf1"
+                },
+                "created_at": "2026-02-22T00:46:44.014862+00:00",
+                "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f",
+                "updated_at": "2026-02-22T00:46:44.014862+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Multi-Factor Authentication",
+                    "category": "technical",
+                    "description": "Implement MFA for all user accounts to prevent unauthorized access",
+                    "library_measure_id": "d6dc5a95-ddcb-4573-96ce-eb44af6d0ce8"
+                },
+                "created_at": "2026-02-22T00:46:48.807493+00:00",
+                "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7",
+                "updated_at": "2026-02-22T00:46:48.807493+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Intrusion Detection System",
+                    "category": "technical",
+                    "description": "Monitor network traffic for suspicious activity and threats",
+                    "library_measure_id": "c2810838-d0c3-4a2d-b540-9ccc744db0a5"
+                },
+                "created_at": "2026-02-22T00:46:51.971688+00:00",
+                "measure_id": "1f53b315-3d7d-44e0-8a30-61447a267d4d",
+                "updated_at": "2026-02-22T00:46:51.971688+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Patch Management",
+                    "category": "technical",
+                    "description": "Regular security updates and patch deployment within 30 days",
+                    "library_measure_id": "491cc548-02c0-48fc-9b52-ca939d3ef81d"
+                },
+                "created_at": "2026-02-22T00:46:56.120703+00:00",
+                "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7",
+                "updated_at": "2026-02-22T00:46:56.120703+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Security Awareness Training",
+                    "category": "administrative",
+                    "description": "Quarterly security training for all employees on threats and best practices",
+                    "library_measure_id": "5f25014f-7995-405e-adac-d4e4c021058a"
+                },
+                "created_at": "2026-02-22T00:46:59.239813+00:00",
+                "measure_id": "d4a7a535-4c4c-404d-8f1b-bf540e881608",
+                "updated_at": "2026-02-22T00:46:59.239813+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            }
+        ],
+        "linked_controls": null,
+        "linked_assets": [],
+        "linked_categories": [
+            {
+                "id": 1,
+                "name": "Access Control"
+            }
+        ],
+        "created_by": null,
+        "created_at": "2026-02-25T15:33:07.19734+00:00",
+        "notes": "Impact changed further"
+    },
+    {
+        "id": "c7dc7ebe-ab38-40c9-8757-488a50f478fc",
+        "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+        "organization_id": 22,
+        "snapshot_date": "2026-02-22T00:47:13.105165+00:00",
+        "snapshot_type": "manual",
+        "snapshot_name": null,
+        "version_number": 1,
+        "risk_data": {
+            "id": "637b6db1-deba-4831-89a3-90062783120a",
+            "name": "Risk of app being hacked",
+            "impact": 5,
+            "status": "pending_approval",
+            "risk_id": "RISK-001",
+            "category": "Operational",
+            "owner_id": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "created_at": "2026-02-22T00:37:59.810124+00:00",
+            "created_by": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "likelihood": 3,
+            "risk_score": 15,
+            "updated_at": "2026-02-22T00:47:12.047343+00:00",
+            "description": "",
+            "archive_reason": null,
+            "measures_count": 5,
+            "organizationId": 22,
+            "risk_treatment": "mitigate",
+            "residual_impact": 5,
+            "next_review_date": null,
+            "open_tasks_count": 0,
+            "review_frequency": "quarterly",
+            "residual_likelihood": 3,
+            "residual_risk_score": 15
+        },
+        "risk_count": null,
+        "status": "pending_approval",
+        "likelihood": 3,
+        "impact": 5,
+        "risk_score": 15,
+        "residual_likelihood": 3,
+        "residual_impact": 5,
+        "residual_score": 15,
+        "risk_treatment": "mitigate",
+        "measures_count": 5,
+        "implemented_measures_count": 0,
+        "linked_measures": [
+            {
+                "measures": {
+                    "name": "Web Application Firewall",
+                    "category": "technical",
+                    "description": "Deploy WAF to protect web applications from common attacks",
+                    "library_measure_id": "fd1c7cd8-dcf0-42b7-8c59-801a679eedf1"
+                },
+                "created_at": "2026-02-22T00:46:44.014862+00:00",
+                "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f",
+                "updated_at": "2026-02-22T00:46:44.014862+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Multi-Factor Authentication",
+                    "category": "technical",
+                    "description": "Implement MFA for all user accounts to prevent unauthorized access",
+                    "library_measure_id": "d6dc5a95-ddcb-4573-96ce-eb44af6d0ce8"
+                },
+                "created_at": "2026-02-22T00:46:48.807493+00:00",
+                "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7",
+                "updated_at": "2026-02-22T00:46:48.807493+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Intrusion Detection System",
+                    "category": "technical",
+                    "description": "Monitor network traffic for suspicious activity and threats",
+                    "library_measure_id": "c2810838-d0c3-4a2d-b540-9ccc744db0a5"
+                },
+                "created_at": "2026-02-22T00:46:51.971688+00:00",
+                "measure_id": "1f53b315-3d7d-44e0-8a30-61447a267d4d",
+                "updated_at": "2026-02-22T00:46:51.971688+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Patch Management",
+                    "category": "technical",
+                    "description": "Regular security updates and patch deployment within 30 days",
+                    "library_measure_id": "491cc548-02c0-48fc-9b52-ca939d3ef81d"
+                },
+                "created_at": "2026-02-22T00:46:56.120703+00:00",
+                "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7",
+                "updated_at": "2026-02-22T00:46:56.120703+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            },
+            {
+                "measures": {
+                    "name": "Security Awareness Training",
+                    "category": "administrative",
+                    "description": "Quarterly security training for all employees on threats and best practices",
+                    "library_measure_id": "5f25014f-7995-405e-adac-d4e4c021058a"
+                },
+                "created_at": "2026-02-22T00:46:59.239813+00:00",
+                "measure_id": "d4a7a535-4c4c-404d-8f1b-bf540e881608",
+                "updated_at": "2026-02-22T00:46:59.239813+00:00",
+                "effectiveness": 0,
+                "implementation_notes": "",
+                "implementation_status": "planned"
+            }
+        ],
+        "linked_controls": null,
+        "linked_assets": [],
+        "linked_categories": [
+            {
+                "id": 1,
+                "name": "Access Control"
+            }
+        ],
+        "created_by": null,
+        "created_at": "2026-02-22T00:47:13.105165+00:00",
+        "notes": null
+    }
+]

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Profile – RiskRegisterHQ</title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='profile')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+
+        <!-- Page header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold tracking-tight text-gray-900">My Profile</h1>
+          <p class="mt-1 text-sm text-gray-500">View and manage your account information.</p>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
+          <div class="space-y-6">
+            <!-- User Avatar and Name -->
+            <div class="flex items-start gap-6">
+              <img
+                id="profile-page-avatar"
+                th:data-user-name="${user.firstName} + ' ' + ${user.lastName}"
+                alt="User avatar"
+                class="h-20 w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm" />
+              <script>
+                // Set profile avatar URL with deterministic color
+                const profilePageAvatar = document.getElementById('profile-page-avatar');
+                if (profilePageAvatar && profilePageAvatar.dataset.userName) {
+                  const userName = profilePageAvatar.dataset.userName;
+                  if (window.AvatarUtils) {
+                    profilePageAvatar.src = window.AvatarUtils.getAvatarUrl(userName, 80);
+                  }
+                }
+              </script>
+              <div class="flex-1">
+                <h2 class="text-2xl font-bold text-gray-900">
+                  <span th:text="${user.firstName}"></span>
+                  <span th:text="${user.lastName}"></span>
+                </h2>
+                <p class="mt-1 text-sm text-gray-500" th:text="${user.email}"></p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700 border border-green-200">
+                    Active
+                  </span>
+                  <span class="inline-flex items-center rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 border border-sky-200"
+                        th:text="${#strings.capitalize(#strings.toLowerCase(user.role.name()))}">
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200"></div>
+
+            <!-- Account Information -->
+            <div class="space-y-4">
+              <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Account Information</h3>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="text-xs font-medium text-gray-500">First Name</label>
+                  <p class="mt-1 text-sm text-gray-900" th:text="${user.firstName ?: '—'}"></p>
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-500">Last Name</label>
+                  <p class="mt-1 text-sm text-gray-900" th:text="${user.lastName ?: '—'}"></p>
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="text-xs font-medium text-gray-500">Email Address</label>
+                  <p class="mt-1 text-sm text-gray-900" th:text="${user.email}"></p>
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-500">Role</label>
+                  <p class="mt-1 text-sm text-gray-900" th:text="${#strings.capitalize(#strings.toLowerCase(user.role.name()))}"></p>
+                </div>
+                <div>
+                  <label class="text-xs font-medium text-gray-500">Account Status</label>
+                  <p class="mt-1 text-sm text-gray-900">
+                    <span th:if="${user.approved}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Approved
+                    </span>
+                    <span th:unless="${user.approved}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Pending Approval
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="rounded-xl border border-red-200 bg-red-50 p-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-base font-semibold text-red-900">Logout</h2>
+              <p class="mt-2 text-sm text-red-700">
+                Sign out of your account. You'll need to log in again to access this application.
+              </p>
+            </div>
+            <form th:action="@{/logout}" method="post" th:csrf="true">
+              <button type="submit"
+                class="inline-flex items-center gap-1.5 rounded-lg border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 hover:border-red-700 transition-colors shadow-sm">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div th:replace="~{fragments/footer}"></div>
+
+</body>
+
+</html>

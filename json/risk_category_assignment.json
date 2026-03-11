@@ -1,0 +1,18 @@
+[
+    {
+        "category_id": 1,
+        "risk_categories": {
+            "id": 1,
+            "name": "Access Control",
+            "description": "Authentication, authorization, user management"
+        }
+    },
+    {
+        "category_id": 5,
+        "risk_categories": {
+            "id": 5,
+            "name": "Change Management",
+            "description": "System changes, deployment processes"
+        }
+    }
+]

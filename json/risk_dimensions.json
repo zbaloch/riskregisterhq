@@ -1,0 +1,66 @@
+[
+    {
+        "name": "Financial",
+        "description": "Risks related to financial performance, reporting, and compliance"
+    },
+    {   
+        "name": "Customer",
+        "description": "Risks related to customer interactions, satisfaction, and retention"
+    },
+    {
+        "name": "Opportunity",
+        "description": "Risks related to missed business opportunities, market changes, and competitive threats"
+    },
+    {
+        "name": "Commercial",
+        "description": "Risks related to contracts, suppliers, and third-party relationships"
+    },
+    {
+        "name": "Staff",
+        "description": "Risks related to employee management, talent acquisition, and workforce development"
+    },
+    {
+        "name": "Brand/Reputation",
+        "description": "Risks related to brand reputation, public perception, and media coverage"
+    },
+    {
+        "name": "Media",
+        "description": "Risks related to media coverage, public relations, and communication strategies"
+    },
+    {
+        "name": "Regulatory",
+        "description": "Risks related to regulatory compliance, legal issues, and government relations"
+    },
+    {
+        "name": "Environmental",
+        "description": "Risks related to environmental impact, sustainability, and climate change"
+    },
+    {
+        "name": "Health & Safety",
+        "description": "Risks related to workplace safety, employee health, and public health issues"
+    },
+    {
+        "name": "Technology",
+        "description": "Risks related to technology infrastructure, cybersecurity, and data management"
+    },
+    {
+        "name": "Operational",
+        "description": "Risks related to business operations, supply chain, and logistics"
+    },
+    {
+        "name": "Legal",
+        "description": "Risks related to legal disputes, intellectual property, and contract management"
+    },
+    {
+        "name": "Strategic",
+        "description": "Risks related to strategic planning, market positioning, and long-term growth"
+    },
+    {
+        "name": "Project",
+        "description": "Risks related to project management, timelines, and deliverables"
+    },
+    {
+        "name": "Financial Crime (AML/CFT)",
+        "description": "Risks related to fraud, money laundering, and other financial crimes"
+    }
+]

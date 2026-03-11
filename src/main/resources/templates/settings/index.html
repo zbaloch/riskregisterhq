@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+
+<head>
+
+  <div th:replace="~{fragments/head}"></div>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>RiskRegisterHQ</title>
+  <meta name="description" content="Risk Register & Compliance Platform" />
+</head>
+
+<body class="h-full">
+
+    <div th:replace="~{fragments/admin-nav(activePage='settings')}"></div>
+
+  <div class="lg:pl-72">
+    
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+
+    <main class="py-10">
+      <div class="mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Your content -->
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Settings</h1>
+
+
+        <!-- Critical Metrics -->
+        <div class="py-4 sm:py-6">
+          <h3 class="text-base font-semibold text-gray-900">Critical Metrics</h3>
+          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Risk Effectiveness Score</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">71,897</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Approved High Residual Risks (≥15)</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Approved Risks Without Controls</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Controls Without Evidence</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Approved Risks Without Owner</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            </div>
+          </dl>
+        </div>
+
+
+        <!-- Process Metrics -->
+        <div class="py-4 sm:py-6">
+          <h3 class="text-base font-semibold text-gray-900">Process Metrics</h3>
+          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Risks Pending Approval</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">71,897</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Approved Risks Overdue Reviews</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Controls Without Owner</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            </div>
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt class="truncate text-sm font-medium text-gray-500">Controls Overdue Reviews</dt>
+              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            </div>
+          </dl>
+        </div>
+
+
+        <!-- Risk Management Effectiveness -->
+         <div class="py-2 sm:py-3">
+        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+          <div class="px-4 py-5 sm:px-6">
+            Risk Management Effectiveness
+            <!-- Content goes here -->
+            <!-- We use less vertical padding on card headers on desktop than on body sections -->
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <!-- Content goes here -->
+          </div>
+        </div>
+        </div>
+
+        <!-- Framework Compliance -->
+         <div class="py-2 sm:py-3">
+        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+          <div class="px-4 py-5 sm:px-6">
+            Framework Compliance
+            <!-- Content goes here -->
+            <!-- We use less vertical padding on card headers on desktop than on body sections -->
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <!-- Content goes here -->
+          </div>
+        </div>
+        </div>
+
+        <!-- Risk Heatmap -->
+         <div class="py-2 sm:py-3">
+        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+          <div class="px-4 py-5 sm:px-6">
+            Risk Heatmap
+            <!-- Content goes here -->
+            <!-- We use less vertical padding on card headers on desktop than on body sections -->
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <!-- Content goes here -->
+          </div>
+        </div>
+        </div>
+
+        <!-- My Tasks -->
+         <div class="py-2 sm:py-3">
+        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+          <div class="px-4 py-5 sm:px-6">
+            My Tasks
+            <!-- Content goes here -->
+            <!-- We use less vertical padding on card headers on desktop than on body sections -->
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <!-- Content goes here -->
+          </div>
+        </div>
+        </div>
+
+         <!-- My Tasks -->
+         <div class="py-2 sm:py-3">
+        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+          <div class="px-4 py-5 sm:px-6">
+            Recent Changes
+            <!-- Content goes here -->
+            <!-- We use less vertical padding on card headers on desktop than on body sections -->
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <!-- Content goes here -->
+          </div>
+        </div>
+        </div>
+
+
+      </div>
+
+
+
+
+
+    </main>
+
+    </div>
+
+</body>
+
+</html>

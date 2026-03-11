@@ -1,0 +1,4424 @@
+{
+    "library_measures": [
+        {
+            "id": "d8a0d9c6-2377-4e1b-98ab-57bd1d5418d3",
+            "name": "Acceptable Use Policy",
+            "description": "Define acceptable use of company IT resources and data",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.567835+00:00",
+            "updated_at": "2025-11-20T22:31:21.567835+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.10",
+                    "control_name": "Acceptable use of information and other associated assets"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "c31ebdd1-f3e8-4f50-ac95-c1b27579230c",
+            "name": "Access Review Process",
+            "description": "Quarterly review of user access rights and permissions",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.09109+00:00",
+            "updated_at": "2025-11-20T22:31:21.09109+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.18",
+                    "control_name": "Access rights"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "5.3",
+                    "control_name": "Disable Dormant Accounts"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.3",
+                    "control_name": "Access Review Procedures"
+                }
+            ]
+        },
+        {
+            "id": "0cca395d-5e11-4b3a-b350-eeb07381ca8f",
+            "name": "AI Customer Expectations Management",
+            "description": "Understand and address customer expectations and needs when supplying AI systems or services",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:06.175769+00:00",
+            "updated_at": "2025-11-28T20:17:06.175769+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.10.4",
+                    "control_name": "Customers"
+                }
+            ]
+        },
+        {
+            "id": "414b571b-0b06-4fcc-9ca6-18448c02dcaa",
+            "name": "AI External Reporting Mechanism",
+            "description": "Provide capabilities for interested parties to report adverse impacts of AI systems",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:05.4878+00:00",
+            "updated_at": "2025-11-28T20:17:05.4878+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.8.3",
+                    "control_name": "External reporting"
+                }
+            ]
+        },
+        {
+            "id": "326239b1-8ec1-4e34-ba07-0cb0807ece0d",
+            "name": "AI Human Oversight Implementation",
+            "description": "Implement meaningful human oversight including review authority, monitoring, and decision override capabilities",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:05.702418+00:00",
+            "updated_at": "2025-11-28T20:17:05.702418+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.3.2",
+                    "control_name": "AI roles and responsibilities"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.4.6",
+                    "control_name": "Human resources"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.3",
+                    "control_name": "Objectives for responsible use of AI systems"
+                }
+            ]
+        },
+        {
+            "id": "3c566b2f-dbbe-4733-a602-0a5b9cef3176",
+            "name": "AI Impact Assessment Process",
+            "description": "Assess and document potential impacts on individuals, groups, and society throughout AI system lifecycle",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:04.677592+00:00",
+            "updated_at": "2025-11-28T20:17:04.677592+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.5.2",
+                    "control_name": "AI system impact assessment process"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.5.3",
+                    "control_name": "Documentation of AI system impact assessments"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.5.4",
+                    "control_name": "Assessing AI system impact on individuals or groups of individuals"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.5.5",
+                    "control_name": "Assessing societal impacts of AI systems"
+                }
+            ]
+        },
+        {
+            "id": "131557ce-7257-4052-a1f6-65c94a30b314",
+            "name": "AI Incident Communication Plan",
+            "description": "Document and implement plan for communicating AI system incidents to users and stakeholders",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:05.550622+00:00",
+            "updated_at": "2025-11-28T20:17:05.550622+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.8.4",
+                    "control_name": "Communication of incidents"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.8.5",
+                    "control_name": "Information for interested parties"
+                }
+            ]
+        },
+        {
+            "id": "b16785b4-94c1-4f09-a0f0-6d9a018984c4",
+            "name": "AI Policy and Governance Framework",
+            "description": "Establish and maintain documented AI policy aligned with organizational objectives and other policies",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:04.465403+00:00",
+            "updated_at": "2025-11-28T20:17:04.465403+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.2.2",
+                    "control_name": "AI policy"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.2.3",
+                    "control_name": "Alignment with other organizational policies"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.2.4",
+                    "control_name": "Review of the AI policy"
+                }
+            ]
+        },
+        {
+            "id": "d04874ee-76fd-4c2d-bd4e-f15cca98fb4b",
+            "name": "AI Resource Documentation and Management",
+            "description": "Document and manage data, tooling, computing, and human resources required for AI system lifecycle stages",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:04.599716+00:00",
+            "updated_at": "2025-11-28T20:17:04.599716+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.4.2",
+                    "control_name": "Resource documentation"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.4.3",
+                    "control_name": "Data resources"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.4.4",
+                    "control_name": "Tooling resources"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.4.5",
+                    "control_name": "System and computing resources"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.4.6",
+                    "control_name": "Human resources"
+                }
+            ]
+        },
+        {
+            "id": "4eaf891b-675f-43d4-94b8-f6da4710501d",
+            "name": "AI Responsible Use Processes",
+            "description": "Define processes and objectives to guide responsible use of AI systems according to intended use",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:05.61358+00:00",
+            "updated_at": "2025-11-28T20:17:05.61358+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.2",
+                    "control_name": "Processes for responsible use of AI systems"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.3",
+                    "control_name": "Objectives for responsible use of AI systems"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.4",
+                    "control_name": "Intended use of the AI system"
+                }
+            ]
+        },
+        {
+            "id": "5611f3ef-1672-4d19-a4fa-8d47ad06cc9e",
+            "name": "AI Roles and Responsibilities Assignment",
+            "description": "Define and allocate AI-specific roles, responsibilities, and reporting mechanisms throughout the AI lifecycle",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:04.534861+00:00",
+            "updated_at": "2025-11-28T20:17:04.534861+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.3.2",
+                    "control_name": "AI roles and responsibilities"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.3.3",
+                    "control_name": "Reporting of concerns"
+                }
+            ]
+        },
+        {
+            "id": "2ce525ca-e1ab-47c7-af59-0f55fc5404ef",
+            "name": "AI Supplier and Third-Party Management",
+            "description": "Manage AI system suppliers, components, and third-party relationships aligned with responsible AI approach",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:06.105883+00:00",
+            "updated_at": "2025-11-28T20:17:06.105883+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.10.2",
+                    "control_name": "Allocating responsibilities"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.10.3",
+                    "control_name": "Suppliers"
+                }
+            ]
+        },
+        {
+            "id": "f1338671-a3f9-4055-9625-76f83430a65d",
+            "name": "AI System Deployment Planning",
+            "description": "Document deployment plans ensuring requirements are met prior to AI system deployment",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:04.877589+00:00",
+            "updated_at": "2025-11-28T20:17:04.877589+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.5",
+                    "control_name": "AI system deployment"
+                }
+            ]
+        },
+        {
+            "id": "be26ae9a-be6e-40d6-8cf8-dad0286a8d35",
+            "name": "AI System Requirements and Specifications",
+            "description": "Define, document, and approve requirements and specifications for AI systems including responsible development objectives",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:04.758062+00:00",
+            "updated_at": "2025-11-28T20:17:04.758062+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.2",
+                    "control_name": "Objectives for responsible development of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.3",
+                    "control_name": "Processes for responsible AI system design and development"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.2",
+                    "control_name": "AI system requirements and specification"
+                }
+            ]
+        },
+        {
+            "id": "4dbc5667-931e-45b5-85cc-e8d91514f7f1",
+            "name": "AI System Technical Documentation",
+            "description": "Provide appropriate technical documentation to users, partners, and supervisory authorities",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:05.011222+00:00",
+            "updated_at": "2025-11-28T20:17:05.011222+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.3",
+                    "control_name": "Documentation of AI system design and development"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.7",
+                    "control_name": "AI system technical documentation"
+                }
+            ]
+        },
+        {
+            "id": "7b76e830-275c-429b-be89-21f4ec1cdcac",
+            "name": "AI User Documentation and Information",
+            "description": "Provide necessary information and instructions to AI system users for proper and intended use",
+            "category": "administrative",
+            "created_at": "2025-11-28T20:17:05.429472+00:00",
+            "updated_at": "2025-11-28T20:17:05.429472+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.8.2",
+                    "control_name": "System documentation and information for users"
+                }
+            ]
+        },
+        {
+            "id": "961fcc13-58f9-4bd4-9c8e-ed2dc98ea460",
+            "name": "Asset Management",
+            "description": "Maintain inventory of all IT assets and their owners",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.125018+00:00",
+            "updated_at": "2025-11-20T22:31:22.125018+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.9",
+                    "control_name": "Inventory of information and other associated assets"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "1.1",
+                    "control_name": "Establish and Maintain Detailed Enterprise Asset Inventory"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "2.1",
+                    "control_name": "Establish and Maintain a Software Inventory"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.4",
+                    "control_name": "Business Impact Analysis"
+                }
+            ]
+        },
+        {
+            "id": "61d78b17-6044-4018-9812-5a61225d63b4",
+            "name": "Background Checks",
+            "description": "Pre-employment screening for sensitive positions",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.47982+00:00",
+            "updated_at": "2025-11-20T22:31:21.47982+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.1",
+                    "control_name": "Screening"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.2",
+                    "control_name": "Personnel Security Screening"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.4",
+                    "control_name": "Identity Verification"
+                }
+            ]
+        },
+        {
+            "id": "a15455de-3a14-4a10-94b5-345f8c02f8f0",
+            "name": "Business Continuity Plan",
+            "description": "Documented procedures for business continuity and disaster recovery",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.300023+00:00",
+            "updated_at": "2025-11-20T22:31:21.300023+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.29",
+                    "control_name": "Information security during disruption"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.30",
+                    "control_name": "ICT readiness for business continuity"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "11.5",
+                    "control_name": "Test Data Recovery"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.2",
+                    "control_name": "Disaster Recovery Planning"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.2",
+                    "control_name": "Emergency Communications"
+                }
+            ]
+        },
+        {
+            "id": "6d656dd4-b5ab-4ba8-b855-8997e478556e",
+            "name": "Change Management Process",
+            "description": "Formal approval process for system and application changes",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.734669+00:00",
+            "updated_at": "2025-11-20T22:31:21.734669+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.32",
+                    "control_name": "Change management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "16.6",
+                    "control_name": "Establish and Maintain a Severity Rating System and Process for Application Vulnerabilities"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.4",
+                    "control_name": "Change Management"
+                }
+            ]
+        },
+        {
+            "id": "3d2e4cb2-b911-4090-adf1-7f07eb4aab5e",
+            "name": "Children's Privacy Protection",
+            "description": "Special controls for processing children's personal data",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:29.302681+00:00",
+            "updated_at": "2025-11-20T22:31:29.302681+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.1",
+                    "control_name": "Consent and choice"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "342b81ad-b236-49cb-8adf-dd989fddc34c",
+            "name": "Cloud Capacity Planning",
+            "description": "Monitor resource utilization and plan for scaling requirements",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:31.526555+00:00",
+            "updated_at": "2025-11-20T22:31:31.526555+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.6",
+                    "control_name": "Capacity management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.1",
+                    "control_name": "Ensure Network Infrastructure is Up-to-Date"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.6.1",
+                    "control_name": "Cloud capacity management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.4",
+                    "control_name": "Business Impact Analysis"
+                }
+            ]
+        },
+        {
+            "id": "3129c624-f739-44f5-8d6a-73a40b9a58a9",
+            "name": "Cloud Cost Optimization",
+            "description": "Monitor and optimize cloud spending with rightsizing and reserved instances",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:30.968621+00:00",
+            "updated_at": "2025-11-20T22:31:30.968621+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.6.1",
+                    "control_name": "Cloud capacity management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.6",
+                    "control_name": "Capacity management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.4",
+                    "control_name": "Business Impact Analysis"
+                }
+            ]
+        },
+        {
+            "id": "f42ccf0b-2b17-46b7-9238-ac4d0dd9c315",
+            "name": "Cloud Data Residency Controls",
+            "description": "Enforce geographic restrictions on data storage and processing",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:31.613689+00:00",
+            "updated_at": "2025-11-20T22:31:31.613689+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.31",
+                    "control_name": "Legal, statutory, regulatory and contractual requirements"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.31.1",
+                    "control_name": "Cloud compliance"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.2",
+                    "control_name": "Third-Party Security Requirements"
+                }
+            ]
+        },
+        {
+            "id": "6e2dd3b2-10d6-4378-9e41-6044c4e00629",
+            "name": "Cloud Governance Policy",
+            "description": "Rules for cloud resource provisioning and management",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.875119+00:00",
+            "updated_at": "2025-11-20T22:31:26.875119+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.23",
+                    "control_name": "Information security for use of cloud services"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.1.2",
+                    "control_name": "Cloud information security policy"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.19.1",
+                    "control_name": "Cloud supplier relationships"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.20.1",
+                    "control_name": "Cloud service agreements"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "15.4",
+                    "control_name": "Ensure Service Provider Contracts Include Security Requirements"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.2",
+                    "control_name": "Third-Party Security Requirements"
+                }
+            ]
+        },
+        {
+            "id": "5054f7c2-31da-4002-8aad-0022d03c7411",
+            "name": "Cloud Incident Response",
+            "description": "Cloud-specific incident handling and coordination with provider",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:30.499459+00:00",
+            "updated_at": "2025-11-20T22:31:30.499459+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.24.1",
+                    "control_name": "Cloud incident management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.26",
+                    "control_name": "Response to information security incidents"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "17.4",
+                    "control_name": "Establish and Maintain an Incident Response Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.1",
+                    "control_name": "Incident Response Plan"
+                }
+            ]
+        },
+        {
+            "id": "a908d3bf-717b-49d7-b99f-0816aaee14f0",
+            "name": "Cloud Service Provider Assessment",
+            "description": "Security evaluation and due diligence for cloud vendors",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:30.321372+00:00",
+            "updated_at": "2025-11-20T22:31:30.321372+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.12.1.1",
+                    "control_name": "Cloud transparency and audit"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.19",
+                    "control_name": "Information security in supplier relationships"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.19.1",
+                    "control_name": "Cloud supplier relationships"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.20.1",
+                    "control_name": "Cloud service agreements"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "15.1",
+                    "control_name": "Establish and Maintain an Inventory of Service Providers"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.1",
+                    "control_name": "Supplier Risk Assessment"
+                }
+            ]
+        },
+        {
+            "id": "18655b0d-fb05-40cd-9f53-cb31e98508ca",
+            "name": "Cloud Shared Responsibility Model",
+            "description": "Document security responsibilities between customer and provider",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:30.704884+00:00",
+            "updated_at": "2025-11-20T22:31:30.704884+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.1.1",
+                    "control_name": "Shared roles and responsibilities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.19",
+                    "control_name": "Information security in supplier relationships"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.2",
+                    "control_name": "Third-Party Security Requirements"
+                }
+            ]
+        },
+        {
+            "id": "5395e8f9-45ec-4f48-bce1-0792884ee1b4",
+            "name": "Compliance Monitoring",
+            "description": "Regular audits and assessments for regulatory compliance",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.053839+00:00",
+            "updated_at": "2025-11-20T22:31:22.053839+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.36",
+                    "control_name": "Compliance with policies, rules and standards for information security"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.3",
+                    "control_name": "Supply Chain Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "6d915b56-e2aa-4c75-a794-caaff7d31c5f",
+            "name": "Cross-Border Data Transfer Controls",
+            "description": "Implement safeguards for international PII transfers",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.774071+00:00",
+            "updated_at": "2025-11-20T22:31:28.774071+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "B.1",
+                    "control_name": "Return, transfer or disposal of PII"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.14",
+                    "control_name": "Information transfer"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.2",
+                    "control_name": "Third-Party Security Requirements"
+                }
+            ]
+        },
+        {
+            "id": "938dd02e-464f-46cc-80bf-a06b98c1364b",
+            "name": "Cryptography Standards",
+            "description": "Define approved encryption algorithms and key management",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.62709+00:00",
+            "updated_at": "2025-11-20T22:31:22.62709+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.6",
+                    "control_name": "Encrypt Data on End-User Devices"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.1",
+                    "control_name": "Cryptographic Standards"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.4",
+                    "control_name": "Cryptographic Controls"
+                }
+            ]
+        },
+        {
+            "id": "0f933a4d-4567-487d-a766-d855ae5dcaa9",
+            "name": "Cyber Insurance",
+            "description": "Insurance coverage for cyber incidents and breaches",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.981293+00:00",
+            "updated_at": "2025-11-20T22:31:25.981293+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.29",
+                    "control_name": "Information security during disruption"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.2",
+                    "control_name": "Disaster Recovery Planning"
+                }
+            ]
+        },
+        {
+            "id": "aa267ee9-2bff-4d06-87d2-91ddce8f6df7",
+            "name": "Data Breach Notification Process",
+            "description": "Notify authorities and data subjects of personal data breaches",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.937051+00:00",
+            "updated_at": "2025-11-20T22:31:28.937051+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "B.4",
+                    "control_name": "Notification of data breaches"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.26",
+                    "control_name": "Response to information security incidents"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.4",
+                    "control_name": "Incident Reporting"
+                }
+            ]
+        },
+        {
+            "id": "75980ecb-3c71-4c48-a48f-e453f5333fc3",
+            "name": "Data Breach Response Plan",
+            "description": "Specific procedures for data breach notification and remediation",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.358388+00:00",
+            "updated_at": "2025-11-20T22:31:26.358388+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.26",
+                    "control_name": "Response to information security incidents"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.28",
+                    "control_name": "Collection of evidence"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "17.7",
+                    "control_name": "Conduct Routine Incident Response Exercises"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.4",
+                    "control_name": "Incident Reporting"
+                }
+            ]
+        },
+        {
+            "id": "301d1951-ade0-4dfb-9620-5f123322be64",
+            "name": "Data Classification Policy",
+            "description": "Classify data based on sensitivity levels and handling requirements",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.649115+00:00",
+            "updated_at": "2025-11-20T22:31:21.649115+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.12",
+                    "control_name": "Classification of information"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.13",
+                    "control_name": "Labelling of information"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.1",
+                    "control_name": "Establish and Maintain a Data Management Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.1",
+                    "control_name": "Risk Assessment Framework"
+                }
+            ]
+        },
+        {
+            "id": "8257d429-c16e-4cad-9958-fdaa0b6313a5",
+            "name": "Data Minimization Controls",
+            "description": "Collect and process only necessary PII for specified purposes",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.163093+00:00",
+            "updated_at": "2025-11-20T22:31:28.163093+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.3",
+                    "control_name": "Collection limitation"
+                },
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.4",
+                    "control_name": "Data minimization"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.12",
+                    "control_name": "Classification of information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "c6a1032a-7d93-4c1c-b069-86d153c9df9e",
+            "name": "Data Protection Officer",
+            "description": "Designate DPO for GDPR compliance oversight",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.356489+00:00",
+            "updated_at": "2025-11-20T22:31:25.356489+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "78529af2-f234-415d-84ed-d170c0c0e4ca",
+            "name": "Data Retention Policy",
+            "description": "Define retention periods and disposal procedures for data",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.202867+00:00",
+            "updated_at": "2025-11-20T22:31:22.202867+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.33",
+                    "control_name": "Protection of records"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.3",
+                    "control_name": "Configure Data Access Control Lists"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.2",
+                    "control_name": "Risk Treatment Plans"
+                }
+            ]
+        },
+        {
+            "id": "1ce6eb49-280d-4606-87c1-c714a9deca65",
+            "name": "Data Subject Access Request Process",
+            "description": "Enable individuals to access, correct, and delete their personal data",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:27.916914+00:00",
+            "updated_at": "2025-11-20T22:31:27.916914+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.8",
+                    "control_name": "Individual participation and access"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "d3ce434f-ffc5-44ee-93f3-e59384a519fd",
+            "name": "Incident Response Plan",
+            "description": "Documented procedures for security incident handling and escalation",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.178484+00:00",
+            "updated_at": "2025-11-20T22:31:21.178484+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.24",
+                    "control_name": "Information security incident management planning and preparation"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.25",
+                    "control_name": "Assessment and decision on information security events"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.26",
+                    "control_name": "Response to information security incidents"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "17.1",
+                    "control_name": "Designate Personnel to Manage Incident Handling"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.3",
+                    "control_name": "Crisis Management Procedures"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.1",
+                    "control_name": "Incident Response Plan"
+                }
+            ]
+        },
+        {
+            "id": "daecd465-3d2b-4e6d-a0ca-1ddfd7649972",
+            "name": "Insider Threat Program",
+            "description": "Monitor and mitigate risks from malicious insiders",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.62619+00:00",
+            "updated_at": "2025-11-20T22:31:25.62619+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.18",
+                    "control_name": "Access rights"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.16",
+                    "control_name": "Monitoring activities"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.8",
+                    "control_name": "Define and Maintain Role-Based Access Control"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.2",
+                    "control_name": "Continuous Authentication"
+                }
+            ]
+        },
+        {
+            "id": "30b24ff5-8624-4444-8ecf-c23ae4baae87",
+            "name": "Multi-Cloud Management",
+            "description": "Unified security management across AWS, Azure, GCP environments",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:31.233611+00:00",
+            "updated_at": "2025-11-20T22:31:31.233611+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.19.1",
+                    "control_name": "Cloud supplier relationships"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.23",
+                    "control_name": "Information security for use of cloud services"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "15.1",
+                    "control_name": "Establish and Maintain an Inventory of Service Providers"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.4",
+                    "control_name": "Vendor Management"
+                }
+            ]
+        },
+        {
+            "id": "62906095-647d-42a4-a9a3-c97e811d3986",
+            "name": "Offboarding Procedures",
+            "description": "Secure process for employee departures and access revocation",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.54984+00:00",
+            "updated_at": "2025-11-20T22:31:26.54984+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.5",
+                    "control_name": "Responsibilities after termination or change of employment"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "5.5",
+                    "control_name": "Establish and Maintain an Inventory of Service Accounts"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.3",
+                    "control_name": "Secure Termination Procedures"
+                }
+            ]
+        },
+        {
+            "id": "e2970ac0-226b-4211-95fd-ff887bc24c21",
+            "name": "Password Policy",
+            "description": "Enforce strong password requirements and rotation",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.439742+00:00",
+            "updated_at": "2025-11-20T22:31:22.439742+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.17",
+                    "control_name": "Authentication information"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.2",
+                    "control_name": "Establish an Access Revoking Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.3",
+                    "control_name": "Authentication Policy"
+                }
+            ]
+        },
+        {
+            "id": "bbc2af0f-7874-442f-ba87-071e92c41395",
+            "name": "Phishing Simulation",
+            "description": "Regular phishing tests to measure user awareness",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.544136+00:00",
+            "updated_at": "2025-11-20T22:31:25.544136+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.3",
+                    "control_name": "Information security awareness, education and training"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "14.2",
+                    "control_name": "Train Workforce Members to Recognize Social Engineering Attacks"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.1",
+                    "control_name": "Security Awareness Training"
+                }
+            ]
+        },
+        {
+            "id": "e0e4f502-12de-4e54-9100-058843a44c22",
+            "name": "PII Inventory and Mapping",
+            "description": "Maintain inventory of all PII with data flows and processing purposes",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:27.989152+00:00",
+            "updated_at": "2025-11-20T22:31:27.989152+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "B.6",
+                    "control_name": "Records of processing activities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.9",
+                    "control_name": "Inventory of information and other associated assets"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.1",
+                    "control_name": "Risk Assessment Framework"
+                }
+            ]
+        },
+        {
+            "id": "59766ae6-25d6-4e7f-97b9-b3e8c428da6e",
+            "name": "Privacy by Design",
+            "description": "Integrate privacy requirements into system design and development",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.077154+00:00",
+            "updated_at": "2025-11-20T22:31:28.077154+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.9",
+                    "control_name": "Accountability"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "b000bbcb-e8f1-457a-82f9-0d65d7570820",
+            "name": "Privacy Compliance Monitoring",
+            "description": "Regular audits and assessments of privacy compliance",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:29.180208+00:00",
+            "updated_at": "2025-11-20T22:31:29.180208+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.11",
+                    "control_name": "Privacy compliance"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.36",
+                    "control_name": "Compliance with policies, rules and standards for information security"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.3",
+                    "control_name": "Supply Chain Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "7631f754-b5a2-4116-8c99-976825f67906",
+            "name": "Privacy Impact Assessment",
+            "description": "Assess privacy risks for new projects and systems",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.278396+00:00",
+            "updated_at": "2025-11-20T22:31:25.278396+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.12",
+                    "control_name": "Segment Data Processing and Storage"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.1",
+                    "control_name": "Supplier Risk Assessment"
+                }
+            ]
+        },
+        {
+            "id": "2b0816f5-a30a-4f34-8f7b-898573c6dd34",
+            "name": "Privacy Notice Management",
+            "description": "Maintain and publish transparent privacy notices for data subjects",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.30984+00:00",
+            "updated_at": "2025-11-20T22:31:28.30984+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.7",
+                    "control_name": "Openness, transparency and notice"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "5ea16bbc-754b-4d9e-bdc3-5b7c1c0b677f",
+            "name": "Privacy Training Program",
+            "description": "Train staff on privacy regulations and PII handling procedures",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.850005+00:00",
+            "updated_at": "2025-11-20T22:31:28.850005+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.9",
+                    "control_name": "Accountability"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.3",
+                    "control_name": "Information security awareness, education and training"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.1",
+                    "control_name": "Security Awareness Training"
+                }
+            ]
+        },
+        {
+            "id": "5f1735e4-890b-4d27-b622-db5476578dfb",
+            "name": "Records of Processing Activities",
+            "description": "Maintain detailed records of all PII processing activities",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:29.052364+00:00",
+            "updated_at": "2025-11-20T22:31:29.052364+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "B.6",
+                    "control_name": "Records of processing activities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.28",
+                    "control_name": "Collection of evidence"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "1c77a73f-6987-4258-8f50-632b0e24edfa",
+            "name": "Red Team Exercises",
+            "description": "Adversarial testing to identify security weaknesses",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.717189+00:00",
+            "updated_at": "2025-11-20T22:31:26.717189+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.29",
+                    "control_name": "Security testing in development and acceptance"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "18.5",
+                    "control_name": "Perform Periodic Internal Penetration Tests"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.3",
+                    "control_name": "Continuous Risk Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "3822eecb-1884-40eb-b47a-8adc6c15d84b",
+            "name": "Remote Work Policy",
+            "description": "Security guidelines for remote and hybrid work arrangements",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.530151+00:00",
+            "updated_at": "2025-11-20T22:31:22.530151+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.7",
+                    "control_name": "Remote working"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.6",
+                    "control_name": "Use of Secure Network Management Protocols"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "d2b4c285-77ff-4ced-a926-dfff741d9583",
+            "name": "Risk Assessment Process",
+            "description": "Regular risk assessments to identify and evaluate threats",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.97819+00:00",
+            "updated_at": "2025-11-20T22:31:21.97819+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.7",
+                    "control_name": "Threat intelligence"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.1",
+                    "control_name": "Risk Assessment Framework"
+                }
+            ]
+        },
+        {
+            "id": "709820d9-966a-40be-9688-c7085cce3054",
+            "name": "Secure Development Lifecycle",
+            "description": "Integrate security into SDLC phases",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.125887+00:00",
+            "updated_at": "2025-11-20T22:31:26.125887+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.25",
+                    "control_name": "Secure development life cycle"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.26",
+                    "control_name": "Application security requirements"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "16.1",
+                    "control_name": "Establish and Maintain a Secure Application Development Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "ba9dc84f-2b99-4365-96e7-637c95156d01",
+            "name": "Security Architecture Review",
+            "description": "Review system designs for security before implementation",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.450903+00:00",
+            "updated_at": "2025-11-20T22:31:26.450903+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.27",
+                    "control_name": "Secure system architecture and engineering principles"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "16.3",
+                    "control_name": "Perform Root Cause Analysis on Security Vulnerabilities"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "5f25014f-7995-405e-adac-d4e4c021058a",
+            "name": "Security Awareness Training",
+            "description": "Quarterly security training for all employees on threats and best practices",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.012659+00:00",
+            "updated_at": "2025-11-20T22:31:21.012659+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.3",
+                    "control_name": "Information security awareness, education and training"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "14.1",
+                    "control_name": "Establish and Maintain a Security Awareness Program"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.1",
+                    "control_name": "Security Awareness Training"
+                }
+            ]
+        },
+        {
+            "id": "abe32b38-012c-4890-b2b3-b5cab5b96dab",
+            "name": "Security Baseline Standards",
+            "description": "Minimum security requirements for all systems",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.625745+00:00",
+            "updated_at": "2025-11-20T22:31:26.625745+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.9",
+                    "control_name": "Configuration management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "f74c6e39-4d74-49c9-bebf-15bbd1c64f55",
+            "name": "Security Budget Planning",
+            "description": "Annual security budget with ROI analysis",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.907894+00:00",
+            "updated_at": "2025-11-20T22:31:25.907894+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.1",
+                    "control_name": "Information security policies"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.2",
+                    "control_name": "Risk Treatment Plans"
+                }
+            ]
+        },
+        {
+            "id": "44bf26a7-9728-4dec-81d9-e3d302ef5363",
+            "name": "Security Champions Program",
+            "description": "Train developers as security advocates in teams",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.468821+00:00",
+            "updated_at": "2025-11-20T22:31:25.468821+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.3",
+                    "control_name": "Information security awareness, education and training"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "14.9",
+                    "control_name": "Conduct Role-Specific Security Awareness and Skills Training"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.1",
+                    "control_name": "Security Awareness Training"
+                }
+            ]
+        },
+        {
+            "id": "075df731-b295-47e8-b914-513aae4330a6",
+            "name": "Security Governance Committee",
+            "description": "Executive committee for security oversight and decisions",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.053585+00:00",
+            "updated_at": "2025-11-20T22:31:26.053585+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.4",
+                    "control_name": "Management responsibilities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.1",
+                    "control_name": "Information security policies"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.3",
+                    "control_name": "Incident Classification"
+                }
+            ]
+        },
+        {
+            "id": "ac183ea7-5ee1-464b-ae76-bd8869203fb1",
+            "name": "Security Incident Metrics",
+            "description": "Track MTTD, MTTR, and incident trends",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.79744+00:00",
+            "updated_at": "2025-11-20T22:31:26.79744+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.27",
+                    "control_name": "Learning from information security incidents"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.3",
+                    "control_name": "Incident Classification"
+                }
+            ]
+        },
+        {
+            "id": "10e6d4d1-7f9f-4bac-91fe-dbe66a1f25f6",
+            "name": "Security Maturity Assessment",
+            "description": "Regular assessment against security frameworks",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.273347+00:00",
+            "updated_at": "2025-11-20T22:31:26.273347+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.35",
+                    "control_name": "Independent review of information security"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.3",
+                    "control_name": "Continuous Risk Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "78d65e1b-f583-4b51-9be9-6f9b58738aa7",
+            "name": "Security Metrics and KPIs",
+            "description": "Track and report security performance indicators",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.367333+00:00",
+            "updated_at": "2025-11-20T22:31:22.367333+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.37",
+                    "control_name": "Documented operating procedures"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.2",
+                    "control_name": "Risk Treatment Plans"
+                }
+            ]
+        },
+        {
+            "id": "fc55dac5-4ddc-4983-81ee-64d005965d81",
+            "name": "Security Policy Framework",
+            "description": "Comprehensive information security policies and procedures",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.89525+00:00",
+            "updated_at": "2025-11-20T22:31:21.89525+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.1",
+                    "control_name": "Information security policies"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "784b8b41-9d60-4e9d-bd5f-7821a5e084d1",
+            "name": "Security Roadmap",
+            "description": "Strategic plan for security improvements and investments",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.720974+00:00",
+            "updated_at": "2025-11-20T22:31:25.720974+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.1",
+                    "control_name": "Information security policies"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.2",
+                    "control_name": "Risk Treatment Plans"
+                }
+            ]
+        },
+        {
+            "id": "0990f5ab-5792-4201-be80-2d4fc883846e",
+            "name": "Segregation of Duties",
+            "description": "Separate critical functions among different people to prevent fraud",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.807535+00:00",
+            "updated_at": "2025-11-20T22:31:21.807535+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.3",
+                    "control_name": "Segregation of duties"
+                }
+            ]
+        },
+        {
+            "id": "8b06690e-31fe-4264-94bd-3c6033271eb6",
+            "name": "Tabletop Exercises",
+            "description": "Simulate security incidents to test response procedures",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:26.199524+00:00",
+            "updated_at": "2025-11-20T22:31:26.199524+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.24",
+                    "control_name": "Information security incident management planning and preparation"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.26",
+                    "control_name": "Response to information security incidents"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "17.2",
+                    "control_name": "Establish and Maintain Contact Information for Reporting Security Incidents"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.3",
+                    "control_name": "Crisis Management Procedures"
+                }
+            ]
+        },
+        {
+            "id": "5ae53486-a2d7-44b1-8f70-b31b9933a8f6",
+            "name": "Third-Party Contracts",
+            "description": "Include security requirements in vendor contracts and SLAs",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:22.29805+00:00",
+            "updated_at": "2025-11-20T22:31:22.29805+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.19",
+                    "control_name": "Information security in supplier relationships"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.21",
+                    "control_name": "Managing information security in the ICT supply chain"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "15.2",
+                    "control_name": "Establish and Maintain a Service Provider Management Policy"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.2",
+                    "control_name": "Third-Party Security Requirements"
+                }
+            ]
+        },
+        {
+            "id": "a68fdb1a-3ebe-44e6-aa6b-00d2a48560b5",
+            "name": "Third-Party Data Processing Agreements",
+            "description": "Establish DPAs with vendors processing personal data",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:28.683133+00:00",
+            "updated_at": "2025-11-20T22:31:28.683133+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "B.2",
+                    "control_name": "Subcontractor relationships"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.19",
+                    "control_name": "Information security in supplier relationships"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.2",
+                    "control_name": "Third-Party Security Requirements"
+                }
+            ]
+        },
+        {
+            "id": "7dd1930d-d36d-4710-8d7d-4e54a33fddb0",
+            "name": "Vendor Risk Assessment",
+            "description": "Due diligence process for evaluating third-party vendors",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:21.381796+00:00",
+            "updated_at": "2025-11-20T22:31:21.381796+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.19",
+                    "control_name": "Information security in supplier relationships"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.20",
+                    "control_name": "Addressing information security within supplier agreements"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "15.1",
+                    "control_name": "Establish and Maintain an Inventory of Service Providers"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.1",
+                    "control_name": "Supplier Risk Assessment"
+                }
+            ]
+        },
+        {
+            "id": "fad5bccd-da99-4f49-bb25-48d136dd3b18",
+            "name": "Vulnerability Disclosure Program",
+            "description": "Process for external researchers to report vulnerabilities",
+            "category": "administrative",
+            "created_at": "2025-11-20T22:31:25.813391+00:00",
+            "updated_at": "2025-11-20T22:31:25.813391+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.28",
+                    "control_name": "Collection of evidence"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "18.1",
+                    "control_name": "Establish and Maintain a Penetration Testing Program"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.3",
+                    "control_name": "Continuous Risk Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "2eb267c9-7979-40a6-9529-aad34f1eb53e",
+            "name": "Alarm Systems",
+            "description": "Intrusion detection alarms for facilities",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:23.349629+00:00",
+            "updated_at": "2025-11-20T22:31:23.349629+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.4",
+                    "control_name": "Equipment siting and protection"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "7e2bc242-f718-4f73-9557-0883518bb6f8",
+            "name": "Biometric Access Control",
+            "description": "Fingerprint or facial recognition for facility access",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:26.954591+00:00",
+            "updated_at": "2025-11-20T22:31:26.954591+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.2",
+                    "control_name": "Physical entry controls"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.5",
+                    "control_name": "Require MFA for Administrative Access"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.1",
+                    "control_name": "Multi-Factor Authentication"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "f99f8134-9e17-4b23-ad4e-f09a43fa2b45",
+            "name": "Cable Locks for Devices",
+            "description": "Physical locks to prevent laptop and equipment theft",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.276463+00:00",
+            "updated_at": "2025-11-20T22:31:27.276463+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.8",
+                    "control_name": "Equipment siting and protection"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "1.1",
+                    "control_name": "Establish and Maintain Detailed Enterprise Asset Inventory"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "940b2345-efb7-47bc-8315-cf91fa1fa44d",
+            "name": "CCTV Surveillance",
+            "description": "Video monitoring of critical areas with recording",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:22.772311+00:00",
+            "updated_at": "2025-11-20T22:31:22.772311+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.4",
+                    "control_name": "Equipment siting and protection"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.3",
+                    "control_name": "Access Review Procedures"
+                }
+            ]
+        },
+        {
+            "id": "8ab1f7ae-7083-42be-9f55-0b3caa18570d",
+            "name": "Clean Desk Policy",
+            "description": "Require removal of sensitive materials from desks when unattended",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:23.429988+00:00",
+            "updated_at": "2025-11-20T22:31:23.429988+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.7",
+                    "control_name": "Clear desk and clear screen"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "6583f2f5-2252-47de-9c7d-025b51f10fc1",
+            "name": "Emergency Power Systems",
+            "description": "UPS and generators for critical infrastructure",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.763145+00:00",
+            "updated_at": "2025-11-20T22:31:27.763145+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.11",
+                    "control_name": "Supporting utilities"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.2",
+                    "control_name": "Emergency Communications"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.1",
+                    "control_name": "Backup Management"
+                }
+            ]
+        },
+        {
+            "id": "432777fe-d1dc-4d5f-812a-7c03e369eb05",
+            "name": "Environmental Controls",
+            "description": "Fire suppression, climate control for data centers",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:22.93392+00:00",
+            "updated_at": "2025-11-20T22:31:22.93392+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.10",
+                    "control_name": "Storage media"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.1",
+                    "control_name": "Backup Management"
+                }
+            ]
+        },
+        {
+            "id": "484cff86-5527-4314-835f-1cea48742449",
+            "name": "Equipment Disposal Tracking",
+            "description": "Chain of custody for disposed hardware",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.674042+00:00",
+            "updated_at": "2025-11-20T22:31:27.674042+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.14",
+                    "control_name": "Secure disposal or reuse of equipment"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.3",
+                    "control_name": "Configure Data Access Control Lists"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "14b0a6eb-f4d5-4ffe-9930-8f67d1c2bcf6",
+            "name": "Equipment Locks",
+            "description": "Physical locks for servers, laptops, and sensitive equipment",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:23.097267+00:00",
+            "updated_at": "2025-11-20T22:31:23.097267+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.8",
+                    "control_name": "Equipment siting and protection"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "3d35e4b5-e4d5-447f-8129-1941bab3f8f1",
+            "name": "Mantrap Entry Systems",
+            "description": "Two-door access control to prevent tailgating",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.032306+00:00",
+            "updated_at": "2025-11-20T22:31:27.032306+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.2",
+                    "control_name": "Physical entry controls"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "722bd0aa-3635-4b06-9a2e-bfaf40850a67",
+            "name": "Perimeter Security",
+            "description": "Fencing, barriers, and controlled entry points",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:23.27315+00:00",
+            "updated_at": "2025-11-20T22:31:23.27315+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.1",
+                    "control_name": "Physical security perimeters"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "06249d5a-9e1b-4522-964e-c46e26b7093b",
+            "name": "Physical Access Controls",
+            "description": "Badge readers, locks, and security guards for facility access",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:22.70581+00:00",
+            "updated_at": "2025-11-20T22:31:22.70581+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.2",
+                    "control_name": "Physical entry controls"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "a3d88ddf-689f-47e0-a74c-69bb69ba0115",
+            "name": "Privacy Screens",
+            "description": "Screen filters to prevent visual eavesdropping",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.519372+00:00",
+            "updated_at": "2025-11-20T22:31:27.519372+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.7",
+                    "control_name": "Clear desk and clear screen"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.4",
+                    "control_name": "Communication Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "5d2d4f49-1250-42aa-8ddd-eec31ac73c0b",
+            "name": "Secure Courier Services",
+            "description": "Vetted couriers for sensitive document transport",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.186797+00:00",
+            "updated_at": "2025-11-20T22:31:27.186797+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.9",
+                    "control_name": "Security of assets off-premises"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.4",
+                    "control_name": "Vendor Management"
+                }
+            ]
+        },
+        {
+            "id": "02f56f9c-28bc-47ab-8fc6-2af02433a5b0",
+            "name": "Secure Disposal",
+            "description": "Secure destruction of physical media and documents",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:22.846571+00:00",
+            "updated_at": "2025-11-20T22:31:22.846571+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.14",
+                    "control_name": "Secure disposal or reuse of equipment"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "6eff47e0-a81e-4181-b484-c0c024dc1b73",
+            "name": "Secure Meeting Rooms",
+            "description": "Soundproofing and signal blocking for sensitive discussions",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.592333+00:00",
+            "updated_at": "2025-11-20T22:31:27.592333+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.5",
+                    "control_name": "Securing offices, rooms and facilities"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.1",
+                    "control_name": "Secure Communications"
+                }
+            ]
+        },
+        {
+            "id": "cf593e14-1f13-4b31-8436-28cb9752fb8f",
+            "name": "Secure Printing",
+            "description": "Pull printing with authentication to prevent document exposure",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.436712+00:00",
+            "updated_at": "2025-11-20T22:31:27.436712+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.7",
+                    "control_name": "Clear desk and clear screen"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.3",
+                    "control_name": "Communication Encryption"
+                }
+            ]
+        },
+        {
+            "id": "5b703bce-ca2f-46d8-a959-0624fe293a5f",
+            "name": "Secure Storage",
+            "description": "Locked cabinets and safes for sensitive documents and media",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:23.19431+00:00",
+            "updated_at": "2025-11-20T22:31:23.19431+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.7",
+                    "control_name": "Clear desk and clear screen"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "560d38bc-221c-45f4-80c9-d51843e2ab46",
+            "name": "Server Room Access Logging",
+            "description": "Detailed logs of all data center access",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:27.108972+00:00",
+            "updated_at": "2025-11-20T22:31:27.108972+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.2",
+                    "control_name": "Physical entry controls"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.15",
+                    "control_name": "Logging"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "8.2",
+                    "control_name": "Collect Audit Logs"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.3",
+                    "control_name": "Access Review Procedures"
+                }
+            ]
+        },
+        {
+            "id": "42e5bb11-a4af-4730-8aa9-6f6713aed00c",
+            "name": "Visitor Management",
+            "description": "Sign-in procedures and escort requirements for visitors",
+            "category": "physical",
+            "created_at": "2025-11-20T22:31:23.01725+00:00",
+            "updated_at": "2025-11-20T22:31:23.01725+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.3",
+                    "control_name": "Protection against environmental threats"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "e86aa653-323a-4489-b3c9-300de46fd22e",
+            "name": "Access Control Lists",
+            "description": "Implement least privilege access controls for all systems",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.966189+00:00",
+            "updated_at": "2025-11-20T22:31:19.966189+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.15",
+                    "control_name": "Access control"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.16",
+                    "control_name": "Identity management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "5.4",
+                    "control_name": "Restrict Administrator Privileges to Dedicated Accounts"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.8",
+                    "control_name": "Define and Maintain Role-Based Access Control"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "f0b30789-e6c1-423c-a84c-cc8122c37736",
+            "name": "AI Accessibility Implementation",
+            "description": "Ensure AI systems are accessible to diverse user groups including those with disabilities",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:06.035321+00:00",
+            "updated_at": "2025-11-28T20:17:06.035321+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.2",
+                    "control_name": "Objectives for responsible development of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.8.2",
+                    "control_name": "System documentation and information for users"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.3",
+                    "control_name": "Objectives for responsible use of AI systems"
+                }
+            ]
+        },
+        {
+            "id": "784c4a0f-ee4f-460d-a7a6-9e931f5a63c3",
+            "name": "AI Data Preparation and Processing",
+            "description": "Define criteria and methods for data preparation including cleaning, transformation, and augmentation",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.347503+00:00",
+            "updated_at": "2025-11-28T20:17:05.347503+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.6",
+                    "control_name": "Data preparation"
+                }
+            ]
+        },
+        {
+            "id": "2d209120-3b30-4bab-b788-cd79e43d4514",
+            "name": "AI Data Provenance Tracking",
+            "description": "Record and maintain provenance of data used in AI systems over data and system lifecycles",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.280521+00:00",
+            "updated_at": "2025-11-28T20:17:05.280521+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.5",
+                    "control_name": "Data provenance"
+                }
+            ]
+        },
+        {
+            "id": "c82f4ed8-aadf-4d28-bf97-3c2e8fa8b4fe",
+            "name": "AI Data Quality Management",
+            "description": "Define and ensure data quality requirements are met for AI system development and operation",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.196541+00:00",
+            "updated_at": "2025-11-28T20:17:05.196541+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.4",
+                    "control_name": "Quality of data for AI systems"
+                }
+            ]
+        },
+        {
+            "id": "bb6dd1e9-8981-4fb1-b9a1-175fcea0a416",
+            "name": "AI Event Logging and Record Keeping",
+            "description": "Enable and maintain event logs throughout AI system lifecycle, especially during system use",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.075151+00:00",
+            "updated_at": "2025-11-28T20:17:05.075151+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.8",
+                    "control_name": "AI system recording of event logs"
+                }
+            ]
+        },
+        {
+            "id": "6ca5088c-771b-451e-932f-910c66eae4d6",
+            "name": "AI Fairness and Bias Controls",
+            "description": "Implement controls to ensure fairness, detect bias, and mitigate discriminatory outcomes in AI systems",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.764913+00:00",
+            "updated_at": "2025-11-28T20:17:05.764913+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.5.4",
+                    "control_name": "Assessing AI system impact on individuals or groups of individuals"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.2",
+                    "control_name": "Objectives for responsible development of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.4",
+                    "control_name": "Quality of data for AI systems"
+                }
+            ]
+        },
+        {
+            "id": "f7271279-a6ac-48da-8232-2f260038832e",
+            "name": "AI Privacy and Security Controls",
+            "description": "Implement privacy-preserving and security controls specific to AI system data processing",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.972913+00:00",
+            "updated_at": "2025-11-28T20:17:05.972913+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.2",
+                    "control_name": "Objectives for responsible development of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.2",
+                    "control_name": "Data for development and enhancement of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.3",
+                    "control_name": "Objectives for responsible use of AI systems"
+                }
+            ]
+        },
+        {
+            "id": "1683fbc4-334a-43b3-a48e-d71a2f5686f1",
+            "name": "AI System Operation and Monitoring",
+            "description": "Monitor AI system performance, behavior, drift, and maintain ongoing operations including repairs and updates",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:04.948769+00:00",
+            "updated_at": "2025-11-28T20:17:04.948769+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.6",
+                    "control_name": "AI system operation and monitoring"
+                }
+            ]
+        },
+        {
+            "id": "39071880-29a8-4fdd-8e8b-831a5ae7968e",
+            "name": "AI System Reliability and Robustness",
+            "description": "Ensure AI system reliability, safety, robustness, and redundancy throughout operational lifecycle",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.888395+00:00",
+            "updated_at": "2025-11-28T20:17:05.888395+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.2",
+                    "control_name": "Objectives for responsible development of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.4",
+                    "control_name": "AI system verification and validation"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.6",
+                    "control_name": "AI system operation and monitoring"
+                }
+            ]
+        },
+        {
+            "id": "fcae4ebf-028b-4ff6-822c-9304f7d998d8",
+            "name": "AI System Verification and Validation",
+            "description": "Implement verification and validation measures with defined criteria before AI system deployment",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:04.817318+00:00",
+            "updated_at": "2025-11-28T20:17:04.817318+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.2.4",
+                    "control_name": "AI system verification and validation"
+                }
+            ]
+        },
+        {
+            "id": "e27b9f68-1069-4241-bac6-dcf76344d157",
+            "name": "AI Training Data Acquisition and Selection",
+            "description": "Document and manage acquisition, selection, and provenance of data used in AI systems",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.134721+00:00",
+            "updated_at": "2025-11-28T20:17:05.134721+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.2",
+                    "control_name": "Data for development and enhancement of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.7.3",
+                    "control_name": "Acquisition of data"
+                }
+            ]
+        },
+        {
+            "id": "3776910e-e75b-4035-a2e2-1a2b36358c0f",
+            "name": "AI Transparency and Explainability",
+            "description": "Implement mechanisms to explain AI decisions, outputs, and system behavior to relevant stakeholders",
+            "category": "technical",
+            "created_at": "2025-11-28T20:17:05.827446+00:00",
+            "updated_at": "2025-11-28T20:17:05.827446+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.6.1.2",
+                    "control_name": "Objectives for responsible development of AI system"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.8.2",
+                    "control_name": "System documentation and information for users"
+                },
+                {
+                    "framework": "ISO42001",
+                    "reference_id": "A.9.3",
+                    "control_name": "Objectives for responsible use of AI systems"
+                }
+            ]
+        },
+        {
+            "id": "46571933-569a-49a7-bdc7-b13a720e2d4e",
+            "name": "Anonymization and Pseudonymization",
+            "description": "Anonymize or pseudonymize PII to reduce privacy risks",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:28.599268+00:00",
+            "updated_at": "2025-11-20T22:31:28.599268+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.4",
+                    "control_name": "Data minimization"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.11",
+                    "control_name": "Data masking"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "2c83814c-e4dc-41de-842b-b81e01b13618",
+            "name": "Antivirus/Anti-malware",
+            "description": "Deploy endpoint protection on all devices with real-time scanning",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.810282+00:00",
+            "updated_at": "2025-11-20T22:31:19.810282+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.7",
+                    "control_name": "Protection against malware"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "10.1",
+                    "control_name": "Deploy and Maintain Anti-Malware Software"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "5f0e3655-2821-4309-8c8a-0adb2c713794",
+            "name": "API Security Gateway",
+            "description": "Protect APIs with rate limiting, authentication, and threat detection",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:23.711136+00:00",
+            "updated_at": "2025-11-20T22:31:23.711136+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.20",
+                    "control_name": "Networks security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.25",
+                    "control_name": "Secure development life cycle"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "13.2",
+                    "control_name": "Deploy a Host-Based Intrusion Detection Solution"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "28d3d0b6-2acc-471f-9ce3-80debabf23b7",
+            "name": "Automated Data Deletion",
+            "description": "Automatically delete PII after retention period expires",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:28.239558+00:00",
+            "updated_at": "2025-11-20T22:31:28.239558+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.5",
+                    "control_name": "Use, retention and disclosure limitation"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.33",
+                    "control_name": "Protection of records"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.2",
+                    "control_name": "Risk Treatment Plans"
+                }
+            ]
+        },
+        {
+            "id": "baf2dc29-b38c-4c13-a0b6-e5c97a58caeb",
+            "name": "Certificate Management",
+            "description": "Automated SSL/TLS certificate lifecycle management",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:25.19117+00:00",
+            "updated_at": "2025-11-20T22:31:25.19117+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.7",
+                    "control_name": "Establish and Maintain a Data Classification Scheme"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.2",
+                    "control_name": "Key Management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.4",
+                    "control_name": "Cryptographic Controls"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.3",
+                    "control_name": "Communication Encryption"
+                }
+            ]
+        },
+        {
+            "id": "008a3250-bc26-429f-a05a-3c746c2c05ae",
+            "name": "Cloud Asset Inventory",
+            "description": "Automated discovery and tracking of all cloud resources across accounts",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:30.782946+00:00",
+            "updated_at": "2025-11-20T22:31:30.782946+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.9.1",
+                    "control_name": "Cloud asset management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.9",
+                    "control_name": "Inventory of information and other associated assets"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "1.1",
+                    "control_name": "Establish and Maintain Detailed Enterprise Asset Inventory"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.4",
+                    "control_name": "Business Impact Analysis"
+                }
+            ]
+        },
+        {
+            "id": "5a12698e-af78-43fc-b918-89801a3f2e9c",
+            "name": "Cloud Backup and Recovery",
+            "description": "Automated cloud backups with disaster recovery capabilities",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:30.110094+00:00",
+            "updated_at": "2025-11-20T22:31:30.110094+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.13.1",
+                    "control_name": "Cloud backup"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.13",
+                    "control_name": "Information backup"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "11.2",
+                    "control_name": "Perform Automated Backups"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.1",
+                    "control_name": "Backup Management"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.29.1",
+                    "control_name": "Cloud business continuity"
+                }
+            ]
+        },
+        {
+            "id": "904d84d7-411f-4262-a059-18c411c91931",
+            "name": "Cloud Compliance Automation",
+            "description": "Automated compliance checks for regulatory requirements in cloud",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:30.865707+00:00",
+            "updated_at": "2025-11-20T22:31:30.865707+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.3",
+                    "control_name": "Supply Chain Monitoring"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.31.1",
+                    "control_name": "Cloud compliance"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.36",
+                    "control_name": "Compliance with policies, rules and standards for information security"
+                }
+            ]
+        },
+        {
+            "id": "fd4d46ba-3a74-47ed-8c83-a1e75821bb54",
+            "name": "Cloud Data Classification",
+            "description": "Automated classification and tagging of data in cloud storage",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:31.344379+00:00",
+            "updated_at": "2025-11-20T22:31:31.344379+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.1",
+                    "control_name": "Establish and Maintain a Data Management Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.1",
+                    "control_name": "Risk Assessment Framework"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.12.1",
+                    "control_name": "Cloud data classification"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.12",
+                    "control_name": "Classification of information"
+                }
+            ]
+        },
+        {
+            "id": "5ead2519-0c90-40ec-8103-b1623cabb092",
+            "name": "Cloud Data Encryption",
+            "description": "Encryption at rest and in transit for cloud-stored data",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:29.871034+00:00",
+            "updated_at": "2025-11-20T22:31:29.871034+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.6.3.1",
+                    "control_name": "Cloud security awareness"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.24.1",
+                    "control_name": "Cloud cryptography"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.11",
+                    "control_name": "Encrypt Sensitive Data at Rest"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                }
+            ]
+        },
+        {
+            "id": "4a5eb54a-b0ff-4c53-be3d-9390666eb1d0",
+            "name": "Cloud Data Portability",
+            "description": "Data export and migration capabilities to avoid vendor lock-in",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:30.572171+00:00",
+            "updated_at": "2025-11-20T22:31:30.572171+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.6.2.1",
+                    "control_name": "Cloud data portability"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.23",
+                    "control_name": "Information security for use of cloud services"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.1",
+                    "control_name": "Secure Communications"
+                }
+            ]
+        },
+        {
+            "id": "1a6ae41f-8998-434f-97ab-8ddc152fbba6",
+            "name": "Cloud Identity and Access Management",
+            "description": "Federated authentication, SSO, and MFA for cloud services",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:29.738697+00:00",
+            "updated_at": "2025-11-20T22:31:29.738697+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.3",
+                    "control_name": "Require MFA for Externally-Exposed Applications"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.4",
+                    "control_name": "Identity Management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.1",
+                    "control_name": "Multi-Factor Authentication"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.16.1",
+                    "control_name": "Cloud identity management"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.5.15.1",
+                    "control_name": "Cloud access control policy"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.6.1.1",
+                    "control_name": "Cloud screening"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.16",
+                    "control_name": "Identity management"
+                }
+            ]
+        },
+        {
+            "id": "26e85c59-8b96-4bb8-9b23-3912ecf1a53c",
+            "name": "Cloud Logging and Monitoring",
+            "description": "Centralized logging and monitoring for cloud services",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:30.208889+00:00",
+            "updated_at": "2025-11-20T22:31:30.208889+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.15.1",
+                    "control_name": "Cloud logging and monitoring"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.12.4.4",
+                    "control_name": "Monitoring cloud service activities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.15",
+                    "control_name": "Logging"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "8.2",
+                    "control_name": "Collect Audit Logs"
+                }
+            ]
+        },
+        {
+            "id": "a280d2b5-a547-4224-8336-aeaa266fddd9",
+            "name": "Cloud Network Segmentation",
+            "description": "VPC, subnets, and security groups for network isolation",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:29.977836+00:00",
+            "updated_at": "2025-11-20T22:31:29.977836+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.20.1",
+                    "control_name": "Cloud network security"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.13.1.4",
+                    "control_name": "Alignment of security management for virtual and physical networks"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.22",
+                    "control_name": "Segregation of networks"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.22.1",
+                    "control_name": "Cloud network segregation"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.2",
+                    "control_name": "Establish and Maintain a Secure Network Architecture"
+                }
+            ]
+        },
+        {
+            "id": "4ad1832c-1e00-4eb3-bf55-a6d0a197c5a5",
+            "name": "Cloud Security Posture Management",
+            "description": "Continuous monitoring and remediation of cloud misconfigurations",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.089081+00:00",
+            "updated_at": "2025-11-20T22:31:24.089081+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.12.4.4",
+                    "control_name": "Monitoring cloud service activities"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.8.1",
+                    "control_name": "Cloud vulnerability management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.9",
+                    "control_name": "Configuration management"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.9.1",
+                    "control_name": "Cloud configuration management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.23",
+                    "control_name": "Information security for use of cloud services"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "8c8aedbc-0ce0-4e53-9eed-81d4b30f45bc",
+            "name": "Cloud Security Testing",
+            "description": "Penetration testing and security assessments for cloud infrastructure",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:31.445425+00:00",
+            "updated_at": "2025-11-20T22:31:31.445425+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.29.1",
+                    "control_name": "Cloud testing"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.29",
+                    "control_name": "Security testing in development and acceptance"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "18.2",
+                    "control_name": "Perform Periodic External Penetration Tests"
+                }
+            ]
+        },
+        {
+            "id": "e3375176-59f7-4a08-a178-2a62dc767f70",
+            "name": "Cloud Workload Protection",
+            "description": "Runtime protection for cloud workloads including anti-malware and EDR",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:31.148513+00:00",
+            "updated_at": "2025-11-20T22:31:31.148513+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.7.1",
+                    "control_name": "Cloud malware protection"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.7",
+                    "control_name": "Protection against malware"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "10.1",
+                    "control_name": "Deploy and Maintain Anti-Malware Software"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "5385ad92-2770-44c0-8102-cf8b966b99de",
+            "name": "Consent Management System",
+            "description": "Obtain and manage user consent for PII processing with audit trails",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:27.837122+00:00",
+            "updated_at": "2025-11-20T22:31:27.837122+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.1",
+                    "control_name": "Consent and choice"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "d2cc0157-ae1f-4b04-b7a7-d978d563b216",
+            "name": "Container Security",
+            "description": "Secure Docker/Kubernetes containers with image scanning and runtime protection",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:23.625776+00:00",
+            "updated_at": "2025-11-20T22:31:23.625776+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.9",
+                    "control_name": "Configuration management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.32",
+                    "control_name": "Change management"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.9.5.1",
+                    "control_name": "Virtual machine hardening"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.6.3.3",
+                    "control_name": "Protection and separation of customer's virtual environment"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.9.1",
+                    "control_name": "Cloud configuration management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "496d4a72-f913-4b3c-8c55-a365f23eeb5d",
+            "name": "Data Encryption at Rest",
+            "description": "Encrypt sensitive data stored in databases and file systems",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.418675+00:00",
+            "updated_at": "2025-11-20T22:31:19.418675+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.11",
+                    "control_name": "Encrypt Sensitive Data at Rest"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.1",
+                    "control_name": "Cryptographic Standards"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "41854eea-8cf9-4b06-9c04-0cfada8780c8",
+            "name": "Data Encryption in Transit",
+            "description": "Use TLS/SSL for all data transmission between systems",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.483301+00:00",
+            "updated_at": "2025-11-20T22:31:19.483301+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.10",
+                    "control_name": "Encrypt Sensitive Data in Transit"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.1",
+                    "control_name": "Cryptographic Standards"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.3",
+                    "control_name": "Communication Encryption"
+                }
+            ]
+        },
+        {
+            "id": "dbf00109-4db4-431b-a660-6e709ec25efe",
+            "name": "Data Loss Prevention",
+            "description": "Implement DLP tools to prevent unauthorized data exfiltration",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.669811+00:00",
+            "updated_at": "2025-11-20T22:31:20.669811+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.11",
+                    "control_name": "Data masking"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.12",
+                    "control_name": "Data leakage prevention"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.2",
+                    "control_name": "Establish and Maintain a Data Inventory"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.4",
+                    "control_name": "Communication Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "e572ebe2-4455-4e60-8b12-f0ae923b335d",
+            "name": "Data Masking in Non-Production",
+            "description": "Anonymize sensitive data in dev/test environments",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:25.035951+00:00",
+            "updated_at": "2025-11-20T22:31:25.035951+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.11",
+                    "control_name": "Data masking"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.33",
+                    "control_name": "Test information"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.4",
+                    "control_name": "Enforce Data Retention"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.3",
+                    "control_name": "Data Encryption"
+                }
+            ]
+        },
+        {
+            "id": "9b5eb8fe-8cc8-4294-a6e9-2d1094b450f4",
+            "name": "Data Portability Tools",
+            "description": "Enable export of personal data in machine-readable formats",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:28.410033+00:00",
+            "updated_at": "2025-11-20T22:31:28.410033+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "B.8",
+                    "control_name": "Data portability"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.1",
+                    "control_name": "Secure Communications"
+                }
+            ]
+        },
+        {
+            "id": "34b6e7f0-6373-48b7-806e-f345ae5bb206",
+            "name": "Database Activity Monitoring",
+            "description": "Monitor and audit database access and queries",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.473873+00:00",
+            "updated_at": "2025-11-20T22:31:20.473873+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.15",
+                    "control_name": "Logging"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "8.2",
+                    "control_name": "Collect Audit Logs"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.3",
+                    "control_name": "Access Review Procedures"
+                }
+            ]
+        },
+        {
+            "id": "c45b8540-b72d-479e-a6f0-84743cf7e5b6",
+            "name": "Deception Technology",
+            "description": "Deploy honeypots and decoys to detect attackers",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.724295+00:00",
+            "updated_at": "2025-11-20T22:31:24.724295+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.16",
+                    "control_name": "Monitoring activities"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "13.6",
+                    "control_name": "Collect Network Traffic Flow Logs"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "6d6b0ed6-1ff9-4b9c-aa1d-a11af2073057",
+            "name": "DNS Security",
+            "description": "DNS filtering and DNSSEC to prevent DNS attacks",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.549875+00:00",
+            "updated_at": "2025-11-20T22:31:24.549875+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.20",
+                    "control_name": "Networks security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.21",
+                    "control_name": "Security of network services"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "9.2",
+                    "control_name": "Use DNS Filtering Services"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "e9a000b7-672d-46c3-b04a-d39b7cc3f6f5",
+            "name": "Email Security Gateway",
+            "description": "Filter malicious emails and prevent phishing attacks",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.74938+00:00",
+            "updated_at": "2025-11-20T22:31:20.74938+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.7",
+                    "control_name": "Protection against malware"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "9.7",
+                    "control_name": "Deploy and Maintain Email Server Anti-Malware Protections"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.1",
+                    "control_name": "Secure Communications"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.4",
+                    "control_name": "Communication Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "fe36656e-3a63-4e3c-ada6-c8ba1d08d5b8",
+            "name": "Endpoint Detection and Response",
+            "description": "Advanced threat detection and response on endpoints",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:23.973325+00:00",
+            "updated_at": "2025-11-20T22:31:23.973325+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.16",
+                    "control_name": "Monitoring activities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.7",
+                    "control_name": "Protection against malware"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "10.7",
+                    "control_name": "Use Behavior-Based Anti-Malware Software"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "dc0f1b6f-c1ee-4e6c-8133-25df2374ad2d",
+            "name": "Firewall Implementation",
+            "description": "Deploy and configure network firewalls with strict rulesets",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.563724+00:00",
+            "updated_at": "2025-11-20T22:31:19.563724+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.20",
+                    "control_name": "Networks security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.22",
+                    "control_name": "Segregation of networks"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.4",
+                    "control_name": "Establish and Maintain Architecture Diagram(s)"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "66cdd162-d5e7-4be6-a100-1f558afdb92c",
+            "name": "Identity and Access Management",
+            "description": "Centralized IAM with SSO, SAML, and OAuth integration",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.182014+00:00",
+            "updated_at": "2025-11-20T22:31:24.182014+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.16",
+                    "control_name": "Identity management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.18",
+                    "control_name": "Access rights"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "5.1",
+                    "control_name": "Establish and Maintain an Inventory of Accounts"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.1",
+                    "control_name": "Establish an Access Granting Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.4",
+                    "control_name": "Identity Management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.3",
+                    "control_name": "Authentication Policy"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.4",
+                    "control_name": "Identity Verification"
+                }
+            ]
+        },
+        {
+            "id": "1d0ca865-8087-4a6b-956d-25c2ffcfab08",
+            "name": "Infrastructure as Code Security",
+            "description": "Scan Terraform, CloudFormation for security issues",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.412271+00:00",
+            "updated_at": "2025-11-20T22:31:24.412271+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.32",
+                    "control_name": "Change management"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.9",
+                    "control_name": "Configuration management"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.32.1",
+                    "control_name": "Cloud change management"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.9.1",
+                    "control_name": "Cloud configuration management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "c2810838-d0c3-4a2d-b540-9ccc744db0a5",
+            "name": "Intrusion Detection System",
+            "description": "Monitor network traffic for suspicious activity and threats",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.893196+00:00",
+            "updated_at": "2025-11-20T22:31:19.893196+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.16",
+                    "control_name": "Monitoring activities"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "13.2",
+                    "control_name": "Deploy a Host-Based Intrusion Detection Solution"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "c84ecfb5-540a-4476-bb63-b8cdf7cd8020",
+            "name": "Log Monitoring",
+            "description": "Centralized logging and SIEM implementation for security events",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.109708+00:00",
+            "updated_at": "2025-11-20T22:31:20.109708+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.15",
+                    "control_name": "Logging"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "8.2",
+                    "control_name": "Collect Audit Logs"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.3",
+                    "control_name": "Continuous Risk Monitoring"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.4",
+                    "control_name": "Communication Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "6041e8c0-dc97-46b9-9646-8cadcd85160d",
+            "name": "Marketing Consent Management",
+            "description": "Manage opt-in/opt-out preferences for marketing communications",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:29.405434+00:00",
+            "updated_at": "2025-11-20T22:31:29.405434+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.1",
+                    "control_name": "Consent and choice"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "b20ec58e-9510-46f0-8d40-74c24674edb1",
+            "name": "Microsegmentation",
+            "description": "Granular network segmentation at workload level",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.644913+00:00",
+            "updated_at": "2025-11-20T22:31:24.644913+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.22",
+                    "control_name": "Segregation of networks"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.2",
+                    "control_name": "Establish and Maintain a Secure Network Architecture"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "892a7c15-9c21-4a90-b2ff-24e02092c309",
+            "name": "Mobile Device Management",
+            "description": "Manage and secure mobile devices accessing corporate data",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.925981+00:00",
+            "updated_at": "2025-11-20T22:31:20.925981+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.7",
+                    "control_name": "Remote working"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.7.9",
+                    "control_name": "Security of assets off-premises"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "1.1",
+                    "control_name": "Establish and Maintain Detailed Enterprise Asset Inventory"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                }
+            ]
+        },
+        {
+            "id": "d6dc5a95-ddcb-4573-96ce-eb44af6d0ce8",
+            "name": "Multi-Factor Authentication",
+            "description": "Implement MFA for all user accounts to prevent unauthorized access",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.332919+00:00",
+            "updated_at": "2025-11-20T22:31:19.332919+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.17",
+                    "control_name": "Authentication information"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.18",
+                    "control_name": "Access rights"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.3",
+                    "control_name": "Require MFA for Externally-Exposed Applications"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.1",
+                    "control_name": "Multi-Factor Authentication"
+                }
+            ]
+        },
+        {
+            "id": "a93d1175-f056-4b67-8bc0-57994c5f3b87",
+            "name": "Network Segmentation",
+            "description": "Separate networks based on security zones and data sensitivity",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.270451+00:00",
+            "updated_at": "2025-11-20T22:31:20.270451+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.20",
+                    "control_name": "Networks security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.22",
+                    "control_name": "Segregation of networks"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.2",
+                    "control_name": "Establish and Maintain a Secure Network Architecture"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "491cc548-02c0-48fc-9b52-ca939d3ef81d",
+            "name": "Patch Management",
+            "description": "Regular security updates and patch deployment within 30 days",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.732177+00:00",
+            "updated_at": "2025-11-20T22:31:19.732177+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.8",
+                    "control_name": "Management of technical vulnerabilities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.19",
+                    "control_name": "Installation of software on operational systems"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "7.2",
+                    "control_name": "Establish and Maintain a Remediation Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.3",
+                    "control_name": "Maintenance Security Controls"
+                }
+            ]
+        },
+        {
+            "id": "196b7831-c666-45fe-8d3f-c10982d1c03b",
+            "name": "PII Access Logging",
+            "description": "Log all access to personal data for audit and compliance",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:28.501204+00:00",
+            "updated_at": "2025-11-20T22:31:28.501204+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.10",
+                    "control_name": "Information security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.15",
+                    "control_name": "Logging"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.3",
+                    "control_name": "Access Review Procedures"
+                }
+            ]
+        },
+        {
+            "id": "8882db37-2dc0-4aa8-b562-3b5fed94987e",
+            "name": "Privacy-Enhancing Technologies",
+            "description": "Deploy PETs like differential privacy and homomorphic encryption",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:29.640668+00:00",
+            "updated_at": "2025-11-20T22:31:29.640668+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.10",
+                    "control_name": "Information security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.4",
+                    "control_name": "Cryptographic Controls"
+                }
+            ]
+        },
+        {
+            "id": "463569bc-2ed3-4408-8f66-f9535a334884",
+            "name": "Privileged Access Management",
+            "description": "Secure and monitor privileged account usage",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.56986+00:00",
+            "updated_at": "2025-11-20T22:31:20.56986+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.18",
+                    "control_name": "Access rights"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.5",
+                    "control_name": "Secure authentication"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.8",
+                    "control_name": "Define and Maintain Role-Based Access Control"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.2",
+                    "control_name": "Privileged Access Controls"
+                }
+            ]
+        },
+        {
+            "id": "d9f9a29a-98a5-4e39-9084-10af7c72729d",
+            "name": "Privileged Session Monitoring",
+            "description": "Record and monitor privileged user sessions",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.962054+00:00",
+            "updated_at": "2025-11-20T22:31:24.962054+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.15",
+                    "control_name": "Logging"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.2",
+                    "control_name": "Privileged access rights"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.8",
+                    "control_name": "Define and Maintain Role-Based Access Control"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "8.5",
+                    "control_name": "Collect Detailed Audit Logs"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.2",
+                    "control_name": "Privileged Access Controls"
+                }
+            ]
+        },
+        {
+            "id": "42e46696-55ca-4e90-94d8-8affcd2ddcfa",
+            "name": "Ransomware Protection",
+            "description": "Specialized tools to detect and block ransomware",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.881404+00:00",
+            "updated_at": "2025-11-20T22:31:24.881404+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.13",
+                    "control_name": "Information backup"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.7",
+                    "control_name": "Protection against malware"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "10.1",
+                    "control_name": "Deploy and Maintain Anti-Malware Software"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "11.3",
+                    "control_name": "Protect Recovery Data"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.2",
+                    "control_name": "Incident Detection"
+                }
+            ]
+        },
+        {
+            "id": "8cdb09fd-2749-40a9-af23-24c7dbe2d8b9",
+            "name": "Regular Backups",
+            "description": "Automated daily backups with offsite storage and recovery testing",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:19.641167+00:00",
+            "updated_at": "2025-11-20T22:31:19.641167+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.13",
+                    "control_name": "Information backup"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "11.1",
+                    "control_name": "Establish and Maintain a Data Recovery Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.2.1",
+                    "control_name": "Backup Management"
+                }
+            ]
+        },
+        {
+            "id": "a6bb42c0-e6f2-4d3e-a792-72252d8bf31d",
+            "name": "Right to be Forgotten Implementation",
+            "description": "Process and fulfill data erasure requests from individuals",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:29.51611+00:00",
+            "updated_at": "2025-11-20T22:31:29.51611+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27018",
+                    "reference_id": "A.8",
+                    "control_name": "Individual participation and access"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.34",
+                    "control_name": "Privacy and protection of personally identifiable information"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.8.4",
+                    "control_name": "Security Responsibilities"
+                }
+            ]
+        },
+        {
+            "id": "5f2c4b27-fb4c-4a8c-b016-faed70956b26",
+            "name": "Secrets Management",
+            "description": "Centralized vault for API keys, passwords, and certificates",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:23.801028+00:00",
+            "updated_at": "2025-11-20T22:31:23.801028+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.17",
+                    "control_name": "Authentication information"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.6",
+                    "control_name": "Encrypt Data on End-User Devices"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.7.2",
+                    "control_name": "Key Management"
+                }
+            ]
+        },
+        {
+            "id": "d776a5b8-1c8a-499c-bb26-9a6531d66378",
+            "name": "Secure Code Review",
+            "description": "Automated and manual code review for security vulnerabilities",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.331274+00:00",
+            "updated_at": "2025-11-20T22:31:24.331274+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.25",
+                    "control_name": "Secure development life cycle"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.28",
+                    "control_name": "Secure coding"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "16.2",
+                    "control_name": "Establish and Maintain a Process to Accept and Address Software Vulnerabilities"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "1601e439-7b02-4662-8a53-c17d912cafe4",
+            "name": "Secure Configuration",
+            "description": "Harden systems according to security baselines (CIS, NIST)",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.040392+00:00",
+            "updated_at": "2025-11-20T22:31:20.040392+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.9",
+                    "control_name": "Configuration management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "16.1",
+                    "control_name": "Establish and Maintain a Secure Application Development Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "5fafcd53-b30b-449e-aed9-aee02427d5c0",
+            "name": "Secure File Transfer",
+            "description": "Encrypted file transfer with audit trails",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:25.122434+00:00",
+            "updated_at": "2025-11-20T22:31:25.122434+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.24",
+                    "control_name": "Use of cryptography"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.14",
+                    "control_name": "Information transfer"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "3.10",
+                    "control_name": "Encrypt Sensitive Data in Transit"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.1",
+                    "control_name": "Secure Communications"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.3",
+                    "control_name": "Communication Encryption"
+                }
+            ]
+        },
+        {
+            "id": "f863aa51-3081-4f47-8b0c-ff8254492878",
+            "name": "Secure Remote Access",
+            "description": "VPN or zero-trust access for remote workers",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.822127+00:00",
+            "updated_at": "2025-11-20T22:31:20.822127+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.6.7",
+                    "control_name": "Remote working"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "12.6",
+                    "control_name": "Use of Secure Network Management Protocols"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.10.1",
+                    "control_name": "Secure Communications"
+                }
+            ]
+        },
+        {
+            "id": "ce950cee-a2b8-4b00-a43f-8634dc13f4c3",
+            "name": "Secure Software Supply Chain",
+            "description": "Verify integrity of dependencies and build artifacts",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.803499+00:00",
+            "updated_at": "2025-11-20T22:31:24.803499+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.21",
+                    "control_name": "Managing information security in the ICT supply chain"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.30",
+                    "control_name": "Outsourced development"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "2.3",
+                    "control_name": "Address Unauthorized Software"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.3.4",
+                    "control_name": "Vendor Management"
+                }
+            ]
+        },
+        {
+            "id": "96c2b165-3858-449e-9356-97666e946610",
+            "name": "Security Orchestration (SOAR)",
+            "description": "Automate security incident response and threat remediation",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:23.886976+00:00",
+            "updated_at": "2025-11-20T22:31:23.886976+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.16",
+                    "control_name": "Monitoring activities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.26",
+                    "control_name": "Response to information security incidents"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "17.4",
+                    "control_name": "Establish and Maintain an Incident Response Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.3",
+                    "control_name": "Continuous Risk Monitoring"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.5.1",
+                    "control_name": "Incident Response Plan"
+                }
+            ]
+        },
+        {
+            "id": "793aaf17-9b55-4618-ac87-f54b19e6bc55",
+            "name": "Serverless Security",
+            "description": "Security controls for Lambda, Cloud Functions, and serverless architectures",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:31.054267+00:00",
+            "updated_at": "2025-11-20T22:31:31.054267+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.8.25.1",
+                    "control_name": "Cloud secure development"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.9.5.1",
+                    "control_name": "Virtual machine hardening"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.25",
+                    "control_name": "Secure development life cycle"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "16.1",
+                    "control_name": "Establish and Maintain a Secure Application Development Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.1",
+                    "control_name": "Secure Development Lifecycle"
+                }
+            ]
+        },
+        {
+            "id": "a6552f40-fbe6-48e7-a16f-316e9c308f14",
+            "name": "Threat Intelligence Platform",
+            "description": "Aggregate and analyze threat intelligence feeds",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:24.255923+00:00",
+            "updated_at": "2025-11-20T22:31:24.255923+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.16",
+                    "control_name": "Monitoring activities"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.7",
+                    "control_name": "Threat intelligence"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "7.1",
+                    "control_name": "Establish and Maintain a Vulnerability Management Process"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.1.3",
+                    "control_name": "Continuous Risk Monitoring"
+                }
+            ]
+        },
+        {
+            "id": "aa9ef04d-cd7b-4a5a-9d61-d34fb697f963",
+            "name": "Virtual Machine Security",
+            "description": "VM hardening, patching, and isolation controls",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:30.419445+00:00",
+            "updated_at": "2025-11-20T22:31:30.419445+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.6.3.3",
+                    "control_name": "Protection and separation of customer's virtual environment"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.9",
+                    "control_name": "Configuration management"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "4.1",
+                    "control_name": "Establish and Maintain a Secure Configuration Process"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.9.5.1",
+                    "control_name": "Virtual machine hardening"
+                },
+                {
+                    "framework": "ISO27017",
+                    "reference_id": "CLD.9.5.2",
+                    "control_name": "Administrator access to virtual machines"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "c098e651-15c5-406d-8174-dc3213c11f62",
+            "name": "Vulnerability Scanning",
+            "description": "Regular automated security scans of infrastructure and applications",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.182117+00:00",
+            "updated_at": "2025-11-20T22:31:20.182117+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.8",
+                    "control_name": "Management of technical vulnerabilities"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "7.5",
+                    "control_name": "Perform Automated Vulnerability Scans"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "18.3",
+                    "control_name": "Remediate Penetration Test Findings"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.3",
+                    "control_name": "Maintenance Security Controls"
+                }
+            ]
+        },
+        {
+            "id": "fd1c7cd8-dcf0-42b7-8c59-801a679eedf1",
+            "name": "Web Application Firewall",
+            "description": "Deploy WAF to protect web applications from common attacks",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:20.351259+00:00",
+            "updated_at": "2025-11-20T22:31:20.351259+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.20",
+                    "control_name": "Networks security"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.25",
+                    "control_name": "Secure development life cycle"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "13.2",
+                    "control_name": "Deploy a Host-Based Intrusion Detection Solution"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.4.2",
+                    "control_name": "System Acquisition Security"
+                }
+            ]
+        },
+        {
+            "id": "ef09fcad-71d4-443e-b8ea-23798bc12505",
+            "name": "Zero Trust Architecture",
+            "description": "Implement zero trust network access with continuous verification",
+            "category": "technical",
+            "created_at": "2025-11-20T22:31:23.520589+00:00",
+            "updated_at": "2025-11-20T22:31:23.520589+00:00",
+            "library_measure_controls": [
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.5.15",
+                    "control_name": "Access control"
+                },
+                {
+                    "framework": "ISO27001",
+                    "reference_id": "A.8.20",
+                    "control_name": "Networks security"
+                },
+                {
+                    "framework": "CISv8",
+                    "reference_id": "6.5",
+                    "control_name": "Require MFA for Administrative Access"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.6.1",
+                    "control_name": "User Access Management"
+                },
+                {
+                    "framework": "NIS2",
+                    "reference_id": "21.9.2",
+                    "control_name": "Continuous Authentication"
+                }
+            ]
+        }
+    ]
+}

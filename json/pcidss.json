@@ -1,0 +1,1282 @@
+[
+    {
+        "id": "pci-001",
+        "name": "Network Firewall Configuration",
+        "description": "Install and maintain network security controls (firewalls, cloud security groups) to protect the cardholder data environment (CDE) from untrusted networks",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 1 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.2.1",
+                "control_name": "Configuration standards for NSC rulesets are defined, implemented, and maintained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.2.5",
+                "control_name": "All services, protocols, and ports allowed are identified, approved, and have a defined business need"
+            }
+        ]
+    },
+    {
+        "id": "pci-002",
+        "name": "DMZ and Network Segmentation",
+        "description": "Implement a DMZ and network segmentation to restrict inbound and outbound traffic to only that which is necessary for the cardholder data environment",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.3.1",
+                "control_name": "Inbound traffic to the CDE is restricted to only that which is necessary and all other traffic is specifically denied"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.3.2",
+                "control_name": "Outbound traffic from the CDE is restricted to only that which is necessary and all other traffic is specifically denied"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.4.1",
+                "control_name": "NSCs are implemented between trusted and untrusted networks"
+            }
+        ]
+    },
+    {
+        "id": "pci-003",
+        "name": "Wireless Network Controls",
+        "description": "Restrict and secure all wireless access to the cardholder data environment, including changing vendor defaults and using strong encryption",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "1.2.3",
+                "control_name": "An accurate network diagram is maintained that shows all connections between the CDE and other networks, including any wireless networks"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.3.2",
+                "control_name": "Wireless environments connected to the CDE or transmitting account data - all wireless vendor defaults are changed at installation"
+            }
+        ]
+    },
+    {
+        "id": "pci-004",
+        "name": "Secure System Defaults and Hardening",
+        "description": "Change all vendor-supplied default passwords and remove or disable unnecessary default accounts, services, and protocols before deploying systems into production",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 2 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.2.1",
+                "control_name": "Configuration standards are developed, implemented, and maintained for all system components"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.2.2",
+                "control_name": "Vendor default accounts are managed - default passwords changed, unnecessary default accounts removed or disabled"
+            }
+        ]
+    },
+    {
+        "id": "pci-005",
+        "name": "System Hardening Standards",
+        "description": "Develop and apply configuration standards for all system components that address known security vulnerabilities and are consistent with industry-accepted hardening standards",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.2.3",
+                "control_name": "Primary functions requiring different security levels are managed to ensure only one primary function exists per server"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.2.4",
+                "control_name": "Only necessary services, protocols, daemons, and functions are enabled"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.2.5",
+                "control_name": "All insecure services, protocols, or daemons are secured with appropriate security features"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "2.2.6",
+                "control_name": "System security parameters are configured to prevent misuse"
+            }
+        ]
+    },
+    {
+        "id": "pci-006",
+        "name": "Stored Cardholder Data Protection",
+        "description": "Protect stored account data through encryption, truncation, masking, or hashing, and minimize data storage amount and retention time",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 3 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.2.1",
+                "control_name": "Account data storage is kept to a minimum through data retention and disposal policies, procedures, and processes"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.3.1",
+                "control_name": "SAD (Sensitive Authentication Data) is not stored after authorization, even if encrypted"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.3.2",
+                "control_name": "SAD that is stored electronically prior to completion of authorization is encrypted using strong cryptography"
+            }
+        ]
+    },
+    {
+        "id": "pci-007",
+        "name": "PAN Display and Storage Restrictions",
+        "description": "Render PAN unreadable anywhere it is stored and mask PAN when displayed so that only authorized personnel can see the full PAN",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.4.1",
+                "control_name": "PAN is masked when displayed, with only personnel with a legitimate business need able to see more than the BIN and last four digits"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.5.1",
+                "control_name": "PAN is rendered unreadable anywhere it is stored by using strong cryptography"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.5.1.1",
+                "control_name": "Hashes used to render PAN unreadable are keyed cryptographic hashes of the entire PAN"
+            }
+        ]
+    },
+    {
+        "id": "pci-008",
+        "name": "Cryptographic Key Management",
+        "description": "Implement proper cryptographic key management procedures including key generation, distribution, storage, rotation, and destruction",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.6.1",
+                "control_name": "Procedures are defined and implemented to protect cryptographic keys used to protect stored account data against disclosure and misuse"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.6.1.1",
+                "control_name": "Additional requirement for service providers: A documented description of the cryptographic architecture is maintained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.7.1",
+                "control_name": "Key-management policies and procedures are implemented to include generation of strong cryptographic keys"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.7.2",
+                "control_name": "Key-management policies and procedures are implemented to include secure key distribution"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.7.3",
+                "control_name": "Key-management policies and procedures are implemented to include secure key storage"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.7.4",
+                "control_name": "Key-management policies and procedures include cryptographic key changes for keys that have reached the end of their cryptoperiod"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.7.5",
+                "control_name": "Key-management policies and procedures include the retirement, replacement, or destruction of keys as deemed necessary"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "3.7.6",
+                "control_name": "Where manual cleartext cryptographic key-management operations are performed, key-management policies and procedures include split knowledge and dual control"
+            }
+        ]
+    },
+    {
+        "id": "pci-009",
+        "name": "Encryption of Data in Transit",
+        "description": "Encrypt transmission of cardholder data across open, public networks using strong cryptography and security protocols (e.g., TLS 1.2+)",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "4.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 4 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "4.2.1",
+                "control_name": "Strong cryptography and security protocols are implemented to safeguard PAN during transmission over open, public networks"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "4.2.1.1",
+                "control_name": "An inventory of the entity's trusted keys and certificates is maintained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "4.2.2",
+                "control_name": "PAN is secured with strong cryptography whenever it is sent via end-user messaging technologies"
+            }
+        ]
+    },
+    {
+        "id": "pci-010",
+        "name": "Anti-Malware Protection",
+        "description": "Deploy and maintain anti-malware solutions on all systems commonly affected by malware, with regular updates and periodic scans",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 5 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.2.1",
+                "control_name": "An anti-malware solution is deployed on all system components, except for those that are not commonly affected by malware"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.2.2",
+                "control_name": "The deployed anti-malware solution detects all known types of malware and removes, blocks, or contains all known types of malware"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.2.3",
+                "control_name": "Any system components that are not at risk for malware are evaluated periodically with a targeted risk analysis"
+            }
+        ]
+    },
+    {
+        "id": "pci-011",
+        "name": "Anti-Malware Maintenance and Monitoring",
+        "description": "Ensure anti-malware mechanisms are kept current, perform periodic scans, generate audit logs, and cannot be disabled or altered by users without authorization",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.3.1",
+                "control_name": "The anti-malware solution is kept current via automatic updates"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.3.2",
+                "control_name": "The anti-malware solution performs periodic scans and active or real-time scans, or performs continuous behavioral analysis of systems or processes"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.3.3",
+                "control_name": "For removable electronic media, the anti-malware solution performs automatic scans or continuous behavioral analysis when media is inserted, connected, or logically mounted"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.3.4",
+                "control_name": "Audit logs for the anti-malware solution are enabled and retained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.3.5",
+                "control_name": "Anti-malware mechanisms cannot be disabled or altered by users, unless specifically documented and authorized by management on a case-by-case basis"
+            }
+        ]
+    },
+    {
+        "id": "pci-012",
+        "name": "Phishing and Social Engineering Controls",
+        "description": "Implement mechanisms to detect and protect personnel against phishing attacks, including email filtering, awareness training, and reporting processes",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "5.4.1",
+                "control_name": "Processes and automated mechanisms are in place to detect and protect personnel against phishing attacks"
+            }
+        ]
+    },
+    {
+        "id": "pci-013",
+        "name": "Secure Software Development Lifecycle",
+        "description": "Develop and maintain secure systems and software by following a secure software development lifecycle, including secure coding practices and code reviews",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 6 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.2.1",
+                "control_name": "Bespoke and custom software are developed securely, including software development processes based on industry standards and/or best practices"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.2.2",
+                "control_name": "Software development personnel working on bespoke and custom software are trained at least once every 12 months on software security relevant to their job function"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.2.3",
+                "control_name": "Bespoke and custom software is reviewed prior to being released into production or to customers, to identify and correct potential coding vulnerabilities"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.2.4",
+                "control_name": "Software engineering techniques or other methods are defined and in use by software development personnel to prevent or mitigate common software attacks"
+            }
+        ]
+    },
+    {
+        "id": "pci-014",
+        "name": "Vulnerability and Patch Management",
+        "description": "Identify, prioritize, and address security vulnerabilities promptly. Install critical security patches within one month of release",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.3.1",
+                "control_name": "Security vulnerabilities are identified and managed by installing applicable security patches/updates and performing code evaluations"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.3.2",
+                "control_name": "An inventory of bespoke and custom software, and third-party software components incorporated into bespoke and custom software is maintained to facilitate vulnerability and patch management"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.3.3",
+                "control_name": "All system components are protected from known vulnerabilities by installing applicable security patches/updates within one month of release"
+            }
+        ]
+    },
+    {
+        "id": "pci-015",
+        "name": "Change Control Procedures",
+        "description": "Implement change control processes for all changes to system components in the CDE, including documentation, impact analysis, approval, testing, and rollback procedures",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.5.1",
+                "control_name": "Changes to all system components in the production environment are made according to established procedures that include documentation of impact, approval by authorized parties, functionality testing, and back-out procedures"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.5.2",
+                "control_name": "Upon completion of a significant change, all applicable PCI DSS requirements are confirmed to be in place on all new or changed systems and networks, and documentation is updated as applicable"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.5.3",
+                "control_name": "Pre-production environments are separated from production environments and the separation is enforced with access controls"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.5.4",
+                "control_name": "Roles and functions are separated between production and pre-production environments"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.5.5",
+                "control_name": "Live PANs are not used in pre-production environments, except where those environments are included in the CDE"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.5.6",
+                "control_name": "Test data and test accounts are removed from system components before the system goes into production"
+            }
+        ]
+    },
+    {
+        "id": "pci-016",
+        "name": "Web Application Security",
+        "description": "Protect public-facing web applications against attacks using WAFs, automated vulnerability assessments, or manual application security reviews",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.4.1",
+                "control_name": "For public-facing web applications, new threats and vulnerabilities are addressed on an ongoing basis and applications are protected against known attacks"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.4.2",
+                "control_name": "For public-facing web applications, an automated technical solution is deployed that continually detects and prevents web-based attacks"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "6.4.3",
+                "control_name": "All payment page scripts that are loaded and executed in the consumer's browser are managed - an inventory is maintained, authorization is confirmed, integrity is assured"
+            }
+        ]
+    },
+    {
+        "id": "pci-017",
+        "name": "User Identification and Authentication",
+        "description": "Assign a unique identification to each person with computer access and implement strong authentication mechanisms to ensure proper identity verification",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "7.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 7 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 8 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.2.1",
+                "control_name": "All users are assigned a unique ID before access to system components or cardholder data is allowed"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.2.2",
+                "control_name": "Group, shared, or generic accounts, or other shared authentication credentials are only used when necessary on an exception basis"
+            }
+        ]
+    },
+    {
+        "id": "pci-018",
+        "name": "Role-Based Access Control",
+        "description": "Restrict access to system components and cardholder data to only those individuals whose job requires such access, using role-based access control (RBAC) and least privilege principles",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "7.2.1",
+                "control_name": "An access control model is defined and includes granting access based on the entity's business and access needs"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "7.2.2",
+                "control_name": "Access is assigned to users, including privileged users, based on job classification and function"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "7.2.3",
+                "control_name": "Required privileges are approved by authorized personnel"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "7.2.4",
+                "control_name": "All user accounts and related access privileges, including third-party/vendor accounts, are reviewed at least once every six months"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "7.2.5",
+                "control_name": "All application and system accounts and related access privileges are assigned and managed based on least privilege"
+            }
+        ]
+    },
+    {
+        "id": "pci-019",
+        "name": "Strong Password and Authentication Policies",
+        "description": "Enforce strong password/authentication policies including minimum length (12+ characters), complexity requirements, password history, and account lockout mechanisms",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.3.1",
+                "control_name": "All user access to system components for users and administrators is authenticated via at least one authentication factor"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.3.4",
+                "control_name": "Invalid authentication attempts are limited by locking out the user ID after not more than 10 attempts"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.3.6",
+                "control_name": "If passwords/passphrases are used as authentication factors, they meet a minimum level of complexity of at least 12 characters containing both numeric and alphabetic characters"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.3.7",
+                "control_name": "Individuals are not allowed to submit a new password/passphrase that is the same as any of the last four passwords/passphrases used"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.3.9",
+                "control_name": "If passwords/passphrases are used as the only authentication factor for user access, passwords/passphrases are either changed at least once every 90 days, or dynamically analyzed for security"
+            }
+        ]
+    },
+    {
+        "id": "pci-020",
+        "name": "Multi-Factor Authentication",
+        "description": "Implement multi-factor authentication (MFA) for all access into the CDE, for all remote network access, and for all non-console administrative access",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.4.1",
+                "control_name": "MFA is implemented for all non-console access into the CDE for personnel with administrative access"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.4.2",
+                "control_name": "MFA is implemented for all access into the CDE"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.4.3",
+                "control_name": "MFA is implemented for all remote network access originating from outside the entity's network that could access or impact the CDE"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.5.1",
+                "control_name": "MFA systems are implemented so that they cannot be bypassed by any users, including administrative users"
+            }
+        ]
+    },
+    {
+        "id": "pci-021",
+        "name": "Session Timeout and Idle Controls",
+        "description": "Configure system/session idle timeout to 15 minutes or less and require re-authentication to reactivate the terminal or session",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.2.8",
+                "control_name": "If a user session has been idle for more than 15 minutes, the user is required to re-authenticate to re-activate the terminal or session"
+            }
+        ]
+    },
+    {
+        "id": "pci-022",
+        "name": "Service and Application Account Management",
+        "description": "Manage application and system accounts, including interactive login controls, password rotation, and restricting usage to the minimum necessary",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.6.1",
+                "control_name": "If accounts used by systems or applications can be used for interactive login, they are managed as follows: interactive use is prevented unless needed for an exceptional circumstance, and additional scrutiny is applied"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.6.2",
+                "control_name": "Passwords/passphrases for any application and system accounts that can be used for interactive login are not hard coded in scripts, configuration/property files, or bespoke and custom source code"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "8.6.3",
+                "control_name": "Passwords/passphrases for any application and system accounts are protected against misuse"
+            }
+        ]
+    },
+    {
+        "id": "pci-023",
+        "name": "Physical Access Controls",
+        "description": "Restrict and monitor physical access to systems in the cardholder data environment using access control mechanisms such as badges, locks, and video surveillance",
+        "category": "physical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 9 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.2.1",
+                "control_name": "Appropriate facility entry controls are in place to restrict physical access to systems in the CDE"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.2.2",
+                "control_name": "Physical and/or logical controls are implemented to restrict use of publicly accessible network jacks within the facility"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.2.3",
+                "control_name": "Physical access to wireless access points, gateways, networking/communications hardware, and telecommunication lines within the facility is restricted"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.2.4",
+                "control_name": "Access to consoles in sensitive areas is restricted via locking when not in use"
+            }
+        ]
+    },
+    {
+        "id": "pci-024",
+        "name": "Visitor Management",
+        "description": "Implement procedures to identify, authorize, and manage visitors in areas where cardholder data is present, including visitor logs and escort requirements",
+        "category": "physical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.3.1",
+                "control_name": "Procedures are implemented for authorizing and managing physical access of personnel to the CDE, including identifying personnel and visitors, managing changes to requirements, and revoking or terminating access immediately"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.3.2",
+                "control_name": "Procedures are implemented for authorizing and managing visitor access to the CDE"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.3.3",
+                "control_name": "Visitor badges or identification are surrendered or deactivated before visitors leave the facility or at the date of expiration"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.3.4",
+                "control_name": "A visitor log is used to maintain a physical record of visitor activity in the facility as well as in sensitive areas, including the visitor's name, firm, and the onsite personnel authorizing physical access"
+            }
+        ]
+    },
+    {
+        "id": "pci-025",
+        "name": "Media Protection and Disposal",
+        "description": "Protect all media containing cardholder data, implement secure media distribution procedures, and destroy media when it is no longer needed",
+        "category": "physical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.4.1",
+                "control_name": "All media with cardholder data is physically secured"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.4.2",
+                "control_name": "All media with cardholder data is classified in accordance with the sensitivity of the data"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.4.3",
+                "control_name": "Media with cardholder data sent outside the facility is secured via tracked delivery, with management approval prior to moving"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.4.5",
+                "control_name": "Inventory logs of all electronic media with cardholder data are maintained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.4.6",
+                "control_name": "Hard-copy materials with cardholder data are destroyed when no longer needed for business or legal reasons"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.4.7",
+                "control_name": "Electronic media with cardholder data is destroyed when no longer needed for business or legal reasons"
+            }
+        ]
+    },
+    {
+        "id": "pci-026",
+        "name": "Point-of-Interaction Device Protection",
+        "description": "Protect point-of-interaction (POI) devices from tampering and unauthorized substitution by maintaining a device inventory and periodic inspections",
+        "category": "physical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.5.1",
+                "control_name": "POI devices that capture payment card data via direct physical interaction with the payment card form factor are protected from tampering and unauthorized substitution"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.5.1.1",
+                "control_name": "An up-to-date list of POI devices is maintained, including make, model, location, and device serial number"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.5.1.2",
+                "control_name": "POI device surfaces are periodically inspected to detect tampering and unauthorized substitution"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "9.5.1.3",
+                "control_name": "Training is provided for personnel in POI environments to be aware of attempted tampering or replacement of POI devices"
+            }
+        ]
+    },
+    {
+        "id": "pci-027",
+        "name": "Audit Logging and Monitoring",
+        "description": "Implement audit trails and logging to link all access to system components to individual users, recording user activities, exceptions, faults, and information security events",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 10 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1",
+                "control_name": "Audit logs are enabled and active for all system components and cardholder data"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.1",
+                "control_name": "Audit logs capture all individual user access to cardholder data"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.2",
+                "control_name": "Audit logs capture all actions taken by any individual with administrative access"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.3",
+                "control_name": "Audit logs capture all access to audit logs"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.4",
+                "control_name": "Audit logs capture all invalid logical access attempts"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.5",
+                "control_name": "Audit logs capture all changes to identification and authentication credentials"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.6",
+                "control_name": "Audit logs capture initialization of new audit logs, stopping or pausing of existing audit logs"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.1.7",
+                "control_name": "Audit logs capture creation and deletion of system-level objects"
+            }
+        ]
+    },
+    {
+        "id": "pci-028",
+        "name": "Audit Log Content and Protection",
+        "description": "Record sufficient detail in audit log entries and protect audit trails from unauthorized modification using time synchronization and access controls",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.2.2",
+                "control_name": "Audit logs record sufficient detail for each auditable event: user identification, type of event, date and time, success or failure, origination of event, identity or name of affected data, system component, resource, or service"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.3.1",
+                "control_name": "Read access to audit logs files is limited to those with a job-related need"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.3.2",
+                "control_name": "Audit log files are protected to prevent modifications by individuals"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.3.3",
+                "control_name": "Audit log files, including for external-facing technologies, are promptly backed up to a secure, central, internal log server(s) or other media that is difficult to alter"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.3.4",
+                "control_name": "File integrity monitoring or change-detection mechanisms is used on audit logs to ensure that existing log data cannot be changed without generating alerts"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.6.1",
+                "control_name": "System clocks and time are synchronized using time-synchronization technology"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.6.2",
+                "control_name": "Systems are configured to the correct and consistent time as: one or more designated time servers are in use, and only the designated central time servers receive time from external sources"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.6.3",
+                "control_name": "Time synchronization settings and data are protected: access to time data is restricted, and changes to time settings on critical systems are logged, monitored, and reviewed"
+            }
+        ]
+    },
+    {
+        "id": "pci-029",
+        "name": "Log Retention",
+        "description": "Retain audit log history for at least 12 months, with at least the most recent three months immediately available for analysis",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.5.1",
+                "control_name": "Retain audit log history for at least 12 months, with at least the most recent three months immediately available for analysis"
+            }
+        ]
+    },
+    {
+        "id": "pci-030",
+        "name": "Security Event Detection and Response",
+        "description": "Implement automated mechanisms to perform audit log reviews and alert personnel of suspected or confirmed security events, including anomalies and indicators of compromise",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.4.1",
+                "control_name": "Audit logs are reviewed at least once daily to identify anomalies or suspicious activity"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.4.1.1",
+                "control_name": "Automated mechanisms are used to perform audit log reviews"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.4.2",
+                "control_name": "Logs of all other system components are reviewed periodically based on the entity's policies and risk management strategy"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.4.3",
+                "control_name": "Exceptions and anomalies identified during the review process are addressed"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "10.7.1",
+                "control_name": "Additional requirement for service providers: Failures of critical security control systems are detected, alerted, and addressed promptly"
+            }
+        ]
+    },
+    {
+        "id": "pci-031",
+        "name": "Vulnerability Scanning",
+        "description": "Perform internal and external network vulnerability scans at least quarterly and after significant changes, with external scans performed by an ASV",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.1.1",
+                "control_name": "All security policies and operational procedures identified in Requirement 11 are documented, kept up to date, in use, and known to all affected parties"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.3.1",
+                "control_name": "Internal vulnerability scans are performed at least once every three months"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.3.1.1",
+                "control_name": "All other applicable vulnerabilities found during internal vulnerability scans are managed per the entity's targeted risk analysis"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.3.2",
+                "control_name": "External vulnerability scans are performed at least once every three months by a PCI SSC Approved Scanning Vendor (ASV)"
+            }
+        ]
+    },
+    {
+        "id": "pci-032",
+        "name": "Penetration Testing",
+        "description": "Perform internal and external penetration testing at least annually and after significant infrastructure or application changes",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.4.1",
+                "control_name": "External penetration testing is performed at least once every 12 months and after any significant infrastructure or application upgrade or change"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.4.2",
+                "control_name": "Internal penetration testing is performed at least once every 12 months and after any significant infrastructure or application upgrade or change"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.4.3",
+                "control_name": "Exploitable vulnerabilities and security weaknesses found during penetration testing are corrected per the entity's assessment of risk"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.4.4",
+                "control_name": "If segmentation is used to isolate the CDE from other networks, penetration tests are performed on segmentation controls at least once every 12 months and after any changes to segmentation controls/methods"
+            }
+        ]
+    },
+    {
+        "id": "pci-033",
+        "name": "Wireless Access Point Detection",
+        "description": "Detect and identify authorized and unauthorized wireless access points on a quarterly basis using wireless analyzers, NAC, or IDS/IPS",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.2.1",
+                "control_name": "Authorized and unauthorized wireless access points are managed by testing for the presence of wireless (Wi-Fi) access points and detecting and identifying all authorized and unauthorized wireless access points on a quarterly basis"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.2.2",
+                "control_name": "An inventory of authorized wireless access points is maintained, including a documented business justification"
+            }
+        ]
+    },
+    {
+        "id": "pci-034",
+        "name": "Intrusion Detection and File Integrity Monitoring",
+        "description": "Deploy intrusion-detection and/or intrusion-prevention techniques on the network and file integrity monitoring on critical system files",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.5.1",
+                "control_name": "Intrusion-detection and/or intrusion-prevention techniques are used to detect and/or prevent intrusions into the network"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.5.1.1",
+                "control_name": "Intrusion-detection and/or intrusion-prevention techniques detect, alert on/prevent, and address covert malware communication channels"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.5.2",
+                "control_name": "A change-detection mechanism (file integrity monitoring) is deployed to alert personnel to unauthorized modification of critical system files, configuration files, or content files"
+            }
+        ]
+    },
+    {
+        "id": "pci-035",
+        "name": "Unauthorized Change Detection on Payment Pages",
+        "description": "Deploy a mechanism to detect and alert on unauthorized modifications to HTTP headers and the contents of payment pages as received by the consumer browser",
+        "category": "technical",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "11.6.1",
+                "control_name": "A change- and tamper-detection mechanism is deployed to alert personnel to unauthorized modification to the HTTP headers and the contents of payment pages as received by the consumer browser"
+            }
+        ]
+    },
+    {
+        "id": "pci-036",
+        "name": "Information Security Policy",
+        "description": "Establish, publish, maintain, and disseminate a comprehensive information security policy that addresses all PCI DSS requirements and is reviewed at least annually",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.1.1",
+                "control_name": "An overall information security policy is established, published, maintained, and disseminated to all relevant personnel, as well as to relevant vendors and business partners"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.1.2",
+                "control_name": "The information security policy is reviewed at least once every 12 months and updated as needed to reflect changes to business objectives or the risk environment"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.1.3",
+                "control_name": "The security policy clearly defines information security roles and responsibilities for all personnel"
+            }
+        ]
+    },
+    {
+        "id": "pci-037",
+        "name": "Acceptable Use Policies",
+        "description": "Develop and implement acceptable use policies for end-user technologies, including explicit approval requirements, acceptable uses, and approved products/locations",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.1.4",
+                "control_name": "Responsibility for information security is formally assigned to a Chief Information Security Officer or other information security knowledgeable member of senior management"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.2.1",
+                "control_name": "Acceptable use policies for end-user technologies are documented and implemented"
+            }
+        ]
+    },
+    {
+        "id": "pci-038",
+        "name": "Risk Assessment Program",
+        "description": "Implement a formal risk assessment process performed at least annually and upon significant changes that identifies critical assets, threats, and vulnerabilities",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.3.1",
+                "control_name": "Each PCI DSS requirement that provides flexibility for how frequently it is performed is supported by a targeted risk analysis"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.3.2",
+                "control_name": "A targeted risk analysis is performed for each PCI DSS requirement that the entity meets with the customized approach"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.3.3",
+                "control_name": "Cryptographic cipher suites and protocols in use are documented and reviewed at least once every 12 months"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.3.4",
+                "control_name": "Hardware and software technologies in use are reviewed at least once every 12 months to confirm they continue to receive security fixes from vendors"
+            }
+        ]
+    },
+    {
+        "id": "pci-039",
+        "name": "PCI DSS Scope Documentation",
+        "description": "Document and confirm PCI DSS scope at least annually and upon significant changes, including all data flows, system components, and network connections",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.5.1",
+                "control_name": "An inventory of system components that are in scope for PCI DSS, including a description of function/use, is maintained and kept current"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.5.2",
+                "control_name": "PCI DSS scope is documented and confirmed by the entity at least once every 12 months and upon significant change to the in-scope environment"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.5.3",
+                "control_name": "Additional requirement for service providers: significant changes to organizational structure result in a documented review of the impact to PCI DSS scope and applicability of controls"
+            }
+        ]
+    },
+    {
+        "id": "pci-040",
+        "name": "Security Awareness Training",
+        "description": "Implement a formal security awareness program for all personnel, including upon hire and at least annually, covering threats, cardholder data handling, and incident response",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.6.1",
+                "control_name": "A formal security awareness program is implemented to make all personnel aware of the entity's information security policy and procedures"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.6.2",
+                "control_name": "The security awareness program is reviewed at least once every 12 months and updated as needed"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.6.3",
+                "control_name": "Personnel receive security awareness training upon hire and at least once every 12 months"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.6.3.1",
+                "control_name": "Security awareness training includes awareness of threats and vulnerabilities that could impact the security of account data"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.6.3.2",
+                "control_name": "Security awareness training includes awareness about the acceptable use of end-user technologies"
+            }
+        ]
+    },
+    {
+        "id": "pci-041",
+        "name": "Personnel Screening",
+        "description": "Screen potential personnel prior to hire to minimize the risk of internal attacks, including background checks within legal constraints",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.7.1",
+                "control_name": "Potential personnel who will have access to the CDE are screened, within the constraints of local laws, prior to hire"
+            }
+        ]
+    },
+    {
+        "id": "pci-042",
+        "name": "Third-Party Service Provider Management",
+        "description": "Maintain policies and procedures to manage third-party service providers (TPSPs) with whom account data is shared or that could affect the security of account data",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.8.1",
+                "control_name": "A list of all third-party service providers (TPSPs) with which account data is shared or that could affect the security of account data is maintained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.8.2",
+                "control_name": "Written agreements with TPSPs are maintained that include acknowledgements from TPSPs that they are responsible for the security of account data they possess"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.8.3",
+                "control_name": "An established process is implemented for engaging TPSPs, including proper due diligence prior to engagement"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.8.4",
+                "control_name": "A program is implemented to monitor TPSPs' PCI DSS compliance status at least once every 12 months"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.8.5",
+                "control_name": "Information is maintained about which PCI DSS requirements are managed by each TPSP, which are managed by the entity, and any that are shared between both the TPSP and the entity"
+            }
+        ]
+    },
+    {
+        "id": "pci-043",
+        "name": "Incident Response Plan",
+        "description": "Establish, document, and distribute an incident response plan to be initiated immediately upon suspected or confirmed security breach, including roles, communication, and recovery procedures",
+        "category": "organizational",
+        "created_at": "2025-11-20T22:31:19.641167+00:00",
+        "updated_at": "2025-11-20T22:31:19.641167+00:00",
+        "library_measure_controls": [
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.1",
+                "control_name": "An incident response plan exists and is ready to be activated in the event of a suspected or confirmed security incident"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.2",
+                "control_name": "At least once every 12 months, the security incident response plan is reviewed and the content is updated as needed"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.3",
+                "control_name": "Specific personnel are designated to be available on a 24/7 basis to respond to suspected or confirmed security incidents"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.4",
+                "control_name": "Personnel responsible for responding to suspected and confirmed security incidents are appropriately and periodically trained"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.4.1",
+                "control_name": "The frequency of periodic training for incident response personnel is defined in the entity's targeted risk analysis"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.5",
+                "control_name": "The security incident response plan includes monitoring and responding to alerts from security monitoring systems including IDS/IPS, network security controls, FIM, and anti-malware"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.6",
+                "control_name": "The security incident response plan is modified and evolved according to lessons learned and to incorporate industry developments"
+            },
+            {
+                "framework": "PCI DSS v4.0",
+                "reference_id": "12.10.7",
+                "control_name": "Incident response procedures are in place, to be initiated upon the detection of stored PAN anywhere it is not expected"
+            }
+        ]
+    }
+]

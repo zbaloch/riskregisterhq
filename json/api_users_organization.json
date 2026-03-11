@@ -1,0 +1,13 @@
+{
+    "users": [
+        {
+            "id": "679aea10-ebd7-4912-a4a9-82f4f0b5fcdc",
+            "email": "zaheer1@jaldicommerce.com",
+            "fullName": "Zaheer Baloch",
+            "organizationId": 22,
+            "role": "owner",
+            "status": "active",
+            "mfa_enabled": false
+        }
+    ]
+}

@@ -1,0 +1,490 @@
+{
+    "risk_measures": [
+        {
+            "id": 3,
+            "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+            "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f",
+            "implementation_status": "planned",
+            "effectiveness": 0,
+            "affects_likelihood": true,
+            "affects_impact": false,
+            "implementation_notes": "",
+            "implementation_date": null,
+            "created_at": "2026-02-22T00:46:44.014862+00:00",
+            "updated_at": "2026-02-22T00:46:44.014862+00:00",
+            "measures": {
+                "id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f",
+                "name": "Web Application Firewall",
+                "archived": false,
+                "category": "technical",
+                "created_at": "2026-02-22T00:46:43.18068+00:00",
+                "updated_at": "2026-02-22T00:46:43.18068+00:00",
+                "description": "Deploy WAF to protect web applications from common attacks",
+                "organization_id": 22,
+                "library_measures": {
+                    "id": "fd1c7cd8-dcf0-42b7-8c59-801a679eedf1",
+                    "name": "Web Application Firewall",
+                    "category": "technical",
+                    "created_at": "2025-11-20T22:31:20.351259+00:00",
+                    "updated_at": "2025-11-20T22:31:20.351259+00:00",
+                    "description": "Deploy WAF to protect web applications from common attacks",
+                    "library_measure_controls": [
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.20",
+                            "control_name": "Networks security"
+                        },
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.25",
+                            "control_name": "Secure development life cycle"
+                        },
+                        {
+                            "framework": "CISv8",
+                            "reference_id": "13.2",
+                            "control_name": "Deploy a Host-Based Intrusion Detection Solution"
+                        },
+                        {
+                            "framework": "NIS2",
+                            "reference_id": "21.4.2",
+                            "control_name": "System Acquisition Security"
+                        }
+                    ]
+                },
+                "measure_controls": [
+                    {
+                        "id": 4,
+                        "controls": {
+                            "id": "ef9b1157-41ab-480c-ba0a-a6366b8f2858",
+                            "name": "Networks security",
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.20"
+                        },
+                        "control_id": "ef9b1157-41ab-480c-ba0a-a6366b8f2858",
+                        "created_at": "2026-02-22T00:46:43.319432+00:00",
+                        "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f"
+                    },
+                    {
+                        "id": 5,
+                        "controls": {
+                            "id": "51221730-e454-4710-9a13-97f0c0246693",
+                            "name": "Secure development life cycle",
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.25"
+                        },
+                        "control_id": "51221730-e454-4710-9a13-97f0c0246693",
+                        "created_at": "2026-02-22T00:46:43.408119+00:00",
+                        "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f"
+                    },
+                    {
+                        "id": 6,
+                        "controls": {
+                            "id": "82cf669e-464f-4b96-9102-5a8297c1ac23",
+                            "name": "Deploy a Host-Based Intrusion Detection Solution",
+                            "framework": "CISv8",
+                            "reference_id": "13.2"
+                        },
+                        "control_id": "82cf669e-464f-4b96-9102-5a8297c1ac23",
+                        "created_at": "2026-02-22T00:46:43.485613+00:00",
+                        "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f"
+                    },
+                    {
+                        "id": 7,
+                        "controls": {
+                            "id": "147ca6a4-d432-466e-aef5-774eddb2c205",
+                            "name": "System Acquisition Security",
+                            "framework": "NIS2",
+                            "reference_id": "21.4.2"
+                        },
+                        "control_id": "147ca6a4-d432-466e-aef5-774eddb2c205",
+                        "created_at": "2026-02-22T00:46:43.562683+00:00",
+                        "measure_id": "26e0ceec-5444-43d6-a292-9bb8d4e5af9f"
+                    }
+                ],
+                "library_measure_id": "fd1c7cd8-dcf0-42b7-8c59-801a679eedf1"
+            }
+        },
+        {
+            "id": 4,
+            "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+            "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7",
+            "implementation_status": "planned",
+            "effectiveness": 0,
+            "affects_likelihood": true,
+            "affects_impact": false,
+            "implementation_notes": "",
+            "implementation_date": null,
+            "created_at": "2026-02-22T00:46:48.807493+00:00",
+            "updated_at": "2026-02-22T00:46:48.807493+00:00",
+            "measures": {
+                "id": "4bad5434-a764-4836-843c-dbfc688e3bf7",
+                "name": "Multi-Factor Authentication",
+                "archived": false,
+                "category": "technical",
+                "created_at": "2026-02-22T00:46:47.949058+00:00",
+                "updated_at": "2026-02-22T00:46:47.949058+00:00",
+                "description": "Implement MFA for all user accounts to prevent unauthorized access",
+                "organization_id": 22,
+                "library_measures": {
+                    "id": "d6dc5a95-ddcb-4573-96ce-eb44af6d0ce8",
+                    "name": "Multi-Factor Authentication",
+                    "category": "technical",
+                    "created_at": "2025-11-20T22:31:19.332919+00:00",
+                    "updated_at": "2025-11-20T22:31:19.332919+00:00",
+                    "description": "Implement MFA for all user accounts to prevent unauthorized access",
+                    "library_measure_controls": [
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.5.17",
+                            "control_name": "Authentication information"
+                        },
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.5.18",
+                            "control_name": "Access rights"
+                        },
+                        {
+                            "framework": "CISv8",
+                            "reference_id": "6.3",
+                            "control_name": "Require MFA for Externally-Exposed Applications"
+                        },
+                        {
+                            "framework": "NIS2",
+                            "reference_id": "21.9.1",
+                            "control_name": "Multi-Factor Authentication"
+                        }
+                    ]
+                },
+                "measure_controls": [
+                    {
+                        "id": 8,
+                        "controls": {
+                            "id": "50aba40d-b34b-4050-a652-d71587bbc252",
+                            "name": "Authentication information",
+                            "framework": "ISO27001",
+                            "reference_id": "A.5.17"
+                        },
+                        "control_id": "50aba40d-b34b-4050-a652-d71587bbc252",
+                        "created_at": "2026-02-22T00:46:48.075671+00:00",
+                        "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7"
+                    },
+                    {
+                        "id": 9,
+                        "controls": {
+                            "id": "7306cb4e-db47-4a48-b646-518cf1f7831d",
+                            "name": "Access rights",
+                            "framework": "ISO27001",
+                            "reference_id": "A.5.18"
+                        },
+                        "control_id": "7306cb4e-db47-4a48-b646-518cf1f7831d",
+                        "created_at": "2026-02-22T00:46:48.161812+00:00",
+                        "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7"
+                    },
+                    {
+                        "id": 10,
+                        "controls": {
+                            "id": "113d6757-6f80-4262-8743-0b550304f387",
+                            "name": "Require MFA for Externally-Exposed Applications",
+                            "framework": "CISv8",
+                            "reference_id": "6.3"
+                        },
+                        "control_id": "113d6757-6f80-4262-8743-0b550304f387",
+                        "created_at": "2026-02-22T00:46:48.231576+00:00",
+                        "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7"
+                    },
+                    {
+                        "id": 11,
+                        "controls": {
+                            "id": "26881fb6-908f-49d6-8893-5c36250a3bfb",
+                            "name": "Multi-Factor Authentication",
+                            "framework": "NIS2",
+                            "reference_id": "21.9.1"
+                        },
+                        "control_id": "26881fb6-908f-49d6-8893-5c36250a3bfb",
+                        "created_at": "2026-02-22T00:46:48.330832+00:00",
+                        "measure_id": "4bad5434-a764-4836-843c-dbfc688e3bf7"
+                    }
+                ],
+                "library_measure_id": "d6dc5a95-ddcb-4573-96ce-eb44af6d0ce8"
+            }
+        },
+        {
+            "id": 5,
+            "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+            "measure_id": "1f53b315-3d7d-44e0-8a30-61447a267d4d",
+            "implementation_status": "planned",
+            "effectiveness": 0,
+            "affects_likelihood": true,
+            "affects_impact": false,
+            "implementation_notes": "",
+            "implementation_date": null,
+            "created_at": "2026-02-22T00:46:51.971688+00:00",
+            "updated_at": "2026-02-22T00:46:51.971688+00:00",
+            "measures": {
+                "id": "1f53b315-3d7d-44e0-8a30-61447a267d4d",
+                "name": "Intrusion Detection System",
+                "archived": false,
+                "category": "technical",
+                "created_at": "2026-02-22T00:46:51.221791+00:00",
+                "updated_at": "2026-02-22T00:46:51.221791+00:00",
+                "description": "Monitor network traffic for suspicious activity and threats",
+                "organization_id": 22,
+                "library_measures": {
+                    "id": "c2810838-d0c3-4a2d-b540-9ccc744db0a5",
+                    "name": "Intrusion Detection System",
+                    "category": "technical",
+                    "created_at": "2025-11-20T22:31:19.893196+00:00",
+                    "updated_at": "2025-11-20T22:31:19.893196+00:00",
+                    "description": "Monitor network traffic for suspicious activity and threats",
+                    "library_measure_controls": [
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.16",
+                            "control_name": "Monitoring activities"
+                        },
+                        {
+                            "framework": "CISv8",
+                            "reference_id": "13.2",
+                            "control_name": "Deploy a Host-Based Intrusion Detection Solution"
+                        },
+                        {
+                            "framework": "NIS2",
+                            "reference_id": "21.5.2",
+                            "control_name": "Incident Detection"
+                        }
+                    ]
+                },
+                "measure_controls": [
+                    {
+                        "id": 12,
+                        "controls": {
+                            "id": "d75d31d3-12e0-4170-a964-953c7b03987b",
+                            "name": "Monitoring activities",
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.16"
+                        },
+                        "control_id": "d75d31d3-12e0-4170-a964-953c7b03987b",
+                        "created_at": "2026-02-22T00:46:51.323809+00:00",
+                        "measure_id": "1f53b315-3d7d-44e0-8a30-61447a267d4d"
+                    },
+                    {
+                        "id": 13,
+                        "controls": {
+                            "id": "82cf669e-464f-4b96-9102-5a8297c1ac23",
+                            "name": "Deploy a Host-Based Intrusion Detection Solution",
+                            "framework": "CISv8",
+                            "reference_id": "13.2"
+                        },
+                        "control_id": "82cf669e-464f-4b96-9102-5a8297c1ac23",
+                        "created_at": "2026-02-22T00:46:51.391289+00:00",
+                        "measure_id": "1f53b315-3d7d-44e0-8a30-61447a267d4d"
+                    },
+                    {
+                        "id": 14,
+                        "controls": {
+                            "id": "bad938e1-3834-40e2-bc98-a3b11c4f3154",
+                            "name": "Incident Detection",
+                            "framework": "NIS2",
+                            "reference_id": "21.5.2"
+                        },
+                        "control_id": "bad938e1-3834-40e2-bc98-a3b11c4f3154",
+                        "created_at": "2026-02-22T00:46:51.463842+00:00",
+                        "measure_id": "1f53b315-3d7d-44e0-8a30-61447a267d4d"
+                    }
+                ],
+                "library_measure_id": "c2810838-d0c3-4a2d-b540-9ccc744db0a5"
+            }
+        },
+        {
+            "id": 6,
+            "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+            "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7",
+            "implementation_status": "planned",
+            "effectiveness": 0,
+            "affects_likelihood": true,
+            "affects_impact": false,
+            "implementation_notes": "",
+            "implementation_date": null,
+            "created_at": "2026-02-22T00:46:56.120703+00:00",
+            "updated_at": "2026-02-22T00:46:56.120703+00:00",
+            "measures": {
+                "id": "72795572-52e0-4743-a05a-b57b7b7597a7",
+                "name": "Patch Management",
+                "archived": false,
+                "category": "technical",
+                "created_at": "2026-02-22T00:46:55.264027+00:00",
+                "updated_at": "2026-02-22T00:46:55.264027+00:00",
+                "description": "Regular security updates and patch deployment within 30 days",
+                "organization_id": 22,
+                "library_measures": {
+                    "id": "491cc548-02c0-48fc-9b52-ca939d3ef81d",
+                    "name": "Patch Management",
+                    "category": "technical",
+                    "created_at": "2025-11-20T22:31:19.732177+00:00",
+                    "updated_at": "2025-11-20T22:31:19.732177+00:00",
+                    "description": "Regular security updates and patch deployment within 30 days",
+                    "library_measure_controls": [
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.8",
+                            "control_name": "Management of technical vulnerabilities"
+                        },
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.19",
+                            "control_name": "Installation of software on operational systems"
+                        },
+                        {
+                            "framework": "CISv8",
+                            "reference_id": "7.2",
+                            "control_name": "Establish and Maintain a Remediation Process"
+                        },
+                        {
+                            "framework": "NIS2",
+                            "reference_id": "21.4.3",
+                            "control_name": "Maintenance Security Controls"
+                        }
+                    ]
+                },
+                "measure_controls": [
+                    {
+                        "id": 15,
+                        "controls": {
+                            "id": "7b3498c0-7a87-4acc-bd4e-2c33819fc1ff",
+                            "name": "Management of technical vulnerabilities",
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.8"
+                        },
+                        "control_id": "7b3498c0-7a87-4acc-bd4e-2c33819fc1ff",
+                        "created_at": "2026-02-22T00:46:55.364024+00:00",
+                        "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7"
+                    },
+                    {
+                        "id": 16,
+                        "controls": {
+                            "id": "cf4e5e86-6047-414e-9d6f-f9c1846d331c",
+                            "name": "Installation of software on operational systems",
+                            "framework": "ISO27001",
+                            "reference_id": "A.8.19"
+                        },
+                        "control_id": "cf4e5e86-6047-414e-9d6f-f9c1846d331c",
+                        "created_at": "2026-02-22T00:46:55.456292+00:00",
+                        "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7"
+                    },
+                    {
+                        "id": 17,
+                        "controls": {
+                            "id": "7db5b54c-902b-42a1-81ca-9c6a248e819b",
+                            "name": "Establish and Maintain a Remediation Process",
+                            "framework": "CISv8",
+                            "reference_id": "7.2"
+                        },
+                        "control_id": "7db5b54c-902b-42a1-81ca-9c6a248e819b",
+                        "created_at": "2026-02-22T00:46:55.593264+00:00",
+                        "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7"
+                    },
+                    {
+                        "id": 18,
+                        "controls": {
+                            "id": "421656e4-23d8-4312-af9c-ef268d277180",
+                            "name": "Maintenance Security Controls",
+                            "framework": "NIS2",
+                            "reference_id": "21.4.3"
+                        },
+                        "control_id": "421656e4-23d8-4312-af9c-ef268d277180",
+                        "created_at": "2026-02-22T00:46:55.685901+00:00",
+                        "measure_id": "72795572-52e0-4743-a05a-b57b7b7597a7"
+                    }
+                ],
+                "library_measure_id": "491cc548-02c0-48fc-9b52-ca939d3ef81d"
+            }
+        },
+        {
+            "id": 7,
+            "risk_id": "637b6db1-deba-4831-89a3-90062783120a",
+            "measure_id": "d4a7a535-4c4c-404d-8f1b-bf540e881608",
+            "implementation_status": "planned",
+            "effectiveness": 0,
+            "affects_likelihood": true,
+            "affects_impact": false,
+            "implementation_notes": "",
+            "implementation_date": null,
+            "created_at": "2026-02-22T00:46:59.239813+00:00",
+            "updated_at": "2026-02-22T00:46:59.239813+00:00",
+            "measures": {
+                "id": "d4a7a535-4c4c-404d-8f1b-bf540e881608",
+                "name": "Security Awareness Training",
+                "archived": false,
+                "category": "administrative",
+                "created_at": "2026-02-22T00:46:58.539175+00:00",
+                "updated_at": "2026-02-22T00:46:58.539175+00:00",
+                "description": "Quarterly security training for all employees on threats and best practices",
+                "organization_id": 22,
+                "library_measures": {
+                    "id": "5f25014f-7995-405e-adac-d4e4c021058a",
+                    "name": "Security Awareness Training",
+                    "category": "administrative",
+                    "created_at": "2025-11-20T22:31:21.012659+00:00",
+                    "updated_at": "2025-11-20T22:31:21.012659+00:00",
+                    "description": "Quarterly security training for all employees on threats and best practices",
+                    "library_measure_controls": [
+                        {
+                            "framework": "ISO27001",
+                            "reference_id": "A.6.3",
+                            "control_name": "Information security awareness, education and training"
+                        },
+                        {
+                            "framework": "CISv8",
+                            "reference_id": "14.1",
+                            "control_name": "Establish and Maintain a Security Awareness Program"
+                        },
+                        {
+                            "framework": "NIS2",
+                            "reference_id": "21.8.1",
+                            "control_name": "Security Awareness Training"
+                        }
+                    ]
+                },
+                "measure_controls": [
+                    {
+                        "id": 19,
+                        "controls": {
+                            "id": "1d00aab2-f227-46b6-a8a2-e9f22fe0e89e",
+                            "name": "Information security awareness, education and training",
+                            "framework": "ISO27001",
+                            "reference_id": "A.6.3"
+                        },
+                        "control_id": "1d00aab2-f227-46b6-a8a2-e9f22fe0e89e",
+                        "created_at": "2026-02-22T00:46:58.634004+00:00",
+                        "measure_id": "d4a7a535-4c4c-404d-8f1b-bf540e881608"
+                    },
+                    {
+                        "id": 20,
+                        "controls": {
+                            "id": "283e034d-1874-40c1-bfe4-57c35631c662",
+                            "name": "Establish and Maintain a Security Awareness Program",
+                            "framework": "CISv8",
+                            "reference_id": "14.1"
+                        },
+                        "control_id": "283e034d-1874-40c1-bfe4-57c35631c662",
+                        "created_at": "2026-02-22T00:46:58.737963+00:00",
+                        "measure_id": "d4a7a535-4c4c-404d-8f1b-bf540e881608"
+                    },
+                    {
+                        "id": 21,
+                        "controls": {
+                            "id": "2c3913c2-fc9d-4426-894b-8c5e4e0de8c5",
+                            "name": "Security Awareness Training",
+                            "framework": "NIS2",
+                            "reference_id": "21.8.1"
+                        },
+                        "control_id": "2c3913c2-fc9d-4426-894b-8c5e4e0de8c5",
+                        "created_at": "2026-02-22T00:46:58.803664+00:00",
+                        "measure_id": "d4a7a535-4c4c-404d-8f1b-bf540e881608"
+                    }
+                ],
+                "library_measure_id": "5f25014f-7995-405e-adac-d4e4c021058a"
+            }
+        }
+    ]
+}

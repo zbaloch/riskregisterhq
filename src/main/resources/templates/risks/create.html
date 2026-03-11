@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>New Risk – RiskRegisterHQ</title>
+  <style>
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 6px;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: currentColor;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      margin-top: -7px;
+    }
+    input[type=range]::-moz-range-track {
+      height: 6px;
+      background: transparent;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: currentColor;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='risks')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+
+        <!-- Page header -->
+        <div class="mb-6 flex items-center gap-3">
+          <a href="/risks" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Risks
+          </a>
+          <span class="text-gray-300">/</span>
+          <span class="text-sm text-gray-700 font-medium">New Risk</span>
+        </div>
+
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold tracking-tight text-gray-900">Add New Risk</h1>
+          <p class="mt-1 text-sm text-gray-500">Document a new risk scenario and its assessment details.</p>
+        </div>
+
+        <form action="/risks" method="post" x-data="riskForm()">
+
+          <!-- Basic Information Card -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 mb-6">
+
+            <!-- Risk Title -->
+            <div class="grid grid-cols-3 gap-x-8">
+              <div class="col-span-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="title">
+                  Risk Title <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="title" id="title" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="Name this risk…"/>
+              </div>
+
+              <!-- Risk Description - Rich Text Editor -->
+              <div class="mt-5 col-span-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="description-editor">
+                  Risk Description <span class="text-red-500">*</span>
+                </label>
+                <div id="description-editor"></div>
+                <input type="hidden" id="description" name="description" required />
+              </div>
+            </div>
+
+            <!-- Risk ID + Status + Owner in one row, labels above fields -->
+            <div class="mt-5 grid grid-cols-3 gap-x-8">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="riskId">Risk ID <span class="text-red-500">*</span></label>
+                <input type="text" name="riskId" id="riskId" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                  placeholder="e.g., R-1, RISK-001"/>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
+                <select name="statusId" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select status</option>
+                  <option th:each="s : ${statuses}"
+                      th:value="${s.id}"
+                      th:text="${s.name}"></option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Owner <span class="text-red-500">*</span></label>
+                <select name="riskOwnerName" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select risk owner</option>
+                  <option th:each="user : ${users}"
+                    th:value="${user.displayName}"
+                    th:text="${user.displayName}">
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 1: Risk Category + Subcategory -->
+            <div class="mt-5 grid grid-cols-2 gap-x-8">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Risk Category <span class="text-red-500">*</span></label>
+                <select name="riskCategoryId" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select category</option>
+                  <option th:each="cat : ${riskCategories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}">
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Subcategory <span class="text-red-500">*</span></label>
+                <select name="riskSubcategoryId" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select subcategory</option>
+                  <option th:each="sub : ${riskSubcategories}"
+                    th:value="${sub.id}"
+                    th:text="${sub.name}">
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 2: Dimension + Review Frequency -->
+            <div class="mt-5 grid grid-cols-2 gap-x-8">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Dimension <span class="text-red-500">*</span></label>
+                <select name="riskDimensionId" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select dimension</option>
+                  <option th:each="dim : ${riskDimensions}"
+                    th:value="${dim.id}"
+                    th:text="${dim.name}">
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Review Frequency <span class="text-red-500">*</span></label>
+                <select name="reviewFrequency" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select review frequency</option>
+                  <option th:each="freq : ${reviewFrequencies}"
+                    th:value="${freq.name()}"
+                    th:text="${#strings.capitalize(#strings.toLowerCase(freq.name()))}">
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inherent Risk Card -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 mb-6">
+            <h2 class="text-base font-semibold text-gray-900 mb-6">Inherent Risk</h2>
+
+            <div class="grid grid-cols-2 gap-x-12 gap-y-6">
+              <!-- Inherent Likelihood -->
+              <div x-data="riskSlider(3, 'inherentLikelihood')">
+                <div class="grid grid-cols-[120px_1fr] items-center gap-x-4">
+                  <label class="text-sm font-medium text-gray-700">
+                    Likelihood <span class="text-red-500">*</span>
+                  </label>
+                  <div class="w-full">
+                    <div class="relative h-5">
+                      <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-gray-200 overflow-hidden pointer-events-none">
+                        <div class="h-full rounded-full transition-all duration-75" :class="trackClass" :style="{ width: pct + '%' }"></div>
+                      </div>
+                      <input type="range" min="1" max="5" x-model.number="value"
+                        :name="fieldName"
+                        class="absolute inset-0 w-full h-full"
+                        :class="textClass"/>
+                    </div>
+                    <p class="mt-1 text-sm font-medium" :class="textClass" x-text="value + ' – ' + label"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inherent Impact -->
+              <div x-data="riskSlider(3, 'inherentImpact')">
+                <div class="grid grid-cols-[80px_1fr] items-center gap-x-4">
+                  <label class="text-sm font-medium text-gray-700">
+                    Impact <span class="text-red-500">*</span>
+                  </label>
+                  <div class="w-full">
+                    <div class="relative h-5">
+                      <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-gray-200 overflow-hidden pointer-events-none">
+                        <div class="h-full rounded-full transition-all duration-75" :class="trackClass" :style="{ width: pct + '%' }"></div>
+                      </div>
+                      <input type="range" min="1" max="5" x-model.number="value"
+                        :name="fieldName"
+                        class="absolute inset-0 w-full h-full"
+                        :class="textClass"/>
+                    </div>
+                    <p class="mt-1 text-sm font-medium" :class="textClass" x-text="value + ' – ' + label"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Inherent Rationale -->
+            <div class="mt-6 grid grid-cols-[160px_1fr] items-start gap-x-6">
+              <label class="pt-2.5 text-sm font-medium text-gray-700">Rationale</label>
+              <textarea name="inherentRationale" rows="2"
+                class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 resize-none"
+                placeholder="Explain the reasoning behind the likelihood and impact scores…"></textarea>
+            </div>
+          </div>
+
+          <!-- Residual Risk Card -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 mb-6">
+            <h2 class="text-base font-semibold text-gray-900 mb-1">Residual Risk <span class="font-normal text-gray-500">(After Measures)</span></h2>
+            <p class="text-sm text-gray-500 mb-6">The remaining risk level after controls and mitigation measures are applied.</p>
+
+            <div class="grid grid-cols-2 gap-x-12">
+              <!-- Residual Likelihood -->
+              <div x-data="riskSlider(3, 'residualLikelihood')">
+                <div class="grid grid-cols-[120px_1fr] items-center gap-x-4">
+                  <label class="text-sm font-medium text-gray-700">
+                    Residual Likelihood
+                  </label>
+                  <div class="w-full">
+                    <div class="relative h-5">
+                      <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-gray-200 overflow-hidden pointer-events-none">
+                        <div class="h-full rounded-full transition-all duration-75" :class="trackClass" :style="{ width: pct + '%' }"></div>
+                      </div>
+                      <input type="range" min="1" max="5" x-model.number="value"
+                        :name="fieldName"
+                        class="absolute inset-0 w-full h-full"
+                        :class="textClass"/>
+                    </div>
+                    <p class="mt-1 text-sm font-medium" :class="textClass" x-text="value + ' – ' + label"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Residual Impact -->
+              <div x-data="riskSlider(3, 'residualImpact')">
+                <div class="grid grid-cols-[80px_1fr] items-center gap-x-4">
+                  <label class="text-sm font-medium text-gray-700">
+                    Residual Impact
+                  </label>
+                  <div class="w-full">
+                    <div class="relative h-5">
+                      <div class="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1.5 rounded-full bg-gray-200 overflow-hidden pointer-events-none">
+                        <div class="h-full rounded-full transition-all duration-75" :class="trackClass" :style="{ width: pct + '%' }"></div>
+                      </div>
+                      <input type="range" min="1" max="5" x-model.number="value"
+                        :name="fieldName"
+                        class="absolute inset-0 w-full h-full"
+                        :class="textClass"/>
+                    </div>
+                    <p class="mt-1 text-sm font-medium" :class="textClass" x-text="value + ' – ' + label"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Residual Rationale -->
+            <div class="mt-6 grid grid-cols-[160px_1fr] items-start gap-x-6">
+              <label class="pt-2.5 text-sm font-medium text-gray-700">Rationale</label>
+              <textarea name="residualRationale" rows="2"
+                class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 resize-none"
+                placeholder="Explain why the residual scores (likelihood and impact) differ after applying measures…"></textarea>
+            </div>
+          </div>
+
+          <!-- Risk Treatment Card -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 mb-8" x-data="{ showTreatmentInfo: false }">
+            <div class="flex items-center gap-3 mb-6">
+              <h2 class="text-base font-semibold text-gray-900">Risk Treatment Decision</h2>
+              <button type="button" @click="showTreatmentInfo = !showTreatmentInfo"
+                class="inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/>
+                </svg>
+                <span x-text="showTreatmentInfo ? 'Hide Options' : 'Show Options'"></span>
+              </button>
+            </div>
+            <div x-show="showTreatmentInfo" x-cloak class="rounded-md bg-blue-50 p-4 mb-6">
+              <div class="flex">
+                <div class="shrink-0">
+                  <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-blue-400">
+                    <path d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9z" clip-rule="evenodd" fill-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3 flex-1">
+                  <p class="text-sm font-bold text-blue-700 mb-2">Risk Treatment Options:</p>
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li class="text-sm text-blue-700"><span class="font-semibold">Awaiting Assessment:</span> Risk identified, pending review to decide treatment</li>
+                    <li class="text-sm text-blue-700"><span class="font-semibold">Accept:</span> Acknowledge the residual risk and monitor it regularly</li>
+                    <li class="text-sm text-blue-700"><span class="font-semibold">Mitigate:</span> Implement additional controls to further reduce the risk</li>
+                    <li class="text-sm text-blue-700"><span class="font-semibold">Transfer:</span> Shift the risk through insurance, contracts, or outsourcing</li>
+                    <li class="text-sm text-blue-700"><span class="font-semibold">Avoid:</span> Eliminate the activity or process that creates the risk</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <h2 class="text-base font-semibold text-gray-900 mb-1">Risk Treatment Decision <span class="text-red-500">*</span></h2>
+            <p class="text-sm text-gray-500 mb-5">Select how this risk will be handled after controls are applied.</p>
+            <select name="riskTreatment" required class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              <option value="">Select treatment</option>
+              <option th:each="treatment : ${treatments}"
+                th:value="${treatment.name()}"
+                th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(treatment.name(), '_', ' ')))}"></option>
+            </select>
+          </div>
+
+          <!-- Form actions -->
+          <div class="flex items-center justify-end gap-3">
+            <a href="/risks"
+              class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+              Cancel
+            </a>
+            <button type="submit"
+              class="rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 transition-colors shadow-sm">
+              Create Risk
+            </button>
+          </div>
+
+          </div>
+
+
+          
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Tailwind safelist for dynamically applied slider classes -->
+  <div class="hidden text-green-500 text-yellow-500 text-orange-500 text-rose-400 text-red-600 bg-green-500 bg-yellow-500 bg-orange-500 bg-rose-400 bg-red-600"></div>
+
+  <script>
+    const LABELS        = ['', 'Very Low',        'Low',            'Medium',         'High',         'Very High'   ];
+    const TEXT_CLASSES  = ['', 'text-green-500',  'text-yellow-500', 'text-orange-500', 'text-rose-400', 'text-red-600'];
+    const TRACK_CLASSES = ['', 'bg-green-500',    'bg-yellow-500',   'bg-orange-500',  'bg-rose-400',  'bg-red-600'  ];
+
+    function riskSlider(initial, name) {
+      return {
+        value: initial,
+        fieldName: name,
+        get label()      { return LABELS[this.value] || ''; },
+        get textClass()  { return TEXT_CLASSES[this.value] || ''; },
+        get trackClass() { return TRACK_CLASSES[this.value] || ''; },
+        get pct()        { return ((this.value - 1) / 4) * 100; }
+      };
+    }
+
+
+    function riskForm() {
+      return { showTreatmentInfo: false };
+    }
+
+    // Initialize rich text editor for risk description
+    document.addEventListener('DOMContentLoaded', function() {
+      window.LexicalEditor.init('description-editor', 'description', '').catch(err => {
+        console.error('Failed to initialize editor:', err);
+      });
+    });
+  </script>
+</body>
+</html>

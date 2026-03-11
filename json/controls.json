@@ -1,0 +1,1057 @@
+[
+    {
+        "id": "bd381999-750f-4521-8849-867af8dad1ec",
+        "name": "Information security policies",
+        "description": "Policies for information security management",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.1",
+        "sort_order": 78,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Establish management direction and support for information security",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.2",
+            "A.5.4"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop comprehensive information security policies",
+                "Obtain management approval for policies",
+                "Publish and communicate policies to all personnel",
+                "Establish policy review and update procedures"
+            ],
+            "requirements": [
+                "Policies must be approved by management",
+                "Policies must be published and accessible",
+                "Regular review procedures must be established"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "e33975f3-2fa0-4249-bce8-e9bf22766515",
+        "name": "Information security roles and responsibilities",
+        "description": "Allocation and communication of information security responsibilities",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.2",
+        "sort_order": 79,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Ensure clear allocation and communication of information security responsibilities",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.1",
+            "A.5.4"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Define information security roles and responsibilities",
+                "Update job descriptions to include security duties",
+                "Establish accountability mechanisms and reporting structures"
+            ],
+            "requirements": [
+                "All personnel must have documented security responsibilities",
+                "Job descriptions must include security duties"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "dc8ca77b-c7b8-400b-9fad-da9350182062",
+        "name": "Segregation of duties",
+        "description": "Conflicting duties and areas of responsibility segregated",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.3",
+        "sort_order": 80,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Reduce risk of accidental or deliberate misuse of organizational assets",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.15",
+            "A.8.2"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Identify conflicting duties and areas of responsibility",
+                "Separate conflicting duties between different individuals",
+                "Implement approval workflows for sensitive operations",
+                "Document segregation requirements",
+                "Monitor compliance with segregation controls"
+            ],
+            "requirements": [
+                "Conflicting duties must be separated",
+                "Approval workflows must be implemented",
+                "Segregation requirements must be documented"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "a7d98a54-9b86-4e35-bdf2-7cfd63c8753f",
+        "name": "Management responsibilities",
+        "description": "Management requirements to apply information security",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.4",
+        "sort_order": 81,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Ensure management actively supports information security through clear requirements",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.1",
+            "A.5.2"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish management requirements for information security",
+                "Define management oversight responsibilities",
+                "Create governance structures",
+                "Implement regular reporting mechanisms"
+            ],
+            "requirements": [
+                "Management requirements must be clearly defined",
+                "Governance structures must be established",
+                "Regular reporting must be implemented"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "58894c50-6264-47e7-935c-7137a840ef9e",
+        "name": "Contact with authorities",
+        "description": "Appropriate contacts with relevant authorities maintained",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.5",
+        "sort_order": 82,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Maintain appropriate contacts with relevant authorities for incident response",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.26",
+            "A.6.8"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Identify relevant authorities (law enforcement, regulators, emergency services)",
+                "Maintain current contact information",
+                "Establish communication procedures",
+                "Test contact mechanisms regularly"
+            ],
+            "requirements": [
+                "Contact information must be current and accessible",
+                "Communication procedures must be documented",
+                "Contact mechanisms must be tested regularly"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "01ed458f-9587-4363-8485-d9d3628b782c",
+        "name": "Contact with special interest groups",
+        "description": "Contacts with special interest groups maintained",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.6",
+        "sort_order": 83,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Maintain contacts with security forums and professional associations",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.7",
+            "A.5.5"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Identify relevant security professional groups and industry forums",
+                "Establish relationships with specialist security associations",
+                "Participate in information sharing initiatives",
+                "Join threat intelligence communities"
+            ],
+            "requirements": [
+                "Relationships must be formally established",
+                "Participation in information sharing must be documented"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "f58edbc4-572f-4ebc-976f-bdff86781215",
+        "name": "Threat intelligence",
+        "description": "Information relating to information security threats collected and analyzed",
+        "type": "detective",
+        "framework": "ISO27001",
+        "reference_id": "A.5.7",
+        "sort_order": 84,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Collect and analyze information about information security threats",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.6",
+            "A.8.8"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish threat intelligence gathering processes",
+                "Subscribe to relevant threat feeds and security bulletins",
+                "Analyze threat information for organizational relevance",
+                "Update security measures based on threat analysis"
+            ],
+            "requirements": [
+                "Threat intelligence processes must be documented",
+                "Threat feeds must be regularly monitored",
+                "Analysis results must inform security updates"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "4c271f9e-b9f1-466c-90c5-6c1f7f3e7626",
+        "name": "Information security in project management",
+        "description": "Information security integrated into project management",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.8",
+        "sort_order": 85,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Ensure information security is addressed in project management",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.8.25",
+            "A.8.26"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Integrate security requirements into project management methodologies",
+                "Include security reviews at project milestones",
+                "Assign security responsibilities within project teams",
+                "Document security considerations in project plans"
+            ],
+            "requirements": [
+                "Security requirements must be included in all projects",
+                "Security reviews must be conducted at defined milestones",
+                "Security responsibilities must be clearly assigned"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "4bc1cc9a-00e6-4e83-9b22-4e05859a3d31",
+        "name": "Inventory of information and other associated assets",
+        "description": "Assets associated with information and information processing facilities identified",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.9",
+        "sort_order": 86,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Identify and maintain an inventory of information and associated assets",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.12",
+            "A.7.14"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Create comprehensive asset inventories",
+                "Include information assets, IT assets, and associated assets",
+                "Assign asset owners for each identified asset",
+                "Classify assets according to organizational importance",
+                "Maintain and regularly update asset inventories"
+            ],
+            "requirements": [
+                "All assets must be inventoried",
+                "Asset owners must be assigned",
+                "Asset classification must be documented",
+                "Inventories must be regularly updated"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "d95f221d-7e48-44d9-979b-3d94c270979a",
+        "name": "Acceptable use of information and other associated assets",
+        "description": "Rules for acceptable use of information and assets identified and documented",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.10",
+        "sort_order": 87,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Define and communicate acceptable use rules for information and assets",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.11",
+            "A.6.2"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop acceptable use policies for information systems",
+                "Cover networks and information assets in policies",
+                "Communicate policies to all users",
+                "Obtain user acknowledgment of policies",
+                "Monitor compliance with acceptable use policies",
+                "Enforce policies when violations occur"
+            ],
+            "requirements": [
+                "Policies must cover all information systems and assets",
+                "User acknowledgment must be documented",
+                "Compliance monitoring must be implemented",
+                "Policy enforcement procedures must be established"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "11395c1c-2c20-48ae-b484-f6c84a04bc06",
+        "name": "Return of assets",
+        "description": "Personnel and other parties return all organizational assets in their possession",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.11",
+        "sort_order": 88,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Ensure all organizational assets are returned when employment or agreement ends",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.10",
+            "A.6.5"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish procedures for asset return upon termination",
+                "Maintain records of assets assigned to individuals",
+                "Verify return of all physical assets",
+                "Verify return of access credentials and digital assets",
+                "Document completion of asset return process"
+            ],
+            "requirements": [
+                "Asset return procedures must be documented",
+                "Asset assignment records must be maintained",
+                "Asset return must be verified and documented",
+                "All access credentials must be revoked"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "28d1df99-1d5c-4116-b264-dd9697c36c3d",
+        "name": "Classification of information",
+        "description": "Information classified according to legal requirements and value to the organization",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.12",
+        "sort_order": 89,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Classify information according to its sensitivity and importance",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.13",
+            "A.5.14"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop information classification scheme based on legal requirements",
+                "Align classification with business value and sensitivity",
+                "Train personnel on classification procedures",
+                "Implement handling requirements for each classification level",
+                "Regularly review and update classification scheme"
+            ],
+            "requirements": [
+                "Classification scheme must be documented",
+                "Personnel must be trained on classification procedures",
+                "Handling requirements must be defined for each level"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "3dcf5e4e-85b0-404d-8df3-22a702086612",
+        "name": "Labelling of information",
+        "description": "Appropriate set of procedures for information labelling developed and implemented",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.13",
+        "sort_order": 90,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Implement appropriate labelling procedures for information",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.12",
+            "A.5.14"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop labelling procedures that align with information classification.",
+                "Implement both physical and electronic labelling systems."
+            ],
+            "requirements": [
+                "Train users on labelling requirements and procedures."
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "78522d1a-9904-4f41-b0db-42cdd31d9fe8",
+        "name": "Information transfer",
+        "description": "Information transfer rules, procedures, or agreements in place for all types of transfer facilities",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.14",
+        "sort_order": 91,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Protect information during transfer within and outside the organization",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.12",
+            "A.8.24"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish secure information transfer procedures for all communication methods.",
+                "Implement encryption for sensitive data transfers.",
+                "Create agreements covering information transfer with external parties."
+            ],
+            "requirements": [
+                "Information transfer procedures must be documented and approved",
+                "Encryption must be used for sensitive data transfers",
+                "Transfer agreements must be established with external parties"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "9f56e095-2bb1-4970-b18e-0548c6e3322c",
+        "name": "Access control",
+        "description": "Rules to control physical and logical access to information and other associated assets established",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.15",
+        "sort_order": 92,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Control access to information and information processing facilities",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.16",
+            "A.5.18"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop access control policies covering both physical and logical access.",
+                "Implement role-based access controls.",
+                "Establish access review and approval procedures."
+            ],
+            "requirements": [
+                "Access control policies must be documented and approved",
+                "Access controls must be implemented for both physical and logical access",
+                "Regular access reviews must be conducted"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "daf4676c-62cf-4db9-8338-51bbbc8fb62d",
+        "name": "Identity management",
+        "description": "Full life cycle of identities managed",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.16",
+        "sort_order": 93,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Manage the full lifecycle of user identities",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.15",
+            "A.5.17"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Implement identity management processes covering identity creation, modification, and deletion.",
+                "Establish identity verification procedures.",
+                "Maintain accurate identity records and regular reviews."
+            ],
+            "requirements": [
+                "Identity management processes must cover the full lifecycle",
+                "Identity verification procedures must be established",
+                "Identity records must be maintained and regularly reviewed"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "50aba40d-b34b-4050-a652-d71587bbc252",
+        "name": "Authentication information",
+        "description": "Allocation and management of authentication information controlled by management process",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.17",
+        "sort_order": 94,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Control the allocation and management of authentication information",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.16",
+            "A.8.5"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Implement secure authentication information management including password policies, multi-factor authentication, and secure distribution of credentials.",
+                "Establish procedures for credential reset and recovery."
+            ],
+            "requirements": [
+                "Authentication information management must be controlled by formal processes",
+                "Strong authentication mechanisms must be implemented",
+                "Credential distribution and recovery procedures must be secure"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "7306cb4e-db47-4a48-b646-518cf1f7831d",
+        "name": "Access rights",
+        "description": "Access rights to information and other associated assets provided, reviewed and modified",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.18",
+        "sort_order": 95,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Manage access rights throughout their lifecycle",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.15",
+            "A.5.16"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Implement access rights management processes including provisioning, regular review, and timely removal.",
+                "Establish approval workflows for access requests.",
+                "Conduct periodic access reviews."
+            ],
+            "requirements": [
+                "Access rights must be managed throughout their lifecycle",
+                "Approval workflows must be established for access requests",
+                "Regular access reviews must be conducted"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "3b5e136d-b5ec-42a7-bccf-b7b686d72f18",
+        "name": "Information security in supplier relationships",
+        "description": "Processes and procedures defined and implemented to manage information security risks",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.19",
+        "sort_order": 96,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Manage information security risks in supplier relationships",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.20",
+            "A.5.21"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish supplier security assessment procedures.",
+                "Implement ongoing monitoring of supplier security performance."
+            ],
+            "requirements": [
+                "Define security requirements for supplier selection."
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "52153337-ab95-4eaa-a7cc-2bf50331c480",
+        "name": "Addressing information security within supplier agreements",
+        "description": "Relevant information security requirements established and agreed with each supplier",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.20",
+        "sort_order": 97,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Establish and agree information security requirements with suppliers",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.19",
+            "A.5.22"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Define security responsibilities and obligations."
+            ],
+            "requirements": [
+                "Include comprehensive security requirements in supplier contracts.",
+                "Establish incident reporting and breach notification requirements."
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "2e7321af-e189-4fb8-9909-4b4bc94ec0cf",
+        "name": "Managing information security in the ICT supply chain",
+        "description": "Processes and procedures defined and implemented to manage information security risks",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.21",
+        "sort_order": 98,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Manage information security risks associated with ICT products and services supply chain",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.19",
+            "A.5.22"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Assess security risks in the ICT supply chain.",
+                "Monitor and manage supply chain security throughout the lifecycle."
+            ],
+            "requirements": [
+                "Implement security requirements for ICT suppliers."
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "4c9e05a9-21ed-4a60-ac68-5fdff1e67153",
+        "name": "Monitoring, review and change management of supplier services",
+        "description": "Organizations regularly monitor, review and evaluate supplier service delivery",
+        "type": "detective",
+        "framework": "ISO27001",
+        "reference_id": "A.5.22",
+        "sort_order": 99,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Monitor and review supplier service delivery and manage changes",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.20",
+            "A.5.21"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish supplier monitoring procedures including performance metrics and security indicators.",
+                "Conduct regular supplier reviews.",
+                "Implement change management procedures for supplier services."
+            ],
+            "requirements": [
+                "Supplier monitoring procedures must include performance and security metrics",
+                "Regular supplier reviews must be conducted",
+                "Change management procedures must be implemented for supplier services"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "e339a355-89c5-4394-ae48-0ce12fd6669d",
+        "name": "Information security for use of cloud services",
+        "description": "Processes for acquisition, use, management and exit from cloud services established",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.23",
+        "sort_order": 100,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Manage information security for cloud service acquisition, use, management and exit",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.19",
+            "CLD.6.3.1"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop cloud security policies and procedures.",
+                "Assess cloud service providers for security capabilities.",
+                "Implement secure cloud configuration and data protection measures."
+            ],
+            "requirements": [
+                "Cloud security policies and procedures must be developed",
+                "Cloud service providers must be assessed for security capabilities",
+                "Secure cloud configuration and data protection measures must be implemented"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "3ac5b55a-65a2-4aa1-8846-4073b3f090b1",
+        "name": "Information security incident management planning and preparation",
+        "description": "Organization plans and prepares for managing information security incidents",
+        "type": "preventive",
+        "framework": "ISO27001",
+        "reference_id": "A.5.24",
+        "sort_order": 101,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Plan and prepare for information security incident management",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.25",
+            "A.5.26"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Develop incident response plans and procedures.",
+                "Establish incident response team with defined roles and responsibilities.",
+                "Conduct regular incident response training and exercises."
+            ],
+            "requirements": [
+                "Incident response plans and procedures must be developed",
+                "Incident response team must be established with defined roles",
+                "Regular incident response training and exercises must be conducted"
+            ]
+        },
+        "completed_steps": []
+    },
+    {
+        "id": "bd1750f8-1902-4b7a-800e-d3174e090913",
+        "name": "Assessment and decision on information security events",
+        "description": "Organization assesses information security events and decides if they are to be categorized as incidents",
+        "type": "detective",
+        "framework": "ISO27001",
+        "reference_id": "A.5.25",
+        "sort_order": 102,
+        "owner_id": null,
+        "organization_id": 22,
+        "status": "not_implemented",
+        "applicable": true,
+        "justification": null,
+        "control_objective": "Assess information security events and determine incident classification",
+        "implementation_guidance": null,
+        "related_controls": [
+            "A.5.24",
+            "A.5.26"
+        ],
+        "implementation_date": null,
+        "implementation_notes": null,
+        "evidence_links": [],
+        "evidence_count": 0,
+        "open_tasks_count": 0,
+        "review_frequency": null,
+        "next_review_date": null,
+        "created_at": "2026-02-22T00:28:42.669008+00:00",
+        "updated_at": "2026-02-22T00:28:42.669008+00:00",
+        "implementation_guidance_json": {
+            "steps": [
+                "Establish event assessment procedures and criteria for incident classification.",
+                "Train personnel on event evaluation.",
+                "Implement decision-making processes for incident escalation."
+            ],
+            "requirements": [
+                "Event assessment procedures and incident classification criteria must be established",
+                "Personnel must be trained on event evaluation",
+                "Decision-making processes for incident escalation must be implemented"
+            ]
+        },
+        "completed_steps": []
+    }
+]

@@ -1,0 +1,8 @@
+{
+    "likelihood": 2,
+    "impact": 2,
+    "risk_score": 4,
+    "residual_likelihood": 3,
+    "residual_impact": 5,
+    "residual_risk_score": 15
+}
