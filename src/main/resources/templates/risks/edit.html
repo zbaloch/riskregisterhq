@@ -185,7 +185,7 @@
                   <option th:each="freq : ${reviewFrequencies}"
                     th:value="${freq.name()}"
                     th:selected="${risk.reviewFrequency == freq}"
-                    th:text="${#strings.capitalize(#strings.toLowerCase(freq.name()))}">
+                    th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(freq.name(), '_', ' ')))}">
                   </option>
                 </select>
               </div>

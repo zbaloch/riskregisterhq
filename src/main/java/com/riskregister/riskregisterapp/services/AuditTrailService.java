@@ -298,6 +298,96 @@ public class AuditTrailService {
         return changes;
     }
 
+    // -----------------------------------------------------------------------
+    // Asset logging
+    // -----------------------------------------------------------------------
+
+    /** Log an Asset creation event. */
+    public void logAssetCreated(com.riskregister.riskregisterapp.entities.Asset asset, String actorEmail, String actorName) {
+        AuditTrail entry = new AuditTrail();
+        entry.setEntityType("Asset");
+        entry.setEntityId(asset.getId());
+        entry.setAction("CREATED");
+        entry.setSummary("Asset created: " + asset.getName());
+        entry.setChangesJson(null);
+        entry.setActorEmail(actorEmail);
+        entry.setActorName(actorName);
+        entry.setCreatedAt(Instant.now());
+        auditTrailRepository.save(entry);
+    }
+
+    /** Log an Asset update event with field-level changes. */
+    public void logAssetUpdated(com.riskregister.riskregisterapp.entities.Asset oldAsset,
+                                com.riskregister.riskregisterapp.entities.Asset newAsset,
+                                String actorEmail, String actorName) {
+        List<FieldChange> changes = diffAsset(oldAsset, newAsset);
+        if (changes.isEmpty()) return;  // Nothing changed — skip
+
+        String changedFieldLabels = changes.stream()
+            .map(FieldChange::label)
+            .collect(Collectors.joining(", "));
+
+        String summary = "Asset updated: " + changedFieldLabels;
+
+        AuditTrail entry = new AuditTrail();
+        entry.setEntityType("Asset");
+        entry.setEntityId(newAsset.getId());
+        entry.setAction("UPDATED");
+        entry.setSummary(summary);
+        entry.setChangesJson(toJson(changes));
+        entry.setActorEmail(actorEmail);
+        entry.setActorName(actorName);
+        entry.setCreatedAt(Instant.now());
+        auditTrailRepository.save(entry);
+    }
+
+    /** Log an Asset deletion event. */
+    public void logAssetDeleted(com.riskregister.riskregisterapp.entities.Asset asset, String actorEmail, String actorName) {
+        AuditTrail entry = new AuditTrail();
+        entry.setEntityType("Asset");
+        entry.setEntityId(asset.getId());
+        entry.setAction("DELETED");
+        entry.setSummary("Asset deleted: " + asset.getName());
+        entry.setChangesJson(null);
+        entry.setActorEmail(actorEmail);
+        entry.setActorName(actorName);
+        entry.setCreatedAt(Instant.now());
+        auditTrailRepository.save(entry);
+    }
+
+    /** Retrieve all audit trail entries for an Asset, newest first. */
+    public List<AuditTrail> findByAsset(Long assetId) {
+        return auditTrailRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc("Asset", assetId);
+    }
+
+    // -----------------------------------------------------------------------
+    // Private: Asset field diff logic
+    // -----------------------------------------------------------------------
+
+    private List<FieldChange> diffAsset(com.riskregister.riskregisterapp.entities.Asset before,
+                                         com.riskregister.riskregisterapp.entities.Asset after) {
+        List<FieldChange> changes = new ArrayList<>();
+
+        diff(changes, "name", "Name", before.getName(), after.getName());
+        diff(changes, "description", "Description", before.getDescription(), after.getDescription());
+        diff(changes, "type", "Type", before.getType(), after.getType());
+        diff(changes, "status", "Status", before.getStatus(), after.getStatus());
+        diff(changes, "location", "Location", before.getLocation(), after.getLocation());
+        diff(changes, "notes", "Notes", before.getNotes(), after.getNotes());
+        diff(changes, "ownerName", "Owner", before.getOwnerName(), after.getOwnerName());
+        diff(changes, "confidentiality", "Confidentiality",
+             before.getConfidentiality() != null ? before.getConfidentiality().toString() : "",
+             after.getConfidentiality() != null ? after.getConfidentiality().toString() : "");
+        diff(changes, "integrity", "Integrity",
+             before.getIntegrity() != null ? before.getIntegrity().toString() : "",
+             after.getIntegrity() != null ? after.getIntegrity().toString() : "");
+        diff(changes, "availability", "Availability",
+             before.getAvailability() != null ? before.getAvailability().toString() : "",
+             after.getAvailability() != null ? after.getAvailability().toString() : "");
+
+        return changes;
+    }
+
     private String toJson(List<FieldChange> changes) {
         try {
             return objectMapper.writeValueAsString(changes);

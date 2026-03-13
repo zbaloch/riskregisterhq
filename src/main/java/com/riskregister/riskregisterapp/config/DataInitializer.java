@@ -52,6 +52,7 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        fixUserNames();
         seedRiskCategories();
         seedRiskSubcategories();
         seedRiskDimensions();
@@ -59,6 +60,24 @@ public class DataInitializer implements ApplicationRunner {
         seedAdminUser();
         seedRisks();
         seedEffectivenessScores();
+    }
+
+    private void fixUserNames() {
+        List<User> users = userRepository.findAll();
+        boolean updated = false;
+        for (User user : users) {
+            if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
+                user.setFirstName("");
+                updated = true;
+            }
+            if (user.getLastName() == null || user.getLastName().isEmpty()) {
+                user.setLastName("");
+                updated = true;
+            }
+        }
+        if (updated) {
+            userRepository.saveAll(users);
+        }
     }
 
     private void seedRiskCategories() {

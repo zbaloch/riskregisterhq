@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,6 +28,7 @@ import com.riskregister.riskregisterapp.entities.RiskDimension;
 import com.riskregister.riskregisterapp.entities.RiskSubcategory;
 import com.riskregister.riskregisterapp.entities.RiskNote;
 import com.riskregister.riskregisterapp.entities.Task;
+import com.riskregister.riskregisterapp.entities.Asset;
 import com.riskregister.riskregisterapp.repositories.AuditTrailRepository;
 import com.riskregister.riskregisterapp.enums.RiskReviewFrequency;
 import com.riskregister.riskregisterapp.lookups.RiskTreatment;
@@ -40,6 +42,7 @@ import com.riskregister.riskregisterapp.services.AuditTrailService;
 import com.riskregister.riskregisterapp.services.RiskService;
 import com.riskregister.riskregisterapp.services.RiskNoteService;
 import com.riskregister.riskregisterapp.services.TaskService;
+import com.riskregister.riskregisterapp.services.AssetService;
 
 @Controller
 public class RisksController {
@@ -73,6 +76,9 @@ public class RisksController {
 
     @Autowired
     private AuditTrailRepository auditTrailRepository;
+
+    @Autowired
+    private AssetService assetService;
 
     @GetMapping("/risks")
     public String index(Model model) {
@@ -130,6 +136,31 @@ public class RisksController {
         List<Task> tasks = taskService.findAllByRisk(id);
         model.addAttribute("tasks", tasks);
         model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+
+        // Assets - linked and available
+        List<Asset> allAssets = assetService.findAll();
+        List<Asset> linkedAssets = new ArrayList<>();
+        List<Long> linkedAssetIds = new ArrayList<>();
+
+        if (risk.getLinkedAssetIds() != null && !risk.getLinkedAssetIds().isEmpty()) {
+            String[] ids = risk.getLinkedAssetIds().split(",");
+            for (String idStr : ids) {
+                try {
+                    Long assetId = Long.parseLong(idStr.trim());
+                    linkedAssetIds.add(assetId);
+                    allAssets.stream()
+                        .filter(a -> a.getId().equals(assetId))
+                        .findFirst()
+                        .ifPresent(linkedAssets::add);
+                } catch (NumberFormatException e) {
+                    // Skip invalid IDs
+                }
+            }
+        }
+
+        model.addAttribute("linkedAssets", linkedAssets);
+        model.addAttribute("allAssets", allAssets);
+        model.addAttribute("linkedAssetIds", linkedAssetIds);
 
         // Audit entries for this risk (both Risk and Task entries, newest first)
         List<AuditTrail> allAuditEntries = new ArrayList<>();
@@ -265,6 +296,22 @@ public class RisksController {
     private Map<Long, String> statusNameMap() {
         return riskStatusRepository.findAll().stream()
                 .collect(Collectors.toMap(RiskStatus::getId, RiskStatus::getName));
+    }
+
+    @PostMapping("/api/risks/{id}/assets")
+    public ResponseEntity<?> updateLinkedAssets(@PathVariable Long id, @RequestBody Map<String, List<Long>> payload) {
+        Risk risk = riskService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
+
+        List<Long> assetIds = payload.getOrDefault("assetIds", new ArrayList<>());
+        String linkedAssetIds = assetIds.isEmpty() ? null : assetIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        risk.setLinkedAssetIds(linkedAssetIds);
+        riskService.save(risk);
+
+        return ResponseEntity.ok(Map.of("success", true, "message", "Assets linked successfully"));
     }
 
     private String getActorName(String email) {

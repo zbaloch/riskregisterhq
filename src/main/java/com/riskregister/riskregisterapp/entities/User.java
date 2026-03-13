@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,8 +25,10 @@ public class User {
 
     private String email;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
     private String firstName;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT ''")
     private String lastName;
     
     private String password;
@@ -41,6 +44,8 @@ public class User {
 
     public User() {
         this.id = UUID.randomUUID().toString();
+        this.firstName = "";
+        this.lastName = "";
         this.role = Role.MEMBER; // Set default role to MEMBER
         this.approved = false; // Default to not approved - admin must approve
     }

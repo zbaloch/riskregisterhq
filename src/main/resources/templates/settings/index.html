@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-  <title>RiskRegisterHQ</title>
+  <title>Settings - RiskRegisterHQ</title>
   <meta name="description" content="Risk Register & Compliance Platform" />
 </head>
 
@@ -19,137 +19,261 @@
     <div th:replace="~{fragments/admin-nav(activePage='settings')}"></div>
 
   <div class="lg:pl-72">
-    
+
     <div th:replace="~{fragments/admin-nav-top}"></div>
 
     <main class="py-10">
-      <div class="mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Your content -->
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Settings</h1>
+      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8" x-data="{ showAddModal: false, showEditModal: false, editingUser: null }">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Settings</h1>
+            <p class="mt-1 text-sm text-gray-500">Manage your organization and users.</p>
+          </div>
+          <button @click="showAddModal = true" class="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add New User
+          </button>
+        </div>
 
+        <div th:if="${successMessage}" class="mt-6 rounded-lg bg-green-50 border border-green-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <p class="text-sm font-medium text-green-800" th:text="${successMessage}"></p>
+        </div>
+        <div th:if="${errorMessage}" class="mt-6 rounded-lg bg-red-50 border border-red-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-medium text-red-800" th:text="${errorMessage}"></p>
+        </div>
 
-        <!-- Critical Metrics -->
-        <div class="py-4 sm:py-6">
-          <h3 class="text-base font-semibold text-gray-900">Critical Metrics</h3>
-          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Risk Effectiveness Score</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">71,897</dd>
+        <div class="mt-8" x-data="{ activeTab: 'users' }">
+          <div class="border-b border-gray-200">
+            <nav class="flex gap-8" aria-label="Tabs">
+              <button @click="activeTab = 'users'" :class="activeTab === 'users' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                Users
+              </button>
+              <button @click="activeTab = 'support'" :class="activeTab === 'support' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                Support
+              </button>
+            </nav>
+          </div>
+
+          <div x-show="activeTab === 'users'" class="mt-8">
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Users</h2>
+                <p class="text-sm text-gray-500 mt-1">Active and inactive users in your organization</p>
+              </div>
+
+              <div th:if="${#lists.isEmpty(users)}" class="p-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 10H9m6 0a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+                <h3 class="mt-4 text-sm font-semibold text-gray-900">No users yet</h3>
+                <p class="mt-1 text-sm text-gray-500">Add your first user to get started.</p>
+              </div>
+
+              <table th:if="${not #lists.isEmpty(users)}" class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr th:each="user : ${users}" class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm">
+                      <div class="flex items-center gap-3">
+                        <img th:src="'https://ui-avatars.com/api/?name=' + ${user.firstName} + '+' + ${user.lastName} + '&background=random&size=32'" th:alt="${user.getDisplayName()}" class="h-8 w-8 rounded-full">
+                        <span class="font-medium text-gray-900" th:text="${user.getDisplayName()}"></span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600" th:text="${user.email}"></td>
+                    <td class="px-6 py-4 text-sm text-gray-700" th:text="${user.role.name() == 'ADMIN' ? 'Admin' : 'Member'}"></td>
+                    <td class="px-6 py-4 text-sm">
+                      <span th:if="${user.approved}" class="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                        <!-- <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span> -->
+                        Active
+                      </span>
+                      <span th:if="${!user.approved}" class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                        <!-- <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span> -->
+                        Suspended
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-3">
+                      <button @click="editingUser = {id: $el.dataset.userId, firstName: $el.dataset.firstName, lastName: $el.dataset.lastName, email: $el.dataset.email, role: $el.dataset.role, approved: $el.dataset.approved === 'true'}; showEditModal = true"
+                        th:data-user-id="${user.id ?: ''}"
+                        th:data-first-name="${user.firstName ?: ''}"
+                        th:data-last-name="${user.lastName ?: ''}"
+                        th:data-email="${user.email ?: ''}"
+                        th:data-role="${user.role.name()}"
+                        th:data-approved="${user.approved}"
+                        class="text-xs font-medium text-sky-600 hover:text-sky-800 transition-colors">
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Approved High Residual Risks (≥15)</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
+          </div>
+
+          <div x-show="activeTab === 'support'" class="mt-8">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Contact Support</h2>
+                <p class="text-sm text-gray-700 mt-1">Need help? Reach out to our support team and we'll get back to you as soon as possible.</p>
+                <p class="text-sm text-gray-700"><strong>Email:</strong> <a href="mailto:support@riskregisterhq.com" class="text-sky-600 hover:text-sky-700 font-medium">support@riskregisterhq.com</a></p>
+              </div>
+
+              <!-- <div class="p-8 space-y-6">
+                <div class="rounded-lg bg-sky-50 border border-sky-200 p-6">
+                  <h3 class="text-sm font-semibold text-gray-900 mb-2">Contact Support</h3>
+                  <p class="text-sm text-gray-600 mb-4">Need help? Reach out to our support team and we'll get back to you as soon as possible.</p>
+                  <p class="text-sm text-gray-700"><strong>Email:</strong> <a href="mailto:support@riskregisterhq.com" class="text-sky-600 hover:text-sky-700 font-medium">support@riskregisterhq.com</a></p>
+                </div>
+
+                <div class="rounded-lg bg-gray-50 border border-gray-200 p-6">
+                  <h3 class="text-sm font-semibold text-gray-900 mb-4">Resources</h3>
+                  <ul class="space-y-3">
+                    <li>
+                      <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium">Documentation</a>
+                      <p class="text-xs text-gray-500 mt-1">Learn how to use RiskRegisterHQ</p>
+                    </li>
+                    <li>
+                      <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium">FAQ</a>
+                      <p class="text-xs text-gray-500 mt-1">Find answers to common questions</p>
+                    </li>
+                    <li>
+                      <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium">Status Page</a>
+                      <p class="text-xs text-gray-500 mt-1">Check system status and updates</p>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="rounded-lg bg-gray-50 border border-gray-200 p-6">
+                  <h3 class="text-sm font-semibold text-gray-900 mb-3">Feedback</h3>
+                  <p class="text-sm text-gray-600 mb-4">We'd love to hear your feedback and suggestions for improving RiskRegisterHQ.</p>
+                  <button class="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                    Send Feedback
+                  </button>
+                </div>
+
+
+              </div> -->
+              
             </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Approved Risks Without Controls</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+          </div>
+        </div>
+
+        <!-- Add New User Modal -->
+        <div x-cloak x-show="showAddModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click="showAddModal = false">
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full" @click.stop>
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Add New User</h3>
+              <button @click="showAddModal = false" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
             </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Controls Without Evidence</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            <form method="POST" action="/settings/users/create" class="space-y-4 p-6">
+              <div>
+                <label for="addFirstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <input type="text" id="addFirstName" name="firstName" required class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="John">
+              </div>
+              <div>
+                <label for="addLastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input type="text" id="addLastName" name="lastName" required class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="Doe">
+              </div>
+              <div>
+                <label for="addEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input type="email" id="addEmail" name="email" required class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="john.doe@company.com">
+              </div>
+              <div>
+                <label for="addRole" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <select id="addRole" name="role" required class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors">
+                  <option value="">Select a role</option>
+                  <option value="ADMIN">Admin</option>
+                  <option value="MEMBER">Member</option>
+                </select>
+              </div>
+              <p class="text-xs text-gray-500">A magic link will be sent to the user's email for login.</p>
+              <div class="flex gap-3 pt-4">
+                <button type="button" @click="showAddModal = false" class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" class="flex-1 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">
+                  Create User
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div x-cloak x-show="showEditModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click="showEditModal = false">
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full" @click.stop>
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Edit User</h3>
+              <button @click="showEditModal = false; editingUser = null" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
             </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Approved Risks Without Owner</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
+            <div x-show="editingUser">
+              <form action="/settings/users/update" method="POST" class="space-y-4 p-6">
+                <input type="hidden" name="userId" x-model="editingUser.id">
+                <div>
+                  <label for="editFirstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                  <input type="text" id="editFirstName" name="firstName" required x-model="editingUser.firstName" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors">
+                </div>
+                <div>
+                  <label for="editLastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                  <input type="text" id="editLastName" name="lastName" required x-model="editingUser.lastName" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors">
+                </div>
+                <div>
+                  <label for="editEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                  <input type="email" id="editEmail" name="email" disabled x-model="editingUser.email" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-gray-50 text-gray-600 cursor-not-allowed">
+                  <p class="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                </div>
+                <div>
+                  <label for="editRole" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                  <select id="editRole" name="role" required x-model="editingUser.role" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors">
+                    <option value="ADMIN">Admin</option>
+                    <option value="MEMBER">Member</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-3 pt-2">
+                  <input type="hidden" name="approved" :value="editingUser.approved ? 'true' : 'false'">
+                  <input type="checkbox" id="editApproved" x-model="editingUser.approved" class="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
+                  <label for="editApproved" class="text-sm font-medium text-gray-700">Active User</label>
+                  <span class="text-xs text-gray-500" x-text="editingUser.approved ? '(User can login)' : '(User is suspended)'"></span>
+                </div>
+                <div class="flex gap-3 pt-4">
+                  <button type="button" @click="showEditModal = false; editingUser = null" class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                    Cancel
+                  </button>
+                  <button type="submit" class="flex-1 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
             </div>
-          </dl>
-        </div>
-
-
-        <!-- Process Metrics -->
-        <div class="py-4 sm:py-6">
-          <h3 class="text-base font-semibold text-gray-900">Process Metrics</h3>
-          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Risks Pending Approval</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">71,897</dd>
-            </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Approved Risks Overdue Reviews</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">58.16%</dd>
-            </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Controls Without Owner</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
-            </div>
-            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <dt class="truncate text-sm font-medium text-gray-500">Controls Overdue Reviews</dt>
-              <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">24.57%</dd>
-            </div>
-          </dl>
-        </div>
-
-
-        <!-- Risk Management Effectiveness -->
-         <div class="py-2 sm:py-3">
-        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-          <div class="px-4 py-5 sm:px-6">
-            Risk Management Effectiveness
-            <!-- Content goes here -->
-            <!-- We use less vertical padding on card headers on desktop than on body sections -->
-          </div>
-          <div class="px-4 py-5 sm:p-6">
-            <!-- Content goes here -->
           </div>
         </div>
-        </div>
-
-        <!-- Framework Compliance -->
-         <div class="py-2 sm:py-3">
-        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-          <div class="px-4 py-5 sm:px-6">
-            Framework Compliance
-            <!-- Content goes here -->
-            <!-- We use less vertical padding on card headers on desktop than on body sections -->
-          </div>
-          <div class="px-4 py-5 sm:p-6">
-            <!-- Content goes here -->
-          </div>
-        </div>
-        </div>
-
-        <!-- Risk Heatmap -->
-         <div class="py-2 sm:py-3">
-        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-          <div class="px-4 py-5 sm:px-6">
-            Risk Heatmap
-            <!-- Content goes here -->
-            <!-- We use less vertical padding on card headers on desktop than on body sections -->
-          </div>
-          <div class="px-4 py-5 sm:p-6">
-            <!-- Content goes here -->
-          </div>
-        </div>
-        </div>
-
-        <!-- My Tasks -->
-         <div class="py-2 sm:py-3">
-        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-          <div class="px-4 py-5 sm:px-6">
-            My Tasks
-            <!-- Content goes here -->
-            <!-- We use less vertical padding on card headers on desktop than on body sections -->
-          </div>
-          <div class="px-4 py-5 sm:p-6">
-            <!-- Content goes here -->
-          </div>
-        </div>
-        </div>
-
-         <!-- My Tasks -->
-         <div class="py-2 sm:py-3">
-        <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-          <div class="px-4 py-5 sm:px-6">
-            Recent Changes
-            <!-- Content goes here -->
-            <!-- We use less vertical padding on card headers on desktop than on body sections -->
-          </div>
-          <div class="px-4 py-5 sm:p-6">
-            <!-- Content goes here -->
-          </div>
-        </div>
-        </div>
-
 
       </div>
 

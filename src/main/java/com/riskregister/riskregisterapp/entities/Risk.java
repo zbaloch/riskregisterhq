@@ -48,6 +48,8 @@ public class Risk {
 
     private String categories; // Comma-separated list of category tags
 
+    private String linkedAssetIds; // Comma-separated list of linked asset IDs
+
     @Enumerated(EnumType.STRING)
     private RiskReviewFrequency reviewFrequency;
 

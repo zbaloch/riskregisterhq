@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>New Asset – RiskRegisterHQ</title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='assets')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8">
+
+        <!-- Breadcrumb -->
+        <div class="mb-6 flex items-center gap-3">
+          <a href="/assets" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Assets
+          </a>
+          <span class="text-gray-300">/</span>
+          <span class="text-sm text-gray-700 font-medium">New Asset</span>
+        </div>
+
+        <!-- Page Title -->
+        <h1 class="mb-6 text-3xl font-bold text-gray-900">New Asset</h1>
+
+        <form action="/assets" method="POST" class="space-y-6">
+
+          <!-- All Fields in Single Card -->
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+            <!-- Basic Details Section -->
+            <div class="mb-8 pb-8 border-b border-gray-200">
+              <h2 class="text-lg font-semibold text-gray-900 mb-6">Basic Details</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Asset Name *</label>
+                  <input type="text" id="name" name="name" required th:value="${asset.name ?: ''}"
+                    class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                    placeholder="e.g., Customer Database Server">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type *</label>
+                    <select id="type" name="type" required th:value="${asset.type ?: ''}"
+                      class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                      <option value="">Select type</option>
+                      <option value="Hardware">Hardware</option>
+                      <option value="Software">Software</option>
+                      <option value="Data">Data</option>
+                      <option value="Service">Service</option>
+                      <option value="Facility">Facility</option>
+                      <option value="People">People</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
+                    <select id="status" name="status" required th:value="${asset.status ?: 'Active'}"
+                      class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                      <option value="Active">Active</option>
+                      <option value="Retired">Retired</option>
+                      <option value="Archived">Archived</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <input type="text" id="location" name="location" th:value="${asset.location ?: ''}"
+                      class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                      placeholder="e.g., Data Center, Building A">
+                  </div>
+
+                  <div>
+                    <label for="ownerEmail" class="block text-sm font-medium text-gray-700 mb-1">Owner</label>
+                    <select id="ownerEmail" name="ownerEmail" th:value="${asset.ownerEmail ?: ''}"
+                      class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                      <option value="">No owner assigned</option>
+                      <option th:each="user : ${users}" th:value="${user.email}" th:text="${user.getDisplayName()}"></option>
+                    </select>
+                    <input type="hidden" id="ownerName" name="ownerName" th:value="${asset.ownerName ?: ''}">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description Section -->
+            <div class="mb-8 pb-8 border-b border-gray-200">
+              <h2 class="text-lg font-semibold text-gray-900 mb-6">Description</h2>
+              <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <div id="description-editor" class="rounded-lg border border-gray-300 focus:border-sky-500 focus:ring-1 focus:ring-sky-500" style="min-height: 120px;"></div>
+                <input type="hidden" id="description" name="description" th:value="${asset.description ?: ''}">
+              </div>
+            </div>
+
+            <!-- Security Classification (CIA Triad) -->
+            <div class="mb-8 pb-8 border-b border-gray-200">
+              <h2 class="text-lg font-semibold text-gray-900 mb-2">Security Classification</h2>
+              <p class="text-sm text-gray-500 mb-6">Rate the importance of each security aspect (1=Low, 5=Critical)</p>
+
+              <div class="grid grid-cols-3 gap-6">
+              <!-- Confidentiality -->
+              <div>
+                <label for="confidentiality" class="block text-sm font-medium text-gray-700 mb-1">Confidentiality</label>
+                <p class="text-xs text-gray-500 mb-3">Impact if disclosed</p>
+                <select id="confidentiality" name="confidentiality" required th:value="${asset.confidentiality ?: 3}"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                  <option value="1">1 - Public</option>
+                  <option value="2">2 - Internal</option>
+                  <option value="3">3 - Confidential</option>
+                  <option value="4">4 - Restricted</option>
+                  <option value="5">5 - Secret</option>
+                </select>
+              </div>
+
+              <!-- Integrity -->
+              <div>
+                <label for="integrity" class="block text-sm font-medium text-gray-700 mb-1">Integrity</label>
+                <p class="text-xs text-gray-500 mb-3">Impact if modified</p>
+                <select id="integrity" name="integrity" required th:value="${asset.integrity ?: 3}"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                  <option value="1">1 - Low</option>
+                  <option value="2">2 - Minor</option>
+                  <option value="3">3 - Moderate</option>
+                  <option value="4">4 - High</option>
+                  <option value="5">5 - Critical</option>
+                </select>
+              </div>
+
+              <!-- Availability -->
+              <div>
+                <label for="availability" class="block text-sm font-medium text-gray-700 mb-1">Availability</label>
+                <p class="text-xs text-gray-500 mb-3">Impact if unavailable</p>
+                <select id="availability" name="availability" required th:value="${asset.availability ?: 3}"
+                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                  <option value="1">1 - Low</option>
+                  <option value="2">2 - Minor</option>
+                  <option value="3">3 - Moderate</option>
+                  <option value="4">4 - High</option>
+                  <option value="5">5 - Critical</option>
+                </select>
+              </div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 pt-8 border-t border-gray-200">
+              <a href="/assets"
+                class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                Cancel
+              </a>
+              <button type="submit"
+                class="rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 transition-colors shadow-sm">
+                Create Asset
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      window.LexicalEditor.init('description-editor', 'description', '');
+
+      // Handle owner selection
+      const ownerSelect = document.getElementById('ownerEmail');
+      const ownerNameInput = document.getElementById('ownerName');
+
+      ownerSelect.addEventListener('change', function() {
+        if (this.value) {
+          const selectedOption = this.options[this.selectedIndex];
+          ownerNameInput.value = selectedOption.text;
+        } else {
+          ownerNameInput.value = '';
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

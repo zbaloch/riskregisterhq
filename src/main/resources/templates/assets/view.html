@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title th:text="${asset.name} + ' – RiskRegisterHQ'"></title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='assets')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8">
+
+        <!-- Breadcrumb -->
+        <div class="mb-6 flex items-center gap-3">
+          <a href="/assets" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Assets
+          </a>
+          <span class="text-gray-300">/</span>
+          <span class="text-sm text-gray-700 font-medium" th:text="${asset.name}"></span>
+        </div>
+
+        <!-- Page Title and Actions -->
+        <div class="mb-6 flex items-start justify-between">
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900" th:text="${asset.name}"></h1>
+          </div>
+          <div class="flex gap-2">
+            <a th:href="@{/assets/{id}/edit(id=${asset.id})}"
+              class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+              Edit
+            </a>
+          </div>
+        </div>
+
+        <div x-data="assetTabs()" x-init="init()" @keydown.escape.window="closeModal()">
+          <!-- Tab Navigation -->
+          <div class="flex items-center gap-8 border-b border-gray-200 mb-6">
+            <button @click="setTab('details')"
+              :class="activeTab === 'details' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
+              class="px-1 py-3 text-sm font-medium transition-colors">
+              Details
+            </button>
+            <button @click="setTab('linked')"
+              :class="activeTab === 'linked' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
+              class="px-1 py-3 text-sm font-medium transition-colors">
+              Linked Risks <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(linkedRisks)} + ')'"></span>
+            </button>
+            <button @click="setTab('notes')"
+              :class="activeTab === 'notes' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
+              class="px-1 py-3 text-sm font-medium transition-colors">
+              Notes <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(notes)} + ')'"></span>
+            </button>
+            <button @click="setTab('audit')"
+              :class="activeTab === 'audit' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
+              class="px-1 py-3 text-sm font-medium transition-colors">
+              Audit Trail
+            </button>
+          </div>
+
+          <!-- Details Tab -->
+          <div x-show="activeTab === 'details'" class="space-y-6">
+            <!-- Basic Details Card -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-6">Basic Details</h3>
+              <div class="grid grid-cols-2 gap-6">
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Asset Name</p>
+                  <p class="text-sm font-medium text-gray-900" th:text="${asset.name}"></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Type</p>
+                  <p class="text-sm font-medium text-gray-900" th:text="${asset.type}"></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Status</p>
+                  <p class="text-sm font-medium text-gray-900" th:text="${asset.status}"></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Location</p>
+                  <p class="text-sm font-medium text-gray-900" th:text="${asset.location ?: '—'}"></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Owner</p>
+                  <p class="text-sm font-medium text-gray-900" th:text="${asset.ownerName ?: '—'}"></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 mb-1">Created</p>
+                  <p class="text-sm font-medium text-gray-900" th:text="${asset.getCreatedAtFormatted()}"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description Card -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Description</h3>
+              <div th:if="${asset.description != null}" class="text-sm text-gray-700 lexical-content" th:utext="${asset.description}"></div>
+              <div th:if="${asset.description == null}" class="text-sm text-gray-500 italic py-2">No description</div>
+            </div>
+
+            <!-- Security Classification Card -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-6">Security Classification (CIA Triad)</h3>
+              <div class="grid grid-cols-3 gap-6">
+                <div class="rounded-lg bg-gray-50 p-4">
+                  <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Confidentiality</div>
+                  <div class="text-2xl font-bold text-gray-900 mb-1" th:text="${asset.confidentiality}"></div>
+                  <p class="text-xs text-gray-600">Impact if disclosed</p>
+                </div>
+                <div class="rounded-lg bg-gray-50 p-4">
+                  <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Integrity</div>
+                  <div class="text-2xl font-bold text-gray-900 mb-1" th:text="${asset.integrity}"></div>
+                  <p class="text-xs text-gray-600">Impact if modified</p>
+                </div>
+                <div class="rounded-lg bg-gray-50 p-4">
+                  <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Availability</div>
+                  <div class="text-2xl font-bold text-gray-900 mb-1" th:text="${asset.availability}"></div>
+                  <p class="text-xs text-gray-600">Impact if unavailable</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="bg-red-50 rounded-xl border border-red-200 shadow-sm p-8 flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-semibold text-red-900 mb-1">Danger Zone</h3>
+                <p class="text-sm text-red-700">Once you delete an asset, it cannot be recovered. This action marks the asset as deleted.</p>
+              </div>
+              <form method="POST" th:action="@{/assets/{id}/delete(id=${asset.id})}" class="flex-shrink-0"
+                @submit.prevent="if(confirm('Delete this asset? This cannot be recovered.')) $el.submit()">
+                <button type="submit" class="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition-colors shadow-sm">
+                  Delete Asset
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Linked Risks Tab -->
+          <div x-show="activeTab === 'linked'" class="space-y-4">
+            <!-- Empty state -->
+            <div th:if="${#lists.isEmpty(linkedRisks)}" class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.658 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+              </svg>
+              <h3 class="mt-4 text-sm font-semibold text-gray-900">No linked risks</h3>
+              <p class="mt-1 text-sm text-gray-500">This asset is not linked to any risks yet.</p>
+            </div>
+
+            <!-- Linked Risks Table -->
+            <div th:if="${not #lists.isEmpty(linkedRisks)}" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <p class="text-sm font-medium text-gray-700">
+                  Linked Risks <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(linkedRisks)} + ')'"></span>
+                </p>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Risk</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Inherent Risk</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Residual Risk</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 bg-white">
+                  <tr th:each="risk : ${linkedRisks}" class="hover:bg-gray-50 transition-colors">
+                    <!-- Risk ID + Title -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <a th:href="@{/risks/{id}(id=${risk.id})}" class="text-sm font-medium text-sky-600 hover:text-sky-700 hover:underline"
+                        th:text="${risk.riskId} + ' ' + ${risk.title}"></a>
+                    </td>
+
+                    <!-- Inherent Risk Score -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div th:if="${risk.inherentScore != null}" class="flex items-center gap-1.5">
+                        <span class="text-sm font-bold"
+                          th:text="${risk.inherentScore}"
+                          th:classappend="${risk.inherentScoreLevel == 'Very Low'} ? 'text-green-600' :
+                                          (${risk.inherentScoreLevel == 'Low'} ? 'text-yellow-600' :
+                                          (${risk.inherentScoreLevel == 'Medium'} ? 'text-orange-600' :
+                                          (${risk.inherentScoreLevel == 'High'} ? 'text-rose-600' : 'text-red-600')))">
+                        </span>
+                        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                          th:text="${risk.inherentScoreLevel}"
+                          th:classappend="${risk.inherentScoreLevel == 'Very Low'} ? 'bg-green-50 text-green-600' :
+                                          (${risk.inherentScoreLevel == 'Low'} ? 'bg-yellow-50 text-yellow-600' :
+                                          (${risk.inherentScoreLevel == 'Medium'} ? 'bg-orange-50 text-orange-600' :
+                                          (${risk.inherentScoreLevel == 'High'} ? 'bg-rose-50 text-rose-600' : 'bg-red-50 text-red-600')))">
+                        </span>
+                      </div>
+                      <span th:unless="${risk.inherentScore != null}" class="text-sm text-gray-400">—</span>
+                    </td>
+
+                    <!-- Residual Risk Score -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div th:if="${risk.residualScore != null}" class="flex items-center gap-1.5">
+                        <span class="text-sm font-bold"
+                          th:text="${risk.residualScore}"
+                          th:classappend="${risk.residualScoreLevel == 'Very Low'} ? 'text-green-600' :
+                                          (${risk.residualScoreLevel == 'Low'} ? 'text-yellow-600' :
+                                          (${risk.residualScoreLevel == 'Medium'} ? 'text-orange-600' :
+                                          (${risk.residualScoreLevel == 'High'} ? 'text-rose-600' : 'text-red-600')))">
+                        </span>
+                        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                          th:text="${risk.residualScoreLevel}"
+                          th:classappend="${risk.residualScoreLevel == 'Very Low'} ? 'bg-green-50 text-green-600' :
+                                          (${risk.residualScoreLevel == 'Low'} ? 'bg-yellow-50 text-yellow-600' :
+                                          (${risk.residualScoreLevel == 'Medium'} ? 'bg-orange-50 text-orange-600' :
+                                          (${risk.residualScoreLevel == 'High'} ? 'bg-rose-50 text-rose-600' : 'bg-red-50 text-red-600')))">
+                        </span>
+                      </div>
+                      <span th:unless="${risk.residualScore != null}" class="text-sm text-gray-400">—</span>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span th:if="${risk.statusId != null}"
+                            class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium capitalize bg-gray-50 text-gray-700 border border-gray-100"
+                            th:text="${statusMap[risk.statusId]}"></span>
+                      <span th:unless="${risk.statusId != null}" class="text-sm text-gray-400">—</span>
+                    </td>
+
+                    <!-- Owner -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="text-sm text-gray-700" th:text="${risk.riskOwnerName ?: '—'}"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Notes Tab -->
+          <div x-show="activeTab === 'notes'" class="space-y-4">
+            <!-- Add Note Form -->
+            <form method="POST" th:action="@{/assets/{id}/notes(id=${asset.id})}" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Add a Note</h3>
+              <div>
+                <textarea name="content" placeholder="Write a note..." required
+                          class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+                          rows="4"></textarea>
+              </div>
+              <button type="submit"
+                      class="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors shadow-sm">
+                Add Note
+              </button>
+            </form>
+
+            <!-- Notes List -->
+            <div th:if="${#lists.isEmpty(notes)}" class="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h3.75m-9 8.25h15A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25z"/>
+              </svg>
+              <h3 class="mt-4 text-sm font-semibold text-gray-900">No notes yet</h3>
+              <p class="mt-1 text-sm text-gray-500">Start a discussion by adding the first note.</p>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(notes)}" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div class="space-y-4 divide-y divide-gray-100 p-6">
+                <div th:each="note : ${notes}" class="pt-4 first:pt-0">
+                  <!-- Author & Timestamp -->
+                  <div class="flex items-center gap-3 mb-2">
+                    <img :src="`https://ui-avatars.com/api/?name=${encodeURIComponent('${note.authorName ?: note.authorEmail}')}&background=random&color=fff&bold=true`"
+                         :alt="${note.authorName ?: note.authorEmail}"
+                         class="size-8 rounded-full">
+                    <div>
+                      <p class="text-sm font-semibold text-gray-900" th:text="${note.authorName ?: note.authorEmail}"></p>
+                      <p class="text-xs text-gray-500" th:text="${note.getCreatedAtFormatted()}"></p>
+                    </div>
+                  </div>
+                  <!-- Content -->
+                  <p class="text-sm text-gray-700 whitespace-pre-wrap mt-3" th:text="${note.content}"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audit Trail Tab -->
+          <div x-show="activeTab === 'audit'" class="bg-white rounded-xl border border-gray-200 shadow-sm p-8" x-data="auditTrail()">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Audit Trail</h3>
+              <span class="text-xs text-gray-400" th:text="${#lists.size(auditEntries) + ' entries'}"></span>
+            </div>
+
+            <!-- No entries message -->
+            <div th:if="${#lists.isEmpty(auditEntries)}" class="text-sm text-gray-400 italic">
+              No audit trail entries yet.
+            </div>
+
+            <!-- Audit entries list -->
+            <ul class="space-y-3" th:unless="${#lists.isEmpty(auditEntries)}">
+              <li th:each="entry : ${auditEntries}"
+                  class="group relative flex items-start gap-3 rounded-lg p-3 hover:bg-gray-50 cursor-pointer transition-colors border border-transparent hover:border-gray-200"
+                  th:attr="
+                    data-summary=${entry.summary},
+                    data-changes=${entry.changesJson != null ? entry.changesJson : '[]'},
+                    data-actor-name=${entry.actorName},
+                    data-actor-email=${entry.actorEmail},
+                    data-timestamp=${#dates.format(entry.createdAt, 'MMM d, yyyy HH:mm')}"
+                  @click="openEntry($el)">
+
+                <!-- Action icon -->
+                <div class="mt-0.5 shrink-0">
+                  <!-- CREATED: green dot -->
+                  <span th:if="${entry.action == 'CREATED'}" class="flex h-6 w-6 items-center justify-center rounded-full bg-green-100">
+                    <svg class="h-3.5 w-3.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                  </span>
+                  <!-- UPDATED: blue pencil -->
+                  <span th:if="${entry.action == 'UPDATED'}" class="flex h-6 w-6 items-center justify-center rounded-full bg-sky-100">
+                    <svg class="h-3.5 w-3.5 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                  </span>
+                  <!-- DELETED: red trash -->
+                  <span th:if="${entry.action == 'DELETED'}" class="flex h-6 w-6 items-center justify-center rounded-full bg-red-100">
+                    <svg class="h-3.5 w-3.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </span>
+                </div>
+
+                <!-- Summary text -->
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium text-gray-900 leading-snug" th:text="${entry.summary}"></p>
+                  <p class="mt-0.5 text-xs text-gray-400">
+                    <span th:text="${#dates.format(entry.createdAt, 'MMM d, yyyy HH:mm')}"></span>
+                    <span th:if="${entry.actorName}"> by
+                      <span class="font-medium text-gray-600" th:text="${entry.actorName}"></span>
+                    </span>
+                    <span th:unless="${entry.actorName}"> by
+                      <span class="font-medium text-gray-600" th:text="${entry.actorEmail}"></span>
+                    </span>
+                  </p>
+                </div>
+
+                <!-- Chevron right -->
+                <svg class="mt-1 h-4 w-4 shrink-0 text-gray-300 group-hover:text-gray-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </li>
+            </ul>
+
+            <!-- Modal -->
+            <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4" @keydown.escape.window="open = false">
+              <!-- Backdrop -->
+              <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" @click="open = false"></div>
+
+              <!-- Modal panel -->
+              <div class="relative w-full max-w-lg rounded-2xl bg-white shadow-xl flex flex-col max-h-[85vh]" @click.stop>
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-gray-100">
+                  <h3 class="text-base font-semibold text-gray-900">Audit Trail Entry Details</h3>
+                  <button @click="open = false" class="rounded-md p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Body -->
+                <div class="overflow-y-auto p-6 space-y-4">
+                  <!-- Summary -->
+                  <p class="text-sm font-medium text-gray-900" x-text="current.summary"></p>
+
+                  <!-- Timestamp + actor -->
+                  <div class="text-xs text-gray-400">
+                    <p><span x-text="current.timestamp"></span></p>
+                    <template x-if="current.actorName || current.actorEmail">
+                      <p class="mt-1">
+                        by <span class="font-medium text-gray-600" x-text="getActorDisplay()"></span>
+                      </p>
+                    </template>
+                  </div>
+
+                  <!-- Field changes -->
+                  <template x-if="current.changes && current.changes.length > 0">
+                    <div>
+                      <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Changes</h4>
+                      <div class="space-y-2">
+                        <template x-for="change in current.changes" :key="change.field">
+                          <div class="rounded-lg border border-gray-200 bg-gray-50 p-3">
+                            <p class="text-xs font-semibold text-gray-700 mb-2" x-text="change.label"></p>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <span class="font-medium text-gray-500 block mb-0.5">Old:</span>
+                                <span class="text-gray-700" x-text="change.oldValue || '—'"></span>
+                              </div>
+                              <div>
+                                <span class="font-medium text-gray-500 block mb-0.5">New:</span>
+                                <span class="text-gray-900 font-medium" x-text="change.newValue || '—'"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function assetTabs() {
+      return {
+        activeTab: 'details',
+
+        init() {
+          // Read tab parameter from URL on page load
+          const params = new URLSearchParams(window.location.search);
+          const tabParam = params.get('tab');
+          if (tabParam && ['details', 'linked', 'notes', 'audit'].includes(tabParam)) {
+            this.activeTab = tabParam;
+          }
+        },
+
+        setTab(tab) {
+          this.activeTab = tab;
+          // Update URL without reloading the page
+          const url = new URL(window.location);
+          url.searchParams.set('tab', tab);
+          window.history.pushState({}, '', url);
+        },
+
+        closeModal() {
+          // For audit trail modal compatibility
+        }
+      };
+    }
+
+    function auditTrail() {
+      return {
+        open: false,
+        current: { summary: '', timestamp: '', actorName: '', actorEmail: '', changes: [] },
+
+        openEntry(el) {
+          this.current.summary   = el.dataset.summary   || '';
+          this.current.timestamp = el.dataset.timestamp  || '';
+          this.current.actorName = el.dataset.actorName || '';
+          this.current.actorEmail = el.dataset.actorEmail || '';
+          try {
+            this.current.changes = JSON.parse(el.dataset.changes || '[]');
+          } catch (e) {
+            this.current.changes = [];
+          }
+          this.open = true;
+        },
+
+        getActorDisplay() {
+          return this.current.actorName || this.current.actorEmail || 'Unknown';
+        }
+      };
+    }
+  </script>
+
+</body>
+
+</html>
