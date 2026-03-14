@@ -403,36 +403,6 @@
           </div>
         </div>
 
-        <!-- Overdue Tasks Section -->
-        <div class="mt-8" th:if="${not #lists.isEmpty(overdueTasksList)}">
-          <h3 class="text-base font-semibold text-gray-900 mb-5">Overdue Mitigation Tasks</h3>
-          <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-red-50">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Task</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Due Date</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Status</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-red-900 uppercase tracking-wider">Assignee</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr th:each="task : ${overdueTasksList}" class="hover:bg-red-50">
-                  <td class="px-6 py-4 text-sm font-medium text-gray-900" th:text="${task.title}"></td>
-                  <td class="px-6 py-4 text-sm text-red-600 font-semibold" th:text="${task.getDueDateFormatted()}"></td>
-                  <td class="px-6 py-4 text-sm">
-                    <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600"
-                          th:text="${task.getStatusLabel()}"></span>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-600" th:text="${task.assigneeName ?: 'Unassigned'}"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-
-
     </main>
   </div>
 

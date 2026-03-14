@@ -63,7 +63,6 @@ public class HomeController {
         model.addAttribute("overdueTasks", taskService.countOverdueTasks());
         model.addAttribute("taskCompletionRate", taskService.getCompletionRate());
         model.addAttribute("tasksByStatus", taskService.getTasksByStatus());
-        model.addAttribute("overdueTasksList", taskService.getOverdueTasks(5));
 
         // Effectiveness score metrics
         model.addAttribute("latestEffectivenessScore", effectivenessScoreService.getLatestScore());

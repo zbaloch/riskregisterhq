@@ -112,7 +112,7 @@
                   </ul>
                 </li> -->
 
-                <li class="mt-auto pb-4">
+                <li class="mt-auto pb-4" sec:authorize="hasRole('ADMIN')">
                   <a href="/settings" class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"
                     th:classappend="${activePage == 'settings' ? 'bg-gray-50 text-sky-600' : 'text-gray-700 hover:text-sky-600 hover:bg-gray-50'}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0 text-gray-400 group-hover:text-sky-600">
@@ -227,7 +227,7 @@
             </ul>
           </li> -->
 
-          <li class="mt-auto pb-4">
+          <li class="mt-auto pb-4" sec:authorize="hasRole('ADMIN')">
             <a href="/settings" class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"
               th:classappend="${activePage == 'settings' ? 'bg-gray-50 text-sky-600' : 'text-gray-700 hover:text-sky-600 hover:bg-gray-50'}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 shrink-0 text-gray-400 group-hover:text-sky-600">

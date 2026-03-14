@@ -1,5 +1,6 @@
 package com.riskregister.riskregisterapp.entities;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -7,7 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails, Serializable {
+    private static final long serialVersionUID = 1L;
     private User user;
      
     public CustomUserDetails(User user) {

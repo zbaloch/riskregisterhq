@@ -1,5 +1,6 @@
 package com.riskregister.riskregisterapp.entities;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +20,8 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     private String id;
 
