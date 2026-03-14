@@ -44,3 +44,10 @@ Use the following command to run the application in development with local sqlit
 mvn spring-boot:run --define spring-boot.run.arguments="--spring.profiles.active=dev"
 ```
 
+
+## Run with demo data
+
+```bash
+mvn spring-boot:run -Dspring.profiles.active=demo
+mvn spring-boot:run --define spring-boot.run.arguments="--spring.profiles.active=demo"
+```

@@ -57,9 +57,9 @@ public class DataInitializer implements ApplicationRunner {
         seedRiskSubcategories();
         seedRiskDimensions();
         seedRiskStatuses();
-        seedAdminUser();
-        seedRisks();
-        seedEffectivenessScores();
+        // seedAdminUser();
+        // seedRisks();
+        // seedEffectivenessScores();
     }
 
     private void fixUserNames() {

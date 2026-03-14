@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.riskregisterhq</groupId>
-	<artifactId>riskregister-app</artifactId>
+	<artifactId>riskregister</artifactId>
 	<version>0.0.1</version>
-	<name>riskregister-app</name>
+	<name>riskregister</name>
 	<description>Risk Register Web Application</description>
 	<url />
 	<licenses>
@@ -176,6 +176,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+		<groupId>org.flywaydb</groupId>
+		<artifactId>flyway-mysql</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -203,6 +209,15 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<configuration>
+					<url>${spring.datasource.url}</url>
+					<user>${spring.datasource.username}</user>
+					<password>${spring.datasource.password}</password>
 				</configuration>
 			</plugin>
 		</plugins>
