@@ -28,8 +28,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.riskregister.riskregisterapp.entities.CustomUserDetails;
+import com.riskregister.riskregisterapp.entities.Organization;
 import com.riskregister.riskregisterapp.entities.Role;
 import com.riskregister.riskregisterapp.entities.User;
+import com.riskregister.riskregisterapp.repositories.OrganizationRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
 import com.riskregister.riskregisterapp.services.CustomUserDetailsService;
 import com.riskregister.riskregisterapp.services.EmailService;
@@ -49,6 +51,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Autowired
     private EmailService emailService;
@@ -72,21 +77,24 @@ public class UserController {
     public String createUser(User user,
             Model model,
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            @RequestParam(required = false) String organizationName) {
         // this.securityContextRepository = securityContextRepository;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        // First user becomes ADMIN; otherwise default to MEMBER
-        if (user.getRole() == null) {
-            if (userRepository.count() == 0) {
-                user.setRole(Role.ADMIN);
-                user.setApproved(true);
-            } else {
-                user.setRole(Role.MEMBER);
-            }
-        }
+        // Create organization
+        Organization org = new Organization();
+        org.setName(organizationName != null && !organizationName.isBlank() ? organizationName : "Default Organization");
+        organizationRepository.save(org);
+
+        // Set organization ID for user
+        user.setOrganizationId(org.getId());
+
+        // Self-signup always creates ADMIN with approved=true
+        user.setRole(Role.ADMIN);
+        user.setApproved(true);
 
         userRepository.save(user);
         model.addAttribute("successTitle",
@@ -153,7 +161,8 @@ public class UserController {
     public String createUserMagic(User user,
             Model model,
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            @RequestParam(required = false) String organizationName) {
         User existingUser = userRepository.findByEmail(user.getEmail());
 
         String token = generateToken();
@@ -170,14 +179,17 @@ public class UserController {
 
         } else {
 
-            // First user becomes ADMIN; otherwise default to MEMBER
+            // Create organization for new user
+            Organization org = new Organization();
+            org.setName(organizationName != null && !organizationName.isBlank() ? organizationName : "Default Organization");
+            organizationRepository.save(org);
 
-            if (userRepository.count() == 0) {
-                user.setRole(Role.ADMIN);
-                user.setApproved(true);
-            } else {
-                user.setRole(Role.MEMBER);
-            }
+            // Set organization ID for new user
+            user.setOrganizationId(org.getId());
+
+            // Self-signup always creates ADMIN with approved=true
+            user.setRole(Role.ADMIN);
+            user.setApproved(true);
 
             user.setToken(token);
             Calendar expirationDate = Calendar.getInstance();

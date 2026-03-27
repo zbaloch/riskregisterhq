@@ -25,4 +25,23 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT DISTINCT t FROM Task t LEFT JOIN FETCH t.risk WHERE t.deletedAt IS NULL ORDER BY t.createdAt DESC")
     List<Task> findAllWithRiskAndDeletedAtIsNull();
+
+    // Organization-scoped queries
+    List<Task> findByOrganizationIdAndRiskIdAndDeletedAtIsNullOrderByCreatedAtDesc(Long organizationId, Long riskId);
+    Optional<Task> findByOrganizationIdAndIdAndDeletedAtIsNull(Long organizationId, Long id);
+
+    @Query("""
+        SELECT DISTINCT t FROM Task t LEFT JOIN FETCH t.risk
+        WHERE t.organizationId = :organizationId AND t.deletedAt IS NULL
+        ORDER BY t.createdAt DESC
+        """)
+    List<Task> findAllWithRiskByOrganizationIdAndDeletedAtIsNull(@Param("organizationId") Long organizationId);
+
+    @Query("""
+        SELECT DISTINCT t FROM Task t LEFT JOIN FETCH t.risk
+        WHERE t.assigneeId = :assigneeId AND t.organizationId = :organizationId AND t.deletedAt IS NULL
+        ORDER BY t.createdAt DESC
+        """)
+    List<Task> findByAssigneeIdAndOrganizationIdWithRiskAndDeletedAtIsNull(
+        @Param("assigneeId") String assigneeId, @Param("organizationId") Long organizationId);
 }

@@ -24,6 +24,7 @@ import com.riskregister.riskregisterapp.entities.Asset;
 import com.riskregister.riskregisterapp.entities.AssetNote;
 import com.riskregister.riskregisterapp.entities.AuditTrail;
 import com.riskregister.riskregisterapp.entities.Risk;
+import com.riskregister.riskregisterapp.entities.User;
 import com.riskregister.riskregisterapp.repositories.AssetNoteRepository;
 import com.riskregister.riskregisterapp.repositories.RiskStatusRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
@@ -61,9 +62,10 @@ public class AssetsController {
     // -----------------------------------------------------------------------
 
     @GetMapping
-    public String index(Model model) {
-        List<Asset> assets = assetService.findAll();
-        Map<String, String> userMap = userRepository.findAll().stream()
+    public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        List<Asset> assets = assetService.findAll(orgId);
+        Map<String, String> userMap = userRepository.findByOrganizationId(orgId).stream()
             .collect(Collectors.toMap(u -> u.getEmail() != null ? u.getEmail() : "", u -> u.getDisplayName()));
 
         model.addAttribute("assets", assets);
@@ -76,7 +78,8 @@ public class AssetsController {
     // -----------------------------------------------------------------------
 
     @GetMapping("/new")
-    public String newAsset(Model model) {
+    public String newAsset(Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
         Asset asset = new Asset();
         asset.setConfidentiality(3);
         asset.setIntegrity(3);
@@ -84,7 +87,7 @@ public class AssetsController {
         asset.setStatus("Active");
 
         model.addAttribute("asset", asset);
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         return "assets/create";
     }
 
@@ -93,8 +96,10 @@ public class AssetsController {
     // -----------------------------------------------------------------------
 
     @PostMapping
-    public String create(@ModelAttribute Asset asset, RedirectAttributes redirectAttrs, Principal principal) {
+    public String create(@ModelAttribute Asset asset, @ModelAttribute("currentUser") User currentUser, RedirectAttributes redirectAttrs, Principal principal) {
         try {
+            Long orgId = currentUser.getOrganizationId();
+            asset.setOrganizationId(orgId);
             if (principal != null) {
                 asset.setCreatedByEmail(principal.getName());
             }
@@ -102,7 +107,7 @@ public class AssetsController {
 
             String actorEmail = principal != null ? principal.getName() : "system";
             String actorName = getActorName(actorEmail);
-            auditTrailService.logAssetCreated(saved, actorEmail, actorName);
+            auditTrailService.logAssetCreated(saved, actorEmail, actorName, orgId);
 
             redirectAttrs.addFlashAttribute("success", "Asset created successfully.");
             return "redirect:/assets/" + saved.getId();
@@ -118,15 +123,16 @@ public class AssetsController {
     // -----------------------------------------------------------------------
 
     @GetMapping("/{id}")
-    public String view(@PathVariable Long id, Model model) {
-        Asset asset = assetService.findById(id)
+    public String view(@PathVariable Long id, Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        Asset asset = assetService.findById(orgId, id)
             .orElseThrow(() -> new RuntimeException("Asset not found"));
 
-        List<AuditTrail> auditEntries = auditTrailService.findByAsset(id);
+        List<AuditTrail> auditEntries = auditTrailService.findByAsset(orgId, id);
         List<AssetNote> notes = assetNoteRepository.findByAssetIdOrderByCreatedAtDesc(id);
 
         // Fetch linked risks
-        List<Risk> linkedRisks = riskService.findAll().stream()
+        List<Risk> linkedRisks = riskService.findAll(orgId).stream()
             .filter(risk -> risk.getLinkedAssetIds() != null
                         && risk.getLinkedAssetIds().contains(String.valueOf(id)))
             .collect(Collectors.toList());
@@ -138,7 +144,7 @@ public class AssetsController {
         model.addAttribute("asset", asset);
         model.addAttribute("auditEntries", auditEntries);
         model.addAttribute("notes", notes);
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         model.addAttribute("linkedRisks", linkedRisks);
         model.addAttribute("statusMap", statusMap);
 
@@ -151,9 +157,10 @@ public class AssetsController {
 
     @PostMapping("/{id}/notes")
     public String addNote(@PathVariable Long id, @RequestParam String content,
-                         RedirectAttributes redirectAttrs, Principal principal) {
+                         RedirectAttributes redirectAttrs, Principal principal, @ModelAttribute("currentUser") User currentUser) {
         try {
-            Asset asset = assetService.findById(id)
+            Long orgId = currentUser.getOrganizationId();
+            Asset asset = assetService.findById(orgId, id)
                 .orElseThrow(() -> new RuntimeException("Asset not found"));
 
             String authorEmail = principal != null ? principal.getName() : "system";
@@ -179,12 +186,13 @@ public class AssetsController {
     // -----------------------------------------------------------------------
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        Asset asset = assetService.findById(id)
+    public String editForm(@PathVariable Long id, Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        Asset asset = assetService.findById(orgId, id)
             .orElseThrow(() -> new RuntimeException("Asset not found"));
 
         model.addAttribute("asset", asset);
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         return "assets/edit";
     }
 
@@ -195,10 +203,12 @@ public class AssetsController {
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
                          @ModelAttribute Asset asset,
+                         @ModelAttribute("currentUser") User currentUser,
                          RedirectAttributes redirectAttrs,
                          Principal principal) {
         try {
-            Asset existing = assetService.findById(id)
+            Long orgId = currentUser.getOrganizationId();
+            Asset existing = assetService.findById(orgId, id)
                 .orElseThrow(() -> new RuntimeException("Asset not found"));
 
             // Snapshot old asset for audit diff
@@ -225,7 +235,7 @@ public class AssetsController {
 
             String actorEmail = principal != null ? principal.getName() : "system";
             String actorName = getActorName(actorEmail);
-            auditTrailService.logAssetUpdated(oldSnapshot, saved, actorEmail, actorName);
+            auditTrailService.logAssetUpdated(oldSnapshot, saved, actorEmail, actorName, orgId);
 
             redirectAttrs.addFlashAttribute("success", "Asset updated successfully.");
             return "redirect:/assets/" + id;
@@ -242,17 +252,19 @@ public class AssetsController {
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id,
+                         @ModelAttribute("currentUser") User currentUser,
                          RedirectAttributes redirectAttrs,
                          Principal principal) {
         try {
-            Asset asset = assetService.findById(id)
+            Long orgId = currentUser.getOrganizationId();
+            Asset asset = assetService.findById(orgId, id)
                 .orElseThrow(() -> new RuntimeException("Asset not found"));
 
-            assetService.softDelete(id);
+            assetService.softDelete(orgId, id);
 
             String actorEmail = principal != null ? principal.getName() : "system";
             String actorName = getActorName(actorEmail);
-            auditTrailService.logAssetDeleted(asset, actorEmail, actorName);
+            auditTrailService.logAssetDeleted(asset, actorEmail, actorName, orgId);
 
             redirectAttrs.addFlashAttribute("success", "Asset deleted successfully.");
         } catch (Exception e) {
@@ -268,8 +280,9 @@ public class AssetsController {
     // -----------------------------------------------------------------------
 
     @GetMapping("/api/assets")
-    public ResponseEntity<List<Asset>> getAssetsApi() {
-        List<Asset> assets = assetService.findAll();
+    public ResponseEntity<List<Asset>> getAssetsApi(@ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        List<Asset> assets = assetService.findAll(orgId);
         return ResponseEntity.ok(assets);
     }
 

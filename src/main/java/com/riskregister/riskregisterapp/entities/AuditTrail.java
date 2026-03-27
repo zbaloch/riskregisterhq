@@ -45,6 +45,8 @@ public class AuditTrail {
     private String actorName;  // Full name of the user who performed the action
     private Instant createdAt;
 
+    private Long organizationId;
+
     // --- Display helpers (not persisted) ---
 
     private static final DateTimeFormatter DISPLAY_FMT =

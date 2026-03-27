@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     @Id
     private String id;
 
@@ -43,6 +43,8 @@ public class User implements Serializable {
     private String token;
     private Calendar tokenExpirationDate;
     private Calendar tokenUsedDate;
+
+    private Long organizationId;
 
     public User() {
         this.id = UUID.randomUUID().toString();

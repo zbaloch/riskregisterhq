@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.riskregister.riskregisterapp.entities.Risk;
 import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.entities.TaskUpdate;
+import com.riskregister.riskregisterapp.entities.User;
 import com.riskregister.riskregisterapp.enums.TaskStatus;
 import com.riskregister.riskregisterapp.repositories.RiskRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
@@ -46,12 +47,13 @@ public class TasksController {
     private RiskRepository riskRepository;
 
     @GetMapping("/tasks")
-    public String index(Model model) {
-        List<Task> tasks = taskService.findAll();
+    public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        List<Task> tasks = taskService.findAll(orgId);
         model.addAttribute("tasks", tasks);
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         Map<Long, Risk> riskMap = riskRepository.findAll().stream()
-            .filter(r -> r.getDeletedAt() == null)
+            .filter(r -> r.getDeletedAt() == null && r.getOrganizationId().equals(orgId))
             .collect(Collectors.toMap(Risk::getId, r -> r));
         model.addAttribute("riskMap", riskMap);
         return "tasks/index";
@@ -61,12 +63,15 @@ public class TasksController {
     public String create(@PathVariable Long riskId,
                         @ModelAttribute Task task,
                         @RequestParam(value = "redirectTo", required = false) String redirectTo,
+                        @ModelAttribute("currentUser") User currentUser,
                         RedirectAttributes redirectAttrs,
                         Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
         if (task.getStatus() == null) {
             task.setStatus(TaskStatus.BACKLOG);
         }
         task.setRiskId(riskId);
+        task.setOrganizationId(orgId);
         task.setCreatedAt(Instant.now());
         if (principal != null) {
             task.setCreatedByEmail(principal.getName());
@@ -76,7 +81,7 @@ public class TasksController {
         // Log creation
         String actorEmail = principal != null ? principal.getName() : "system";
         String actorName = getActorName(actorEmail);
-        auditTrailService.logTaskCreated(task, actorEmail, actorName);
+        auditTrailService.logTaskCreated(task, actorEmail, actorName, orgId);
 
         redirectAttrs.addFlashAttribute("success", "Task created successfully.");
         return "redirect:" + (redirectTo != null ? redirectTo : "/risks/" + riskId + "?tab=tasks");
@@ -88,9 +93,11 @@ public class TasksController {
                         @ModelAttribute Task form,
                         @RequestParam(value = "redirectTo", required = false) String redirectTo,
                         @RequestHeader(value = "X-Requested-With", required = false) String requestedWith,
+                        @ModelAttribute("currentUser") User currentUser,
                         RedirectAttributes redirectAttrs,
                         Principal principal) {
-        Task task = taskService.findById(taskId)
+        Long orgId = currentUser.getOrganizationId();
+        Task task = taskService.findById(orgId, taskId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
         // Snapshot old state
@@ -113,7 +120,7 @@ public class TasksController {
         // Log changes
         String actorEmail = principal != null ? principal.getName() : "system";
         String actorName = getActorName(actorEmail);
-        auditTrailService.logTaskUpdated(oldSnapshot, task, actorEmail, actorName);
+        auditTrailService.logTaskUpdated(oldSnapshot, task, actorEmail, actorName, orgId);
 
         // Return JSON for AJAX requests, redirect for traditional form submissions
         if ("XMLHttpRequest".equals(requestedWith)) {
@@ -128,15 +135,17 @@ public class TasksController {
     public String delete(@PathVariable Long riskId,
                         @PathVariable Long taskId,
                         @RequestParam(value = "redirectTo", required = false) String redirectTo,
+                        @ModelAttribute("currentUser") User currentUser,
                         RedirectAttributes redirectAttrs,
                         Principal principal) {
-        Task task = taskService.findById(taskId).orElse(null);
-        taskService.softDelete(taskId);
+        Long orgId = currentUser.getOrganizationId();
+        Task task = taskService.findById(orgId, taskId).orElse(null);
+        taskService.softDelete(orgId, taskId);
 
         if (task != null) {
             String actorEmail = principal != null ? principal.getName() : "system";
             String actorName = getActorName(actorEmail);
-            auditTrailService.logTaskDeleted(task, actorEmail, actorName);
+            auditTrailService.logTaskDeleted(task, actorEmail, actorName, orgId);
         }
 
         redirectAttrs.addFlashAttribute("success", "Task deleted successfully.");
@@ -147,7 +156,9 @@ public class TasksController {
     public ResponseEntity<?> addUpdate(@PathVariable Long riskId,
                                        @PathVariable Long taskId,
                                        @RequestParam(value = "content", required = true) String content,
+                                       @ModelAttribute("currentUser") User currentUser,
                                        Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
         String authorId = principal != null ? principal.getName() : "system";
         String authorName = getActorName(authorId);
         TaskUpdate newUpdate = taskService.addUpdate(taskId, content, authorId, authorName);
@@ -166,7 +177,9 @@ public class TasksController {
     public ResponseEntity<Map<String, String>> deleteUpdate(
             @PathVariable Long riskId,
             @PathVariable Long taskId,
-            @PathVariable Long updateId) {
+            @PathVariable Long updateId,
+            @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
         taskService.deleteUpdate(updateId);
         return ResponseEntity.ok(Map.of("success", "true"));
     }

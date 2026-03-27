@@ -13,4 +13,8 @@ public interface AuditTrailRepository extends JpaRepository<AuditTrail, Long> {
     // Primary query: all entries for a given entity, newest first
     List<AuditTrail> findByEntityTypeAndEntityIdOrderByCreatedAtDesc(
         String entityType, Long entityId);
+
+    // Organization-scoped query
+    List<AuditTrail> findByOrganizationIdAndEntityTypeAndEntityIdOrderByCreatedAtDesc(
+        Long organizationId, String entityType, Long entityId);
 }

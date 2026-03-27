@@ -29,6 +29,7 @@ import com.riskregister.riskregisterapp.entities.RiskSubcategory;
 import com.riskregister.riskregisterapp.entities.RiskNote;
 import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.entities.Asset;
+import com.riskregister.riskregisterapp.entities.User;
 import com.riskregister.riskregisterapp.repositories.AuditTrailRepository;
 import com.riskregister.riskregisterapp.enums.RiskReviewFrequency;
 import com.riskregister.riskregisterapp.lookups.RiskTreatment;
@@ -81,8 +82,9 @@ public class RisksController {
     private AssetService assetService;
 
     @GetMapping("/risks")
-    public String index(Model model) {
-        model.addAttribute("risks", riskService.findAll());
+    public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        model.addAttribute("risks", riskService.findAll(orgId));
         model.addAttribute("categoryMap", categoryNameMap());
         model.addAttribute("subcategoryMap", subcategoryNameMap());
         model.addAttribute("dimensionMap", dimensionNameMap());
@@ -91,14 +93,15 @@ public class RisksController {
     }
 
     @GetMapping("/risks/new")
-    public String newForm(Model model) {
+    public String newForm(Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
         Risk newRisk = new Risk();
         newRisk.setRiskTreatment(RiskTreatment.AWAITING_ASSESSMENT);
         model.addAttribute("risk", newRisk);
         model.addAttribute("reviewFrequencies", RiskReviewFrequency.values());
         model.addAttribute("treatments", RiskTreatment.values());
         model.addAttribute("statuses", riskStatusRepository.findAll());
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         model.addAttribute("riskCategories", riskCategoryRepository.findAll());
         model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAll());
         model.addAttribute("riskDimensions", riskDimensionRepository.findAll());
@@ -106,7 +109,9 @@ public class RisksController {
     }
 
     @PostMapping("/risks")
-    public String create(@ModelAttribute Risk risk, RedirectAttributes redirectAttrs, Principal principal) {
+    public String create(@ModelAttribute Risk risk, @ModelAttribute("currentUser") User currentUser, RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
+        risk.setOrganizationId(orgId);
         if (principal != null) {
             risk.setCreatedByEmail(principal.getName());
         }
@@ -116,15 +121,16 @@ public class RisksController {
         // Log creation after save so risk.getId() is populated
         String actorEmail = principal != null ? principal.getName() : "system";
         String actorName = getActorName(actorEmail);
-        auditTrailService.logRiskCreated(risk, actorEmail, actorName);
+        auditTrailService.logRiskCreated(risk, actorEmail, actorName, orgId);
 
         redirectAttrs.addFlashAttribute("success", "Risk created successfully.");
         return "redirect:/risks";
     }
 
     @GetMapping("/risks/{id}")
-    public String view(@PathVariable Long id, Model model) {
-        Risk risk = riskService.findById(id)
+    public String view(@PathVariable Long id, Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        Risk risk = riskService.findById(orgId, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
         model.addAttribute("risk", risk);
         model.addAttribute("categoryMap", categoryNameMap());
@@ -133,12 +139,12 @@ public class RisksController {
         model.addAttribute("statusMap", statusNameMap());
 
         // Tasks for this risk
-        List<Task> tasks = taskService.findAllByRisk(id);
+        List<Task> tasks = taskService.findAllByRisk(orgId, id);
         model.addAttribute("tasks", tasks);
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
 
         // Assets - linked and available
-        List<Asset> allAssets = assetService.findAll();
+        List<Asset> allAssets = assetService.findAll(orgId);
         List<Asset> linkedAssets = new ArrayList<>();
         List<Long> linkedAssetIds = new ArrayList<>();
 
@@ -165,7 +171,7 @@ public class RisksController {
         // Audit entries for this risk (both Risk and Task entries, newest first)
         List<AuditTrail> allAuditEntries = new ArrayList<>();
         // Add Risk entries
-        allAuditEntries.addAll(auditTrailService.findByRisk(id));
+        allAuditEntries.addAll(auditTrailService.findByRisk(orgId, id));
         // Add Task entries for tasks under this risk
         for (Task task : tasks) {
             allAuditEntries.addAll(auditTrailRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc("Task", task.getId()));
@@ -178,14 +184,15 @@ public class RisksController {
     }
 
     @GetMapping("/risks/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        Risk risk = riskService.findById(id)
+    public String editForm(@PathVariable Long id, Model model, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        Risk risk = riskService.findById(orgId, id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
         model.addAttribute("risk", risk);
         model.addAttribute("reviewFrequencies", RiskReviewFrequency.values());
         model.addAttribute("treatments", RiskTreatment.values());
         model.addAttribute("statuses", riskStatusRepository.findAll());
-        model.addAttribute("users", userRepository.findByApprovedTrueOrderByFirstNameAscLastNameAsc());
+        model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         model.addAttribute("riskCategories", riskCategoryRepository.findAll());
         model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAll());
         model.addAttribute("riskDimensions", riskDimensionRepository.findAll());
@@ -194,8 +201,10 @@ public class RisksController {
 
     @PostMapping("/risks/{id}")
     public String update(@PathVariable Long id, @ModelAttribute Risk form,
+                         @ModelAttribute("currentUser") User currentUser,
                          RedirectAttributes redirectAttrs, Principal principal) {
-        Risk risk = riskService.findById(id)
+        Long orgId = currentUser.getOrganizationId();
+        Risk risk = riskService.findById(orgId, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
 
         // === SNAPSHOT old state before any mutations ===
@@ -231,7 +240,7 @@ public class RisksController {
             oldSnapshot, risk,
             categoryNameMap(), subcategoryNameMap(), dimensionNameMap(),
             statusNameMap(),
-            actorEmail, actorName
+            actorEmail, actorName, orgId
         );
 
         redirectAttrs.addFlashAttribute("success", "Risk updated successfully.");
@@ -239,15 +248,16 @@ public class RisksController {
     }
 
     @PostMapping("/risks/{id}/delete")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttrs, Principal principal) {
+    public String delete(@PathVariable Long id, @ModelAttribute("currentUser") User currentUser, RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
         // Load before deleting so we have the title/riskId for the log entry
-        Risk risk = riskService.findById(id).orElse(null);
-        riskService.softDelete(id);
+        Risk risk = riskService.findById(orgId, id).orElse(null);
+        riskService.softDelete(orgId, id);
 
         if (risk != null) {
             String actorEmail = principal != null ? principal.getName() : "system";
             String actorName = getActorName(actorEmail);
-            auditTrailService.logRiskDeleted(risk, actorEmail, actorName);
+            auditTrailService.logRiskDeleted(risk, actorEmail, actorName, orgId);
         }
 
         redirectAttrs.addFlashAttribute("success", "Risk has been removed.");
@@ -299,8 +309,9 @@ public class RisksController {
     }
 
     @PostMapping("/api/risks/{id}/assets")
-    public ResponseEntity<?> updateLinkedAssets(@PathVariable Long id, @RequestBody Map<String, List<Long>> payload) {
-        Risk risk = riskService.findById(id)
+    public ResponseEntity<?> updateLinkedAssets(@PathVariable Long id, @RequestBody Map<String, List<Long>> payload, @ModelAttribute("currentUser") User currentUser) {
+        Long orgId = currentUser.getOrganizationId();
+        Risk risk = riskService.findById(orgId, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
 
         List<Long> assetIds = payload.getOrDefault("assetIds", new ArrayList<>());

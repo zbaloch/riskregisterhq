@@ -115,8 +115,16 @@ class="h-full bg-[#f6f2ef]">
                   <input id="lastName" name="lastName" type="text" autocomplete="lastName" th:field="*{lastName}" required minlength="2" maxlength="20" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6">
                 </div>
               </div>
-  
-      
+
+              <div>
+                <label for="organizationName" class="block text-sm font-medium leading-6 text-gray-900">Organization Name</label>
+                <div class="mt-2">
+                  <input id="organizationName" name="organizationName" type="text" placeholder="Acme Corp" required minlength="2" maxlength="100" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6">
+                </div>
+                <p class="mt-1 text-xs text-gray-500">You can invite team members after signing up.</p>
+              </div>
+
+
             <div>
               <button type="submit" :disabled="isLoading" :class="isLoading ? 'opacity-75 cursor-not-allowed' : 'hover:bg-sky-500'" class="flex w-full justify-center rounded-md bg-sky-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600">
                 <span x-show="!isLoading">Sign up</span>

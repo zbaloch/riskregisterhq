@@ -15,12 +15,12 @@ public class AssetService {
     @Autowired
     private AssetRepository assetRepository;
 
-    public List<Asset> findAll() {
-        return assetRepository.findByDeletedAtIsNullOrderByCreatedAtDesc();
+    public List<Asset> findAll(Long organizationId) {
+        return assetRepository.findByOrganizationIdAndDeletedAtIsNullOrderByCreatedAtDesc(organizationId);
     }
 
-    public Optional<Asset> findById(Long id) {
-        return assetRepository.findByIdAndDeletedAtIsNull(id);
+    public Optional<Asset> findById(Long organizationId, Long id) {
+        return assetRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id);
     }
 
     public Asset save(Asset asset) {
@@ -32,8 +32,8 @@ public class AssetService {
         return assetRepository.save(asset);
     }
 
-    public void softDelete(Long id) {
-        assetRepository.findByIdAndDeletedAtIsNull(id).ifPresent(asset -> {
+    public void softDelete(Long organizationId, Long id) {
+        assetRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id).ifPresent(asset -> {
             asset.setDeletedAt(Instant.now());
             assetRepository.save(asset);
         });

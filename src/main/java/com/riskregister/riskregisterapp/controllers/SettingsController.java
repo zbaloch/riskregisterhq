@@ -2,6 +2,7 @@ package com.riskregister.riskregisterapp.controllers;
 
 import java.security.Principal;
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.List;
 
@@ -13,14 +14,17 @@ import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.riskregister.riskregisterapp.entities.Organization;
 import com.riskregister.riskregisterapp.entities.Role;
 import com.riskregister.riskregisterapp.entities.User;
+import com.riskregister.riskregisterapp.repositories.OrganizationRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
 import com.riskregister.riskregisterapp.services.EmailService;
 import com.riskregister.riskregisterapp.services.UserService;
@@ -38,15 +42,20 @@ public class SettingsController {
     private UserRepository userRepository;
 
     @Autowired
+    private OrganizationRepository organizationRepository;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private EmailService emailService;
 
     @GetMapping
-    public String settingsPage(Model model, Principal principal) {
-        List<User> users = userRepository.findAll();
+    public String settingsPage(Model model, Principal principal, @ModelAttribute("currentUser") User currentUser) {
+        List<User> users = userRepository.findByOrganizationIdOrderByFirstNameAscLastNameAsc(currentUser.getOrganizationId());
+        Organization org = organizationRepository.findById(currentUser.getOrganizationId()).orElse(null);
         model.addAttribute("users", users);
+        model.addAttribute("organization", org);
         model.addAttribute("roles", Role.values());
         return "settings/index";
     }
@@ -57,6 +66,7 @@ public class SettingsController {
             @RequestParam String lastName,
             @RequestParam String email,
             @RequestParam String role,
+            @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttrs) {
 
         // Check if user already exists
@@ -74,6 +84,7 @@ public class SettingsController {
             newUser.setEmail(email);
             newUser.setRole(Role.valueOf(role));
             newUser.setApproved(false); // Admin must send magic link, approval happens on first login
+            newUser.setOrganizationId(currentUser.getOrganizationId());
 
             // Generate magic link token
             String token = generateToken();
@@ -101,11 +112,17 @@ public class SettingsController {
     @PostMapping("/users/suspend")
     public String suspendUser(
             @RequestParam String userId,
+            @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttrs) {
 
         try {
             User user = userRepository.findById(userId).orElse(null);
             if (user != null) {
+                // Verify user belongs to current organization
+                if (!user.getOrganizationId().equals(currentUser.getOrganizationId())) {
+                    redirectAttrs.addFlashAttribute("errorMessage", "Unauthorized to modify this user.");
+                    return "redirect:/settings";
+                }
                 user.setApproved(false);
                 userRepository.save(user);
                 redirectAttrs.addFlashAttribute("successMessage",
@@ -124,11 +141,17 @@ public class SettingsController {
     @PostMapping("/users/activate")
     public String activateUser(
             @RequestParam String userId,
+            @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttrs) {
 
         try {
             User user = userRepository.findById(userId).orElse(null);
             if (user != null) {
+                // Verify user belongs to current organization
+                if (!user.getOrganizationId().equals(currentUser.getOrganizationId())) {
+                    redirectAttrs.addFlashAttribute("errorMessage", "Unauthorized to modify this user.");
+                    return "redirect:/settings";
+                }
                 user.setApproved(true);
                 userRepository.save(user);
                 redirectAttrs.addFlashAttribute("successMessage",
@@ -151,11 +174,17 @@ public class SettingsController {
             @RequestParam String lastName,
             @RequestParam String role,
             @RequestParam(defaultValue = "false") String approved,
+            @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttrs) {
 
         try {
             User user = userRepository.findById(userId).orElse(null);
             if (user != null) {
+                // Verify user belongs to current organization
+                if (!user.getOrganizationId().equals(currentUser.getOrganizationId())) {
+                    redirectAttrs.addFlashAttribute("errorMessage", "Unauthorized to modify this user.");
+                    return "redirect:/settings";
+                }
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setRole(Role.valueOf(role));
@@ -172,6 +201,23 @@ public class SettingsController {
         }
 
         return "redirect:/settings";
+    }
+
+    @PostMapping("/organization")
+    public String updateOrganization(
+            @RequestParam String name,
+            @RequestParam(required = false) String description,
+            @ModelAttribute("currentUser") User currentUser,
+            RedirectAttributes redirectAttrs) {
+        Organization org = organizationRepository.findById(currentUser.getOrganizationId()).orElse(null);
+        if (org != null) {
+            org.setName(name);
+            org.setDescription(description);
+            org.setUpdatedAt(java.time.Instant.now());
+            organizationRepository.save(org);
+            redirectAttrs.addFlashAttribute("successMessage", "Organization updated.");
+        }
+        return "redirect:/settings?tab=organization";
     }
 
     private String generateToken() {

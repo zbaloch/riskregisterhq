@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.riskregister.riskregisterapp.entities.CustomUserDetails;
 import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.entities.User;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import com.riskregister.riskregisterapp.services.RiskService;
 import com.riskregister.riskregisterapp.services.TaskService;
 import com.riskregister.riskregisterapp.services.UserService;
@@ -38,37 +39,64 @@ public class HomeController {
     private UserService userService;
 
     @GetMapping("/")
-    public String index(Model model, Principal principalUser) {
+    public String index(Model model, @ModelAttribute("currentUser") User currentUser, Principal principalUser) {
+        // Handle unauthenticated users
+        if (currentUser == null || currentUser.getOrganizationId() == null) {
+            model.addAttribute("totalRisks", 0);
+            model.addAttribute("highRisks", 0);
+            model.addAttribute("risksByScoreLevel", java.util.Map.of());
+            model.addAttribute("highestRisks", java.util.List.of());
+            model.addAttribute("statusCounts", java.util.Map.of());
+            model.addAttribute("categoryCounts", java.util.Map.of());
+            model.addAttribute("riskScoreDistribution", java.util.List.of());
+            model.addAttribute("risksByStatusAndCategory", java.util.Map.of());
+            model.addAttribute("riskScoresByCategory", java.util.Map.of());
+            model.addAttribute("riskHeatmaps", java.util.Map.of());
+            model.addAttribute("totalTasks", 0);
+            model.addAttribute("tasksInProgress", 0);
+            model.addAttribute("overdueTasks", 0);
+            model.addAttribute("taskCompletionRate", 0);
+            model.addAttribute("tasksByStatus", java.util.Map.of());
+            model.addAttribute("latestEffectivenessScore", null);
+            model.addAttribute("effectivenessScores90Days", java.util.List.of());
+            model.addAttribute("effectivenessScores1Year", java.util.List.of());
+            model.addAttribute("effectivenessScores2Years", java.util.List.of());
+            model.addAttribute("myTasks", java.util.List.of());
+            return "index";
+        }
+
+        Long orgId = currentUser.getOrganizationId();
+
         // Risk metrics
-        model.addAttribute("totalRisks", riskService.countActive());
-        model.addAttribute("highRisks", riskService.countHighRisks());
-        model.addAttribute("risksByScoreLevel", riskService.getRisksByScoreLevel());
-        model.addAttribute("highestRisks", riskService.getHighestRisks(5));
+        model.addAttribute("totalRisks", riskService.countActive(orgId));
+        model.addAttribute("highRisks", riskService.countHighRisks(orgId));
+        model.addAttribute("risksByScoreLevel", riskService.getRisksByScoreLevel(orgId));
+        model.addAttribute("highestRisks", riskService.getHighestRisks(5, orgId));
 
         // Risk status and category
-        model.addAttribute("statusCounts", riskService.countRisksByStatus());
-        model.addAttribute("categoryCounts", riskService.countRisksByCategory());
+        model.addAttribute("statusCounts", riskService.countRisksByStatus(orgId));
+        model.addAttribute("categoryCounts", riskService.countRisksByCategory(orgId));
 
         // Risk charts
-        model.addAttribute("riskScoreDistribution", riskService.getRiskScoreDistribution());
-        model.addAttribute("risksByStatusAndCategory", riskService.getRisksByStatusAndCategory());
-        model.addAttribute("riskScoresByCategory", riskService.getRiskScoresByCategory());
+        model.addAttribute("riskScoreDistribution", riskService.getRiskScoreDistribution(orgId));
+        model.addAttribute("risksByStatusAndCategory", riskService.getRisksByStatusAndCategory(orgId));
+        model.addAttribute("riskScoresByCategory", riskService.getRiskScoresByCategory(orgId));
 
         // Risk heatmaps (inherent and residual)
-        model.addAttribute("riskHeatmaps", riskService.getRiskHeatmaps());
+        model.addAttribute("riskHeatmaps", riskService.getRiskHeatmaps(orgId));
 
         // Task metrics
-        model.addAttribute("totalTasks", taskService.countTotalTasks());
-        model.addAttribute("tasksInProgress", taskService.countTasksInProgress());
-        model.addAttribute("overdueTasks", taskService.countOverdueTasks());
-        model.addAttribute("taskCompletionRate", taskService.getCompletionRate());
-        model.addAttribute("tasksByStatus", taskService.getTasksByStatus());
+        model.addAttribute("totalTasks", taskService.countTotalTasks(orgId));
+        model.addAttribute("tasksInProgress", taskService.countTasksInProgress(orgId));
+        model.addAttribute("overdueTasks", taskService.countOverdueTasks(orgId));
+        model.addAttribute("taskCompletionRate", taskService.getCompletionRate(orgId));
+        model.addAttribute("tasksByStatus", taskService.getTasksByStatus(orgId));
 
         // Effectiveness score metrics
-        model.addAttribute("latestEffectivenessScore", effectivenessScoreService.getLatestScore());
-        model.addAttribute("effectivenessScores90Days", effectivenessScoreService.getScoresForLastDays(90));
-        model.addAttribute("effectivenessScores1Year", effectivenessScoreService.getScoresForLastDays(365));
-        model.addAttribute("effectivenessScores2Years", effectivenessScoreService.getScoresForLastDays(730));
+        model.addAttribute("latestEffectivenessScore", effectivenessScoreService.getLatestScore(orgId));
+        model.addAttribute("effectivenessScores90Days", effectivenessScoreService.getScoresForLastDays(90, orgId));
+        model.addAttribute("effectivenessScores1Year", effectivenessScoreService.getScoresForLastDays(365, orgId));
+        model.addAttribute("effectivenessScores2Years", effectivenessScoreService.getScoresForLastDays(730, orgId));
 
         // My Tasks (assigned to current user)
         log.info("Fetching tasks for current user {}", principalUser != null ? principalUser.getName() : "anonymous");
@@ -80,7 +108,7 @@ public class HomeController {
         //         currentUserId = ((CustomUserDetails) principal).getUser().getId();
         //     }
         // }
-        List<Task> tasks = taskService.getTasksByAssignee(currentUserId);
+        List<Task> tasks = taskService.getTasksByAssignee(currentUserId, orgId);
         log.info("Current user ID: {}, My Tasks count: {}", currentUserId, tasks.size());
         model.addAttribute("myTasks", currentUserId != null ? tasks : java.util.List.of());
 

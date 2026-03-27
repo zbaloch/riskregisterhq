@@ -12,4 +12,9 @@ import com.riskregister.riskregisterapp.entities.EffectivenessScore;
 public interface EffectivenessScoreRepository extends JpaRepository<EffectivenessScore, Long> {
     List<EffectivenessScore> findByCalculatedAtAfterOrderByCalculatedAtAsc(Instant after);
     EffectivenessScore findFirstByOrderByCalculatedAtDesc();
+
+    // Organization-scoped queries
+    List<EffectivenessScore> findByOrganizationIdAndCalculatedAtAfterOrderByCalculatedAtAsc(
+        Long organizationId, Instant after);
+    EffectivenessScore findFirstByOrganizationIdOrderByCalculatedAtDesc(Long organizationId);
 }
