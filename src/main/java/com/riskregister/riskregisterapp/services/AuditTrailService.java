@@ -31,10 +31,11 @@ public class AuditTrailService {
     // -----------------------------------------------------------------------
 
     /** Log a Risk creation event. */
-    public void logRiskCreated(Risk risk, String actorEmail, String actorName) {
+    public void logRiskCreated(Risk risk, String actorEmail, String actorName, Long organizationId) {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Risk");
         entry.setEntityId(risk.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("CREATED");
         entry.setSummary("Risk created (" + risk.getRiskId() + "): " + risk.getTitle());
         entry.setChangesJson(null);
@@ -61,7 +62,7 @@ public class AuditTrailService {
                                Map<Long, String> subcategoryMap,
                                Map<Long, String> dimensionMap,
                                Map<Long, String> statusMap,
-                               String actorEmail, String actorName) {
+                               String actorEmail, String actorName, Long organizationId) {
         List<FieldChange> changes = diffRisk(oldRisk, newRisk,
                                              categoryMap, subcategoryMap, dimensionMap, statusMap);
         if (changes.isEmpty()) return;  // Nothing actually changed — skip
@@ -75,6 +76,7 @@ public class AuditTrailService {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Risk");
         entry.setEntityId(newRisk.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("UPDATED");
         entry.setSummary(summary);
         entry.setChangesJson(toJson(changes));
@@ -85,10 +87,11 @@ public class AuditTrailService {
     }
 
     /** Log a Risk soft-delete event. */
-    public void logRiskDeleted(Risk risk, String actorEmail, String actorName) {
+    public void logRiskDeleted(Risk risk, String actorEmail, String actorName, Long organizationId) {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Risk");
         entry.setEntityId(risk.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("DELETED");
         entry.setSummary("Risk deleted (" + risk.getRiskId() + "): " + risk.getTitle());
         entry.setChangesJson(null);
@@ -99,8 +102,8 @@ public class AuditTrailService {
     }
 
     /** Retrieve all audit trail entries for a Risk, newest first. */
-    public List<AuditTrail> findByRisk(Long riskId) {
-        return auditTrailRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc("Risk", riskId);
+    public List<AuditTrail> findByRisk(Long organizationId, Long riskId) {
+        return auditTrailRepository.findByOrganizationIdAndEntityTypeAndEntityIdOrderByCreatedAtDesc(organizationId, "Risk", riskId);
     }
 
     /**
@@ -226,10 +229,11 @@ public class AuditTrailService {
     // -----------------------------------------------------------------------
 
     /** Log a Task creation event. */
-    public void logTaskCreated(com.riskregister.riskregisterapp.entities.Task task, String actorEmail, String actorName) {
+    public void logTaskCreated(com.riskregister.riskregisterapp.entities.Task task, String actorEmail, String actorName, Long organizationId) {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Task");
         entry.setEntityId(task.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("CREATED");
         entry.setSummary("Task created: " + task.getTitle());
         entry.setChangesJson(null);
@@ -242,7 +246,7 @@ public class AuditTrailService {
     /** Log a Task update event with field-level changes. */
     public void logTaskUpdated(com.riskregister.riskregisterapp.entities.Task oldTask,
                                com.riskregister.riskregisterapp.entities.Task newTask,
-                               String actorEmail, String actorName) {
+                               String actorEmail, String actorName, Long organizationId) {
         List<FieldChange> changes = diffTask(oldTask, newTask);
         if (changes.isEmpty()) return;  // Nothing changed — skip
 
@@ -255,6 +259,7 @@ public class AuditTrailService {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Task");
         entry.setEntityId(newTask.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("UPDATED");
         entry.setSummary(summary);
         entry.setChangesJson(toJson(changes));
@@ -265,10 +270,11 @@ public class AuditTrailService {
     }
 
     /** Log a Task deletion event. */
-    public void logTaskDeleted(com.riskregister.riskregisterapp.entities.Task task, String actorEmail, String actorName) {
+    public void logTaskDeleted(com.riskregister.riskregisterapp.entities.Task task, String actorEmail, String actorName, Long organizationId) {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Task");
         entry.setEntityId(task.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("DELETED");
         entry.setSummary("Task deleted: " + task.getTitle());
         entry.setChangesJson(null);
@@ -303,10 +309,11 @@ public class AuditTrailService {
     // -----------------------------------------------------------------------
 
     /** Log an Asset creation event. */
-    public void logAssetCreated(com.riskregister.riskregisterapp.entities.Asset asset, String actorEmail, String actorName) {
+    public void logAssetCreated(com.riskregister.riskregisterapp.entities.Asset asset, String actorEmail, String actorName, Long organizationId) {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Asset");
         entry.setEntityId(asset.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("CREATED");
         entry.setSummary("Asset created: " + asset.getName());
         entry.setChangesJson(null);
@@ -319,7 +326,7 @@ public class AuditTrailService {
     /** Log an Asset update event with field-level changes. */
     public void logAssetUpdated(com.riskregister.riskregisterapp.entities.Asset oldAsset,
                                 com.riskregister.riskregisterapp.entities.Asset newAsset,
-                                String actorEmail, String actorName) {
+                                String actorEmail, String actorName, Long organizationId) {
         List<FieldChange> changes = diffAsset(oldAsset, newAsset);
         if (changes.isEmpty()) return;  // Nothing changed — skip
 
@@ -332,6 +339,7 @@ public class AuditTrailService {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Asset");
         entry.setEntityId(newAsset.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("UPDATED");
         entry.setSummary(summary);
         entry.setChangesJson(toJson(changes));
@@ -342,10 +350,11 @@ public class AuditTrailService {
     }
 
     /** Log an Asset deletion event. */
-    public void logAssetDeleted(com.riskregister.riskregisterapp.entities.Asset asset, String actorEmail, String actorName) {
+    public void logAssetDeleted(com.riskregister.riskregisterapp.entities.Asset asset, String actorEmail, String actorName, Long organizationId) {
         AuditTrail entry = new AuditTrail();
         entry.setEntityType("Asset");
         entry.setEntityId(asset.getId());
+        entry.setOrganizationId(organizationId);
         entry.setAction("DELETED");
         entry.setSummary("Asset deleted: " + asset.getName());
         entry.setChangesJson(null);
@@ -356,8 +365,8 @@ public class AuditTrailService {
     }
 
     /** Retrieve all audit trail entries for an Asset, newest first. */
-    public List<AuditTrail> findByAsset(Long assetId) {
-        return auditTrailRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc("Asset", assetId);
+    public List<AuditTrail> findByAsset(Long organizationId, Long assetId) {
+        return auditTrailRepository.findByOrganizationIdAndEntityTypeAndEntityIdOrderByCreatedAtDesc(organizationId, "Asset", assetId);
     }
 
     // -----------------------------------------------------------------------

@@ -24,24 +24,24 @@ public class TaskService {
     @Autowired
     private TaskUpdateRepository taskUpdateRepository;
 
-    public List<Task> findAllByRisk(Long riskId) {
-        return taskRepository.findByRiskIdAndDeletedAtIsNullOrderByCreatedAtDesc(riskId);
+    public List<Task> findAllByRisk(Long organizationId, Long riskId) {
+        return taskRepository.findByOrganizationIdAndRiskIdAndDeletedAtIsNullOrderByCreatedAtDesc(organizationId, riskId);
     }
 
-    public List<Task> findAll() {
-        return taskRepository.findAllWithRiskAndDeletedAtIsNull();
+    public List<Task> findAll(Long organizationId) {
+        return taskRepository.findAllWithRiskByOrganizationIdAndDeletedAtIsNull(organizationId);
     }
 
-    public Optional<Task> findById(Long id) {
-        return taskRepository.findByIdAndDeletedAtIsNull(id);
+    public Optional<Task> findById(Long organizationId, Long id) {
+        return taskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id);
     }
 
     public Task save(Task task) {
         return taskRepository.save(task);
     }
 
-    public void softDelete(Long id) {
-        Optional<Task> taskOpt = taskRepository.findById(id);
+    public void softDelete(Long organizationId, Long id) {
+        Optional<Task> taskOpt = taskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id);
         if (taskOpt.isPresent()) {
             Task task = taskOpt.get();
             task.setDeletedAt(Instant.now());
@@ -67,8 +67,8 @@ public class TaskService {
         taskUpdateRepository.deleteById(updateId);
     }
 
-    public Map<String, Long> getTasksByStatus() {
-        List<Task> allTasks = findAll();
+    public Map<String, Long> getTasksByStatus(Long organizationId) {
+        List<Task> allTasks = findAll(organizationId);
         Map<String, Long> statusCounts = new java.util.LinkedHashMap<>();
 
         long backlog = allTasks.stream().filter(t -> t.getStatus() == TaskStatus.BACKLOG).count();
@@ -82,16 +82,16 @@ public class TaskService {
         return statusCounts;
     }
 
-    public long countOverdueTasks() {
+    public long countOverdueTasks(Long organizationId) {
         LocalDate today = LocalDate.now();
-        return findAll().stream()
+        return findAll(organizationId).stream()
             .filter(t -> t.getStatus() != TaskStatus.COMPLETED && t.getDueDate() != null && t.getDueDate().isBefore(today))
             .count();
     }
 
-    public List<Task> getOverdueTasks(int limit) {
+    public List<Task> getOverdueTasks(int limit, Long organizationId) {
         LocalDate today = LocalDate.now();
-        return findAll().stream()
+        return findAll(organizationId).stream()
             .filter(t -> t.getStatus() != TaskStatus.COMPLETED && t.getDueDate() != null && t.getDueDate().isBefore(today))
             .sorted((t1, t2) -> {
                 if (t1.getDueDate() == null) return 1;
@@ -102,25 +102,25 @@ public class TaskService {
             .collect(java.util.stream.Collectors.toList());
     }
 
-    public long getCompletionRate() {
-        List<Task> allTasks = findAll();
+    public long getCompletionRate(Long organizationId) {
+        List<Task> allTasks = findAll(organizationId);
         if (allTasks.isEmpty()) return 0;
         long completed = allTasks.stream().filter(t -> t.getStatus() == TaskStatus.COMPLETED).count();
         return (completed * 100) / allTasks.size();
     }
 
-    public long countTasksInProgress() {
-        return findAll().stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
+    public long countTasksInProgress(Long organizationId) {
+        return findAll(organizationId).stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count();
     }
 
-    public long countTotalTasks() {
-        return findAll().size();
+    public long countTotalTasks(Long organizationId) {
+        return findAll(organizationId).size();
     }
 
-    public List<Task> getTasksByAssignee(String assigneeId) {
+    public List<Task> getTasksByAssignee(String assigneeId, Long organizationId) {
         if (assigneeId == null || assigneeId.isEmpty()) {
             return List.of();
         }
-        return taskRepository.findByAssigneeIdWithRiskAndDeletedAtIsNullOrderByCreatedAtDesc(assigneeId);
+        return taskRepository.findByAssigneeIdAndOrganizationIdWithRiskAndDeletedAtIsNull(assigneeId, organizationId);
     }
 }

@@ -59,6 +59,8 @@ public class Asset {
     private String createdByEmail;
     private String updatedByEmail;
 
+    private Long organizationId;
+
     // Computed getter for CIA rating display
     public String getCiaRating() {
         return String.format("C:%d I:%d A:%d",

@@ -8,22 +8,30 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import com.riskregister.riskregisterapp.entities.Asset;
+import com.riskregister.riskregisterapp.entities.AuditTrail;
 import com.riskregister.riskregisterapp.entities.EffectivenessScore;
+import com.riskregister.riskregisterapp.entities.Organization;
 import com.riskregister.riskregisterapp.entities.Risk;
 import com.riskregister.riskregisterapp.entities.RiskCategory;
 import com.riskregister.riskregisterapp.entities.RiskDimension;
 import com.riskregister.riskregisterapp.entities.RiskStatus;
 import com.riskregister.riskregisterapp.entities.RiskSubcategory;
 import com.riskregister.riskregisterapp.entities.Role;
+import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.entities.User;
 import com.riskregister.riskregisterapp.enums.RiskReviewFrequency;
 import com.riskregister.riskregisterapp.lookups.RiskTreatment;
+import com.riskregister.riskregisterapp.repositories.AssetRepository;
+import com.riskregister.riskregisterapp.repositories.AuditTrailRepository;
 import com.riskregister.riskregisterapp.repositories.EffectivenessScoreRepository;
+import com.riskregister.riskregisterapp.repositories.OrganizationRepository;
 import com.riskregister.riskregisterapp.repositories.RiskCategoryRepository;
 import com.riskregister.riskregisterapp.repositories.RiskDimensionRepository;
 import com.riskregister.riskregisterapp.repositories.RiskRepository;
 import com.riskregister.riskregisterapp.repositories.RiskStatusRepository;
 import com.riskregister.riskregisterapp.repositories.RiskSubcategoryRepository;
+import com.riskregister.riskregisterapp.repositories.TaskRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
 
 @Component
@@ -50,8 +58,21 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private EffectivenessScoreRepository effectivenessScoreRepository;
 
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private AssetRepository assetRepository;
+
+    @Autowired
+    private AuditTrailRepository auditTrailRepository;
+
     @Override
     public void run(ApplicationArguments args) {
+        ensureDefaultOrganization();
         fixUserNames();
         seedRiskCategories();
         seedRiskSubcategories();
@@ -60,6 +81,51 @@ public class DataInitializer implements ApplicationRunner {
         // seedAdminUser();
         // seedRisks();
         // seedEffectivenessScores();
+    }
+
+    private void ensureDefaultOrganization() {
+        // If any organization already exists, skip — migration already ran
+        if (organizationRepository.count() > 0) return;
+
+        // Create the default org
+        Organization defaultOrg = new Organization();
+        defaultOrg.setName("Default Organization");
+        defaultOrg.setDescription("Migrated from single-tenant setup");
+        defaultOrg.setCreatedAt(Instant.now());
+        defaultOrg.setUpdatedAt(Instant.now());
+        defaultOrg = organizationRepository.save(defaultOrg);
+
+        final Long orgId = defaultOrg.getId();
+
+        // Assign all existing users
+        List<User> users = userRepository.findAll();
+        users.forEach(u -> u.setOrganizationId(orgId));
+        userRepository.saveAll(users);
+
+        // Assign all existing risks
+        List<Risk> risks = riskRepository.findAll();
+        risks.forEach(r -> r.setOrganizationId(orgId));
+        riskRepository.saveAll(risks);
+
+        // Assign all existing tasks
+        List<Task> tasks = taskRepository.findAll();
+        tasks.forEach(t -> t.setOrganizationId(orgId));
+        taskRepository.saveAll(tasks);
+
+        // Assign all existing assets
+        List<Asset> assets = assetRepository.findAll();
+        assets.forEach(a -> a.setOrganizationId(orgId));
+        assetRepository.saveAll(assets);
+
+        // Assign all existing audit trails
+        List<AuditTrail> audits = auditTrailRepository.findAll();
+        audits.forEach(a -> a.setOrganizationId(orgId));
+        auditTrailRepository.saveAll(audits);
+
+        // Assign all existing effectiveness scores
+        List<EffectivenessScore> scores = effectivenessScoreRepository.findAll();
+        scores.forEach(s -> s.setOrganizationId(orgId));
+        effectivenessScoreRepository.saveAll(scores);
     }
 
     private void fixUserNames() {

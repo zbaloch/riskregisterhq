@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.riskregister.riskregisterapp.entities.CustomUserDetails;
+import com.riskregister.riskregisterapp.entities.Organization;
 import com.riskregister.riskregisterapp.entities.User;
+import com.riskregister.riskregisterapp.repositories.OrganizationRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
 
 @ControllerAdvice
@@ -15,6 +17,9 @@ public class GlobalControllerAdvice {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @ModelAttribute("currentUser")
     public User getCurrentUser() {
@@ -30,6 +35,15 @@ public class GlobalControllerAdvice {
                     return userRepository.findByEmail(username);
                 }
             }
+        }
+        return null;
+    }
+
+    @ModelAttribute("currentOrg")
+    public Organization getCurrentOrg() {
+        User user = getCurrentUser();
+        if (user != null && user.getOrganizationId() != null) {
+            return organizationRepository.findById(user.getOrganizationId()).orElse(null);
         }
         return null;
     }

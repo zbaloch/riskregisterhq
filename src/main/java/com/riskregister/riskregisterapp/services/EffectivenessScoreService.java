@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.riskregister.riskregisterapp.entities.EffectivenessScore;
 import com.riskregister.riskregisterapp.entities.Risk;
 import com.riskregister.riskregisterapp.repositories.EffectivenessScoreRepository;
+import com.riskregister.riskregisterapp.repositories.OrganizationRepository;
 
 @Service
 public class EffectivenessScoreService {
@@ -21,13 +22,16 @@ public class EffectivenessScoreService {
     @Autowired
     private RiskService riskService;
 
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
     /**
-     * Calculates the Risk Management Effectiveness score.
+     * Calculates the Risk Management Effectiveness score for a specific organization.
      * Formula: (1 - Total Residual / Total Inherent) × 100%
      * Only includes risks with status Assessed (2), Mitigated (3), or Accepted (4)
      */
-    public EffectivenessScore calculateEffectivenessScore() {
-        List<Risk> allRisks = riskService.findAll();
+    public EffectivenessScore calculateEffectivenessScore(Long organizationId) {
+        List<Risk> allRisks = riskService.findAll(organizationId);
 
         // Filter for approved risks (Assessed, Mitigated, Accepted)
         List<Risk> approvedRisks = allRisks.stream()
@@ -35,7 +39,9 @@ public class EffectivenessScoreService {
             .toList();
 
         if (approvedRisks.isEmpty()) {
-            return new EffectivenessScore(0.0, 0L, 0L, 0);
+            EffectivenessScore score = new EffectivenessScore(0.0, 0L, 0L, 0);
+            score.setOrganizationId(organizationId);
+            return score;
         }
 
         // Calculate total inherent and residual scores
@@ -63,31 +69,32 @@ public class EffectivenessScoreService {
         }
 
         EffectivenessScore score = new EffectivenessScore(effectiveness, totalInherentScore, totalResidualScore, approvedRisks.size());
+        score.setOrganizationId(organizationId);
         return effectivenessScoreRepository.save(score);
     }
 
     /**
-     * Monthly scheduled job to calculate and store effectiveness score
+     * Monthly scheduled job to calculate and store effectiveness score for all organizations
      * Runs at 2 AM on the first day of each month
      */
     @Scheduled(cron = "0 2 1 * * *")
     public void scheduleMonthlyCalculation() {
-        calculateEffectivenessScore();
+        organizationRepository.findAll().forEach(org -> calculateEffectivenessScore(org.getId()));
     }
 
     /**
-     * Get the latest effectiveness score
+     * Get the latest effectiveness score for a specific organization
      */
-    public EffectivenessScore getLatestScore() {
-        return effectivenessScoreRepository.findFirstByOrderByCalculatedAtDesc();
+    public EffectivenessScore getLatestScore(Long organizationId) {
+        return effectivenessScoreRepository.findFirstByOrganizationIdOrderByCalculatedAtDesc(organizationId);
     }
 
     /**
-     * Get effectiveness scores for the last N days
+     * Get effectiveness scores for the last N days for a specific organization
      */
-    public List<EffectivenessScore> getScoresForLastDays(int days) {
+    public List<EffectivenessScore> getScoresForLastDays(int days, Long organizationId) {
         Instant cutoff = Instant.now().minus(days, ChronoUnit.DAYS);
-        return effectivenessScoreRepository.findByCalculatedAtAfterOrderByCalculatedAtAsc(cutoff);
+        return effectivenessScoreRepository.findByOrganizationIdAndCalculatedAtAfterOrderByCalculatedAtAsc(organizationId, cutoff);
     }
 
     /**

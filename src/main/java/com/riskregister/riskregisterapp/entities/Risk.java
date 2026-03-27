@@ -72,6 +72,8 @@ public class Risk {
 
     private Long statusId;
 
+    private Long organizationId;
+
     private Instant createdAt;
     private Instant updatedAt;
     private Instant deletedAt; // null = active; non-null = soft-deleted

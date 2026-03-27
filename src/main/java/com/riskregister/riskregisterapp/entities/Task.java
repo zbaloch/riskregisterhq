@@ -33,6 +33,8 @@ public class Task {
 
     private Long riskId;  // FK to risks.id (bare Long, same pattern as riskCategoryId)
 
+    private Long organizationId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @jakarta.persistence.JoinColumn(name = "riskId", insertable = false, updatable = false)
     private Risk risk;

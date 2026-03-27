@@ -27,12 +27,12 @@ public class RiskService {
     @Autowired
     private RiskCategoryRepository riskCategoryRepository;
 
-    public List<Risk> findAll() {
-        return riskRepository.findByDeletedAtIsNullOrderByCreatedAtDesc();
+    public List<Risk> findAll(Long organizationId) {
+        return riskRepository.findByOrganizationIdAndDeletedAtIsNullOrderByCreatedAtDesc(organizationId);
     }
 
-    public Optional<Risk> findById(Long id) {
-        return riskRepository.findByIdAndDeletedAtIsNull(id);
+    public Optional<Risk> findById(Long organizationId, Long id) {
+        return riskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id);
     }
 
     public Risk save(Risk risk) {
@@ -44,22 +44,22 @@ public class RiskService {
         return riskRepository.save(risk);
     }
 
-    public void softDelete(Long id) {
-        riskRepository.findByIdAndDeletedAtIsNull(id).ifPresent(risk -> {
+    public void softDelete(Long organizationId, Long id) {
+        riskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id).ifPresent(risk -> {
             risk.setDeletedAt(Instant.now());
             riskRepository.save(risk);
         });
     }
 
-    public long countActive() {
-        return riskRepository.countByDeletedAtIsNull();
+    public long countActive(Long organizationId) {
+        return riskRepository.countByOrganizationIdAndDeletedAtIsNull(organizationId);
     }
 
     public List<RiskStatus> getAllStatuses() {
         return riskStatusRepository.findAll();
     }
 
-    public Map<RiskStatus, Long> countRisksByStatus() {
+    public Map<RiskStatus, Long> countRisksByStatus(Long organizationId) {
         Map<RiskStatus, Long> counts = new java.util.LinkedHashMap<>();
         List<RiskStatus> allStatuses = riskStatusRepository.findAll();
 
@@ -72,25 +72,25 @@ public class RiskService {
                 .findFirst()
                 .orElse(null);
             if (status != null) {
-                long count = riskRepository.countByStatusIdAndDeletedAtIsNull(status.getId());
+                long count = riskRepository.countByOrganizationIdAndStatusIdAndDeletedAtIsNull(organizationId, status.getId());
                 counts.put(status, count);
             }
         }
         return counts;
     }
 
-    public Map<RiskCategory, Long> countRisksByCategory() {
+    public Map<RiskCategory, Long> countRisksByCategory(Long organizationId) {
         Map<RiskCategory, Long> counts = new java.util.LinkedHashMap<>();
         List<RiskCategory> categories = riskCategoryRepository.findAll();
         for (RiskCategory category : categories) {
-            long count = riskRepository.countByRiskCategoryIdAndDeletedAtIsNull(category.getId());
+            long count = riskRepository.countByOrganizationIdAndRiskCategoryIdAndDeletedAtIsNull(organizationId, category.getId());
             counts.put(category, count);
         }
         return counts;
     }
 
-    public Map<String, Object> getRiskScoreDistribution() {
-        List<Risk> activeRisks = findAll();
+    public Map<String, Object> getRiskScoreDistribution(Long organizationId) {
+        List<Risk> activeRisks = findAll(organizationId);
 
         // Count risks by inherent likelihood
         long inherent1 = activeRisks.stream().filter(r -> r.getInherentLikelihood() != null && r.getInherentLikelihood() == 1).count();
@@ -112,7 +112,7 @@ public class RiskService {
         return distribution;
     }
 
-    public Map<String, Object> getRisksByStatusAndCategory() {
+    public Map<String, Object> getRisksByStatusAndCategory(Long organizationId) {
         List<RiskStatus> statuses = riskStatusRepository.findAll();
         // Order statuses: Accepted (4), Identified (1), Assessed (2), Mitigated (3), Closed (5)
         java.util.List<Long> desiredOrder = java.util.Arrays.asList(4L, 1L, 2L, 3L, 5L);
@@ -133,7 +133,7 @@ public class RiskService {
         for (RiskStatus status : orderedStatuses) {
             java.util.List<Long> countsByCategory = new java.util.ArrayList<>();
             for (RiskCategory category : categories) {
-                long count = riskRepository.countByStatusIdAndRiskCategoryIdAndDeletedAtIsNull(status.getId(), category.getId());
+                long count = riskRepository.countByOrganizationIdAndStatusIdAndRiskCategoryIdAndDeletedAtIsNull(organizationId, status.getId(), category.getId());
                 countsByCategory.add(count);
             }
             statusData.put(status.getId(), countsByCategory);
@@ -148,8 +148,8 @@ public class RiskService {
         return data;
     }
 
-    public Map<String, Object> getRiskScoresByCategory() {
-        List<Risk> activeRisks = findAll();
+    public Map<String, Object> getRiskScoresByCategory(Long organizationId) {
+        List<Risk> activeRisks = findAll(organizationId);
         List<RiskCategory> categories = riskCategoryRepository.findAll();
 
         // Build data structure: for each category, count risks by score level for both inherent and residual
@@ -193,8 +193,8 @@ public class RiskService {
         return data;
     }
 
-    public Map<String, Long> getRisksByScoreLevel() {
-        List<Risk> activeRisks = findAll();
+    public Map<String, Long> getRisksByScoreLevel(Long organizationId) {
+        List<Risk> activeRisks = findAll(organizationId);
         Map<String, Long> scoreDistribution = new java.util.LinkedHashMap<>();
 
         long veryLow = activeRisks.stream()
@@ -241,8 +241,8 @@ public class RiskService {
         return scoreDistribution;
     }
 
-    public long countHighRisks() {
-        List<Risk> activeRisks = findAll();
+    public long countHighRisks(Long organizationId) {
+        List<Risk> activeRisks = findAll(organizationId);
         return activeRisks.stream()
             .filter(r -> {
                 Integer score = r.getResidualScore() != null ? r.getResidualScore() : r.getInherentScore();
@@ -251,8 +251,8 @@ public class RiskService {
             .count();
     }
 
-    public List<Risk> getHighestRisks(int limit) {
-        return findAll().stream()
+    public List<Risk> getHighestRisks(int limit, Long organizationId) {
+        return findAll(organizationId).stream()
             .sorted((r1, r2) -> {
                 Integer score1 = r1.getResidualScore() != null ? r1.getResidualScore() : r1.getInherentScore();
                 Integer score2 = r2.getResidualScore() != null ? r2.getResidualScore() : r2.getInherentScore();
@@ -302,8 +302,8 @@ public class RiskService {
         return scoreColors;
     }
 
-    public Map<String, Object> getRiskHeatmaps() {
-        List<Risk> activeRisks = findAll();
+    public Map<String, Object> getRiskHeatmaps(Long organizationId) {
+        List<Risk> activeRisks = findAll(organizationId);
 
         // Filter risks: exclude Identified (1) and Closed (5), keep only Assessed (2), Mitigated (3), Accepted (4)
         List<Risk> filteredRisks = activeRisks.stream()

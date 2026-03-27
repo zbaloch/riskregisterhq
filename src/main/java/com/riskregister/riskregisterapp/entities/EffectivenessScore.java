@@ -27,6 +27,8 @@ public class EffectivenessScore {
 
     private Instant calculatedAt; // When this score was calculated
 
+    private Long organizationId;
+
     public EffectivenessScore() {}
 
     public EffectivenessScore(Double score, Long totalInherentScore, Long totalResidualScore, Integer riskCount) {
@@ -35,6 +37,11 @@ public class EffectivenessScore {
         this.totalResidualScore = totalResidualScore;
         this.riskCount = riskCount;
         this.calculatedAt = Instant.now();
+    }
+
+    public EffectivenessScore(Double score, Long totalInherentScore, Long totalResidualScore, Integer riskCount, Long organizationId) {
+        this(score, totalInherentScore, totalResidualScore, riskCount);
+        this.organizationId = organizationId;
     }
 
     public String getScoreLevel() {
