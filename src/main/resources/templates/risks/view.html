@@ -90,7 +90,7 @@
               <button @click="activeTab = 'notes'"
                       :class="activeTab === 'notes' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
                       class="px-4 py-3 text-sm font-medium transition-colors relative">
-                Notes <span class="text-xs text-gray-400" x-text="'(' + (riskNotes ? riskNotes.length : 0) + ')'"></span>
+                Notes <span class="text-xs text-gray-400" x-text="'(' + (riskNotes || []).length + ')'"></span>
                 <!-- <span x-show="riskNotes && riskNotes.length > 0" class="absolute inline-block h-2 w-2 rounded-full bg-sky-600"></span> -->
               </button>
               <button @click="activeTab = 'assets'"
@@ -985,7 +985,11 @@
                       </div>
 
                       <div x-show="allAssets.length === 0" class="text-center py-8 px-6">
-                        <p class="text-sm text-gray-500">No assets available. Create assets to link them to this risk.</p>
+                        <p class="text-sm text-gray-500">No assets available.</p>
+                        <a href="/assets/new" class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-sky-600 hover:text-sky-500">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                          Create a new asset
+                        </a>
                       </div>
 
                       <div x-show="allAssets.length > 0 && filteredAssets().length === 0" class="text-center py-8 px-6">
@@ -1181,7 +1185,9 @@
     </main>
   </div>
 
-  <script>
+  <script th:inline="javascript">
+  const riskId = /*[[${risk.id}]]*/ null;
+
   function riskTabs() {
     return {
       activeTab: (() => {
@@ -1203,7 +1209,6 @@
       },
 
       loadNotes() {
-        const riskId = new URLSearchParams(window.location.search).get('id') || document.querySelector('[data-risk-id]')?.dataset.riskId;
         fetch(`/api/risks/${riskId}/notes`)
           .then(res => res.json())
           .then(notes => {
@@ -1408,24 +1413,19 @@
   }
 
   function notesList() {
-    const riskId = new URLSearchParams(window.location.search).get('id') || document.querySelector('[data-risk-id]')?.dataset.riskId;
-
     return {
       riskNotes: [],
 
       init() {
-        // Load notes
         this.loadNotes();
-        this.$watch('riskNotes', () => {
-          // Initialize note editor when notes are loaded
-          setTimeout(() => {
-            if (document.getElementById('note-editor') && !document.getElementById('note-editor').innerHTML) {
-              window.LexicalEditor.init('note-editor', 'note-content', '').catch(err => {
-                console.error('Failed to init note editor:', err);
-              });
-            }
-          }, 50);
-        });
+        setTimeout(() => {
+          const el = document.getElementById('note-editor');
+          if (el && !el.innerHTML) {
+            window.LexicalEditor.init('note-editor', 'note-content', '').catch(err => {
+              console.error('Failed to init note editor:', err);
+            });
+          }
+        }, 100);
       },
 
       loadNotes() {
@@ -1585,9 +1585,6 @@
       },
 
       saveAssets() {
-        // Get risk ID from URL
-        const riskId = window.location.pathname.split('/').find((part, idx, arr) => arr[idx + 1] === 'risks' || arr[idx - 1] === 'risks') ||
-                      window.location.pathname.split('/')[2];
 
         fetch(`/api/risks/${riskId}/assets`, {
           method: 'POST',
