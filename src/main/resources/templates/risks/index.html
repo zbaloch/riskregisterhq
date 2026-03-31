@@ -84,12 +84,16 @@
               <tr th:each="risk : ${risks}" class="hover:bg-gray-50 transition-colors">
 
                 <!-- Risk ID -->
-                <td class="px-5 py-4 whitespace-nowrap">
+                <td class="px-5 py-4">
                   <a th:href="@{/risks/{id}(id=${risk.id})}" class="text-sm font-medium text-sky-600 hover:text-sky-700 hover:underline"
                     th:text="${risk.riskId} + ' ' + ${risk.title}"></a>
-                  <div th:text="${risk.riskCategoryId != null ? categoryMap[risk.riskCategoryId] ?: '—' : '—'}" class="text-sm text-gray-700"></div>
-                  <div th:text="${risk.riskSubcategoryId != null ? subcategoryMap[risk.riskSubcategoryId] ?: '—' : '—'}" class="text-sm text-gray-700"></div>
-                  <div th:text="${risk.riskDimensionId != null ? dimensionMap[risk.riskDimensionId] ?: '—' : '—'}" class="text-sm text-gray-700"></div>
+                    <div>
+                      <span th:text="${risk.riskCategoryId != null ? categoryMap[risk.riskCategoryId] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
+                      <span class="text-zinc-500"> · </span>
+                      <span th:text="${risk.riskSubcategoryId != null ? subcategoryMap[risk.riskSubcategoryId] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
+                      <span class="text-zinc-500"> · </span>
+                      <span th:text="${risk.riskDimensionId != null ? dimensionMap[risk.riskDimensionId] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
+                    </div>
                 </td>
 
                 <!-- Title -->
@@ -116,8 +120,8 @@
 
                 <!-- Inherent Risk Score -->
                 <td class="px-5 py-4 whitespace-nowrap">
-                  <div th:if="${risk.inherentScore != null}" class="flex items-center gap-1.5">
-                    <span class="text-sm font-bold"
+                  <div th:if="${risk.inherentScore != null}" class="flex flex-col items-center gap-1.5">
+                    <span class="text-xl font-bold"
                       th:text="${risk.inherentScore}"
                       th:classappend="${risk.inherentScoreLevel == 'Very Low'} ? 'text-green-600' :
                                       (${risk.inherentScoreLevel == 'Low'} ? 'text-yellow-600' :
@@ -137,8 +141,8 @@
 
                 <!-- Residual Risk Score -->
                 <td class="px-5 py-4 whitespace-nowrap">
-                  <div th:if="${risk.residualScore != null}" class="flex items-center gap-1.5">
-                    <span class="text-sm font-bold"
+                  <div th:if="${risk.residualScore != null}" class="flex flex-col items-center gap-1.5">
+                    <span class="text-xl font-bold"
                       th:text="${risk.residualScore}"
                       th:classappend="${risk.residualScoreLevel == 'Very Low'} ? 'text-green-600' :
                                       (${risk.residualScoreLevel == 'Low'} ? 'text-yellow-600' :
