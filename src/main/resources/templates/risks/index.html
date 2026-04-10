@@ -181,7 +181,7 @@
 
                 <!-- Owner -->
                 <td class="px-5 py-4 whitespace-nowrap">
-                  <span class="text-sm text-gray-700" th:text="${risk.riskOwnerName ?: '—'}"></span>
+                  <span class="text-sm text-gray-700" th:text="${risk.riskOwnerName != null and risk.riskOwnerName != '' ? @nameUtils.shortName(risk.riskOwnerName) : '—'}"></span>
                 </td>
 
                 <!-- Actions -->

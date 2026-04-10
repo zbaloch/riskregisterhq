@@ -119,7 +119,7 @@
                 </div>
                 <div>
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Owner</div>
-                  <div class="text-sm text-gray-900" th:text="${risk.riskOwnerName ?: '—'}"></div>
+                  <div class="text-sm text-gray-900" th:text="${risk.riskOwnerName != null and risk.riskOwnerName != '' ? @nameUtils.shortName(risk.riskOwnerName) : '—'}"></div>
                 </div>
                 <div>
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Status</div>
@@ -415,7 +415,7 @@
                       </td>
 
                       <!-- Assignee -->
-                      <td class="px-6 py-4 whitespace-nowrap text-sm" th:classappend="${task.assigneeName != null and task.assigneeName != '' ? 'text-gray-600' : 'text-gray-400'}" th:text="${task.assigneeName ?: 'Not assigned'}"></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm" th:classappend="${task.assigneeName != null and task.assigneeName != '' ? 'text-gray-600' : 'text-gray-400'}" th:text="${task.assigneeName != null and task.assigneeName != '' ? @nameUtils.shortName(task.assigneeName) : 'Not assigned'}"></td>
 
                       <!-- Due Date -->
                       <td class="px-6 py-4 whitespace-nowrap text-sm" th:classappend="${task.dueDateFormatted != null and task.dueDateFormatted != '' ? 'text-gray-600' : 'text-gray-400'}" th:text="${task.dueDateFormatted ?: 'No due date'}"></td>
@@ -782,11 +782,9 @@
                 </template>
               </div>
 
-              <!-- Divider -->
-              <div class="border-t border-gray-200 my-6"></div>
 
               <!-- Add Note Form (AJAX) -->
-              <div class="space-y-4">
+              <div class="space-y-4 mt-6">
                 <h3 class="text-sm font-semibold text-gray-900">Add a Note</h3>
                 <form @submit.prevent="submitNote()" class="flex flex-col gap-3">
                   <div id="note-editor"></div>
@@ -872,7 +870,7 @@
                         </span>
                       </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600" th:text="${asset.ownerName ?: '—'}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600" th:text="${asset.ownerName != null and asset.ownerName != '' ? @nameUtils.shortName(asset.ownerName) : '—'}"></td>
                   </tr>
                 </tbody>
               </table>
@@ -1046,7 +1044,7 @@
                     th:attr="
                       data-summary=${entry.summary},
                       data-changes=${entry.changesJson != null ? entry.changesJson : '[]'},
-                      data-actor-name=${entry.actorName},
+                      data-actor-name=${entry.actorName != null ? @nameUtils.shortName(entry.actorName) : ''},
                       data-actor-email=${entry.actorEmail},
                       data-timestamp=${entry.createdAtFormatted}"
                     @click="openEntry($el)">
@@ -1085,7 +1083,7 @@
                     <p class="mt-0.5 text-xs text-gray-400">
                       <span th:text="${entry.createdAtFormatted}"></span>
                       <span th:if="${entry.actorName}"> by
-                        <span class="font-medium text-gray-600" th:text="${entry.actorName}"></span>
+                        <span class="font-medium text-gray-600" th:text="${@nameUtils.shortName(entry.actorName)}"></span>
                       </span>
                       <span th:unless="${entry.actorName}"> by
                         <span class="font-medium text-gray-600" th:text="${entry.actorEmail}"></span>

@@ -26,7 +26,8 @@
               <h1 class="text-2xl font-bold tracking-tight text-gray-900">Tasks <span class="text-sm text-gray-500" th:text="'(' + ${#lists.size(tasks)} + ')'"></span></h1>
               <p class="mt-1 text-sm text-gray-500">Track and manage tasks across all risks.</p>
             </div>
-            <button command="show-modal" commandfor="create-task-drawer"
+            <button th:if="${not #maps.isEmpty(riskMap)}"
+                    command="show-modal" commandfor="create-task-drawer"
                     class="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 transition-colors shadow-sm">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -44,11 +45,28 @@
           </div>
 
           <!-- Tasks Container -->
-          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
 
-            <!-- Empty state -->
-            <div th:if="${#lists.isEmpty(tasks)}"
-                 class="text-center py-12">
+            <!-- Empty state: no risks exist -->
+            <div th:if="${#maps.isEmpty(riskMap)}"
+                 class="text-center py-12 px-6">
+              <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No risks found</h3>
+              <p class="mt-1 text-sm text-gray-500">Tasks must be linked to a risk. Create a risk first before adding tasks.</p>
+              <a href="/risks/new"
+                 class="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 transition-colors shadow-sm">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Create a Risk
+              </a>
+            </div>
+
+            <!-- Empty state: risks exist but no tasks -->
+            <div th:if="${not #maps.isEmpty(riskMap) and #lists.isEmpty(tasks)}"
+                 class="text-center py-12 px-6">
               <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
               </svg>
@@ -64,9 +82,8 @@
             </div>
 
             <!-- Table wrapper with horizontal scroll -->
-            <div class="overflow-x-auto -mx-6 -mb-6">
-              <table th:unless="${#lists.isEmpty(tasks)}" class="w-full">
-                <thead>
+            <table th:unless="${#lists.isEmpty(tasks)}" class="min-w-full divide-y divide-gray-200">
+              <thead>
                   <tr class="border-b border-gray-200 bg-gray-50">
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Title</th>
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Risk</th>
@@ -76,7 +93,7 @@
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Due Date</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+              <tbody class="divide-y divide-gray-100 bg-white">
                   <tr th:each="task : ${tasks}"
                       class="hover:bg-gray-50 transition-colors"
                       th:attr="
@@ -147,15 +164,14 @@
                     </td>
 
                     <!-- Assignee -->
-                    <td class="px-6 py-4 whitespace-nowrap text-sm" th:classappend="${task.assigneeName != null and task.assigneeName != '' ? 'text-gray-600' : 'text-gray-400'}" th:text="${task.assigneeName ?: 'Not assigned'}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm" th:classappend="${task.assigneeName != null and task.assigneeName != '' ? 'text-gray-600' : 'text-gray-400'}" th:text="${task.assigneeName != null and task.assigneeName != '' ? @nameUtils.shortName(task.assigneeName) : 'Not assigned'}"></td>
 
                     <!-- Due Date -->
                     <td class="px-6 py-4 whitespace-nowrap text-sm" th:classappend="${task.dueDateFormatted != null and task.dueDateFormatted != '' ? 'text-gray-600' : 'text-gray-400'}" th:text="${task.dueDateFormatted ?: 'No due date'}"></td>
 
                   </tr>
                 </tbody>
-              </table>
-            </div>
+            </table>
           </div>
 
         <!-- Hidden button to open task detail drawer -->
