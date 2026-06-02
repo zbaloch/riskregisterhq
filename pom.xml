@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.3</version>
+		<version>3.5.14</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.riskregisterhq</groupId>
@@ -30,30 +30,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<lombok.version>1.18.34</lombok.version>
-		<thymeleaf.version>3.1.5.RELEASE</thymeleaf.version>
-		<tomcat.version>10.1.55</tomcat.version>
-		<logback.version>1.5.34</logback.version>
 	</properties>
-	<repositories>
-		<repository>
-			<id>psiegman-repo</id>
-			<url>https://github.com/psiegman/mvn-repo/raw/master/releases</url>
-		</repository>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.nimbusds</groupId>
-				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>9.48</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -88,57 +65,6 @@
 			<version>3.0.7</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.github.imagekit-developer</groupId>
-			<artifactId>imagekit-java</artifactId>
-			<version>2.0.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.squareup.okhttp3</groupId>
-					<artifactId>okhttp</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.squareup.okio</groupId>
-					<artifactId>okio</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.squareup.retrofit2</groupId>
-					<artifactId>retrofit</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.squareup.retrofit2</groupId>
-					<artifactId>converter-gson</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<!-- Patched versions of OkHttp, Okio and Retrofit replacing imagekit-java's bundled ones -->
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>4.12.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.squareup.okio</groupId>
-			<artifactId>okio</artifactId>
-			<version>3.9.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.squareup.retrofit2</groupId>
-			<artifactId>retrofit</artifactId>
-			<version>2.12.0</version>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.squareup.retrofit2</groupId>
-			<artifactId>converter-gson</artifactId>
-			<version>2.12.0</version>
-			<scope>runtime</scope>
-		</dependency>
-
 
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -157,12 +83,6 @@
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-community-dialects</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>nl.siegmann.epublib</groupId>
-			<artifactId>epublib-core</artifactId>
-			<version>3.1</version>
 		</dependency>
 
 		<dependency>
