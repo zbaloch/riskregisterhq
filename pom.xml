@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.1</version>
+		<version>3.5.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.riskregisterhq</groupId>
@@ -30,6 +30,9 @@
 	<properties>
 		<java.version>21</java.version>
 		<lombok.version>1.18.34</lombok.version>
+		<thymeleaf.version>3.1.5.RELEASE</thymeleaf.version>
+		<tomcat.version>10.1.55</tomcat.version>
+		<logback.version>1.5.34</logback.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -41,6 +44,16 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.nimbusds</groupId>
+				<artifactId>nimbus-jose-jwt</artifactId>
+				<version>9.48</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -88,20 +101,42 @@
 					<groupId>com.squareup.okio</groupId>
 					<artifactId>okio</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.squareup.retrofit2</groupId>
+					<artifactId>retrofit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.squareup.retrofit2</groupId>
+					<artifactId>converter-gson</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
-		<!-- Add compatible versions of OkHttp and Okio -->
+		<!-- Patched versions of OkHttp, Okio and Retrofit replacing imagekit-java's bundled ones -->
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
-			<version>4.9.3</version>
+			<version>4.12.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.squareup.okio</groupId>
 			<artifactId>okio</artifactId>
-			<version>2.10.0</version>
+			<version>3.9.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>retrofit</artifactId>
+			<version>2.12.0</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>converter-gson</artifactId>
+			<version>2.12.0</version>
+			<scope>runtime</scope>
 		</dependency>
 
 
@@ -148,14 +183,11 @@
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
-			<!-- Temporary explicit version to fix Thymeleaf bug -->
-			<version>3.1.1.RELEASE</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-			<version>3.3.2</version>
 		</dependency>
 
 		<dependency>
