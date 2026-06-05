@@ -1044,7 +1044,7 @@
                     th:attr="
                       data-summary=${entry.summary},
                       data-changes=${entry.changesJson != null ? entry.changesJson : '[]'},
-                      data-actor-name=${entry.actorName != null ? @nameUtils.shortName(entry.actorName) : ''},
+                      data-actor-name=${entry.actorShortName != null ? entry.actorShortName : ''},
                       data-actor-email=${entry.actorEmail},
                       data-timestamp=${entry.createdAtFormatted}"
                     @click="openEntry($el)">
@@ -1083,7 +1083,7 @@
                     <p class="mt-0.5 text-xs text-gray-400">
                       <span th:text="${entry.createdAtFormatted}"></span>
                       <span th:if="${entry.actorName}"> by
-                        <span class="font-medium text-gray-600" th:text="${@nameUtils.shortName(entry.actorName)}"></span>
+                        <span class="font-medium text-gray-600" th:text="${entry.actorShortName}"></span>
                       </span>
                       <span th:unless="${entry.actorName}"> by
                         <span class="font-medium text-gray-600" th:text="${entry.actorEmail}"></span>

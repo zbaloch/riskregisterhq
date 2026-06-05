@@ -56,4 +56,11 @@ public class AuditTrail {
     public String getCreatedAtFormatted() {
         return createdAt != null ? DISPLAY_FMT.format(createdAt) : null;
     }
+
+    public String getActorShortName() {
+        if (actorName == null || actorName.isBlank()) return actorName;
+        int space = actorName.indexOf(' ');
+        if (space < 0 || space == actorName.length() - 1) return actorName;
+        return actorName.substring(0, space) + " " + actorName.charAt(space + 1) + ".";
+    }
 }
