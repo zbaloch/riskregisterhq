@@ -411,7 +411,7 @@
       return {
         period: '90days',
         chart: null,
-        isRendering: false,
+        pendingRender: null,
 
         initChart() {
           const scores90Days = this.parseScores(document.getElementById('scores-90days')?.textContent || '[]');
@@ -427,10 +427,8 @@
         },
 
         changePeriod(newPeriod) {
-          if (this.isRendering) return;
           this.period = newPeriod;
-          const scores = this.getScoresForPeriod();
-          this.renderChart(scores);
+          this.renderChart(this.getScoresForPeriod());
         },
 
         getScoresForPeriod() {
@@ -440,10 +438,12 @@
         },
 
         renderChart(scores) {
-          if (this.isRendering) return;
-          this.isRendering = true;
+          // Cancel any in-flight render so rapid clicks never get dropped
+          if (this.pendingRender) {
+            clearTimeout(this.pendingRender);
+            this.pendingRender = null;
+          }
 
-          // Destroy old chart first and reset canvas
           if (this.chart) {
             try {
               this.chart.destroy();
@@ -453,25 +453,15 @@
             }
           }
 
-          // Small delay to ensure cleanup
-          setTimeout(() => {
+          this.pendingRender = setTimeout(() => {
+            this.pendingRender = null;
             try {
               const canvas = document.getElementById('effectivenessChart');
-              if (!canvas) {
-                console.warn('Chart canvas not found');
-                this.isRendering = false;
-                return;
-              }
+              if (!canvas) return;
 
-              // Reset canvas to clear any previous state
               const ctx = canvas.getContext('2d');
-              if (!ctx) {
-                console.warn('Could not get canvas context');
-                this.isRendering = false;
-                return;
-              }
+              if (!ctx) return;
 
-              // Prepare chart data
               const labels = scores.map(s => new Date(s.calculatedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
               const data = scores.map(s => parseFloat(s.score.toFixed(1)));
 
@@ -496,36 +486,20 @@
                 options: {
                   responsive: true,
                   maintainAspectRatio: true,
-                  plugins: {
-                    legend: {
-                      display: false
-                    }
-                  },
+                  plugins: { legend: { display: false } },
                   scales: {
                     y: {
                       beginAtZero: true,
                       max: 100,
-                      ticks: {
-                        callback: function(value) {
-                          return value + '%';
-                        }
-                      },
-                      grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                      }
+                      ticks: { callback: value => value + '%' },
+                      grid: { color: 'rgba(0, 0, 0, 0.05)' }
                     },
-                    x: {
-                      grid: {
-                        display: false
-                      }
-                    }
+                    x: { grid: { display: false } }
                   }
                 }
               });
             } catch (e) {
               console.error('Error rendering chart:', e);
-            } finally {
-              this.isRendering = false;
             }
           }, 50);
         }
