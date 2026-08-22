@@ -175,7 +175,7 @@
                   <option value="">Select review frequency</option>
                   <option th:each="freq : ${reviewFrequencies}"
                     th:value="${freq.name()}"
-                    th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(freq.name(), '_', ' ')))}">
+                    th:text="${freq.displayName}">
                   </option>
                 </select>
               </div>

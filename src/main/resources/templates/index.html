@@ -438,24 +438,19 @@
         },
 
         renderChart(scores) {
-          // Cancel any in-flight render so rapid clicks never get dropped
           if (this.pendingRender) {
             clearTimeout(this.pendingRender);
             this.pendingRender = null;
           }
 
-          if (this.chart) {
-            try {
-              this.chart.destroy();
-              this.chart = null;
-            } catch (e) {
-              console.warn('Error destroying chart:', e);
-            }
-          }
-
           this.pendingRender = setTimeout(() => {
             this.pendingRender = null;
             try {
+              if (this.chart) {
+                this.chart.destroy();
+                this.chart = null;
+              }
+
               const canvas = document.getElementById('effectivenessChart');
               if (!canvas) return;
 

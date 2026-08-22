@@ -140,9 +140,7 @@
                 <div>
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Review Frequency</div>
                   <div class="text-sm text-gray-900" th:if="${risk.reviewFrequency != null}">
-                    <th:block th:with="formatted=${#strings.replace(risk.reviewFrequency.name(), '_', ' ')}">
-                      <span th:text="${#strings.capitalize(#strings.toLowerCase(formatted))}"></span>
-                    </th:block>
+                    <span th:text="${risk.reviewFrequency.displayName}"></span>
                   </div>
                   <div class="text-sm text-gray-400" th:unless="${risk.reviewFrequency != null}">—</div>
                 </div>
