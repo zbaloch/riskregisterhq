@@ -169,6 +169,14 @@ public class RisksController {
             }
         }
 
+        // Asset types for the picker's filter, plus code→name for its JSON-rendered rows
+        model.addAttribute("assetTypes", lookupService.findActive(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE, orgId));
+        java.util.Map<String, String> assetTypeNames = new java.util.LinkedHashMap<>();
+        for (var t : lookupService.findAll(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE, orgId)) {
+            assetTypeNames.put(t.getCode(), t.getName());
+        }
+        model.addAttribute("assetTypeNames", assetTypeNames);
+
         model.addAttribute("linkedAssets", linkedAssets);
         model.addAttribute("allAssets", allAssets);
         model.addAttribute("linkedAssetIds", linkedAssetIds);

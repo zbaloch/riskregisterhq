@@ -938,12 +938,7 @@
                       <select x-model="typeFilter"
                               class="rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
                         <option value="">All Types</option>
-                        <option value="Hardware">Hardware</option>
-                        <option value="Software">Software</option>
-                        <option value="Data">Data</option>
-                        <option value="Service">Service</option>
-                        <option value="Facility">Facility</option>
-                        <option value="People">People</option>
+                        <option th:each="t : ${assetTypes}" th:value="${t.code}" th:text="${t.name}"></option>
                       </select>
                     </div>
 
@@ -984,7 +979,7 @@
                               <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                                       :class="getTypeColorClass(asset.type)"
-                                      x-text="asset.type"></span>
+                                      x-text="assetTypeName(asset.type)"></span>
                               </td>
                               <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex gap-1.5">
@@ -1290,6 +1285,13 @@
 
   <script th:inline="javascript">
   const riskId = /*[[${risk.id}]]*/ null;
+
+  // Asset types are admin-managed; assets carry the code, so resolve it for display
+  const ASSET_TYPE_NAMES = /*[[${assetTypeNames}]]*/ {};
+  function assetTypeName(code) {
+    if (!code) return '';
+    return ASSET_TYPE_NAMES[code] || code;
+  }
 
   function riskTabs() {
     return {

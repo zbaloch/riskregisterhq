@@ -403,7 +403,11 @@ public class AuditTrailService {
 
         diff(changes, "name", "Name", before.getName(), after.getName());
         diff(changes, "description", "Description", before.getDescription(), after.getDescription());
-        diff(changes, "type", "Type", before.getType(), after.getType());
+        diff(changes, "type", "Type",
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE,
+                         before.getType(), before.getOrganizationId()),
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE,
+                         after.getType(), after.getOrganizationId()));
         diff(changes, "status", "Status", before.getStatus(), after.getStatus());
         diff(changes, "location", "Location", before.getLocation(), after.getLocation());
         diff(changes, "notes", "Notes", before.getNotes(), after.getNotes());

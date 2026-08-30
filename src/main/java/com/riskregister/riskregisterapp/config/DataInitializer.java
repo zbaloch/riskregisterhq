@@ -75,6 +75,7 @@ public class DataInitializer implements ApplicationRunner {
         ensureDefaultOrganization();
         fixUserNames();
         migrateRiskCategoriesToLookup();
+        migrateAssetTypesToLookup();
         backfillLastReviewedAt();
         backfillRiskAppetiteThreshold();
         seedRiskDimensions();
@@ -172,6 +173,60 @@ public class DataInitializer implements ApplicationRunner {
                                                     .toList();
         seedLookupType(orgs, LookupType.RISK_CATEGORY, seeds);
         backfillRiskCategoryCodes(legacy);
+    }
+
+    /**
+     * Move asset types onto the managed-fields framework.
+     *
+     * assets.type used to hold the display string straight from a hardcoded select
+     * ("Hardware", "Software", ...). It now holds a lookup code, so the seed covers the
+     * standard six plus any value already present in the data — nothing gets orphaned —
+     * and each asset's stored string is rewritten to the matching code.
+     */
+    private void migrateAssetTypesToLookup() {
+        List<Organization> orgs = organizationRepository.findAll();
+        if (orgs.isEmpty()) return;
+
+        List<Seed> seeds = new java.util.ArrayList<>(List.of(
+            new Seed("HARDWARE", "Hardware", "Physical equipment and devices", false),
+            new Seed("SOFTWARE", "Software", "Applications, platforms and licences", false),
+            new Seed("DATA",     "Data",     "Datasets, records and information stores", false),
+            new Seed("SERVICE",  "Service",  "Internal or third-party services", false),
+            new Seed("FACILITY", "Facility", "Buildings, sites and physical locations", false),
+            new Seed("PEOPLE",   "People",   "Roles, teams and key person dependencies", false)
+        ));
+
+        // Preserve any type already in use that the standard list does not cover
+        java.util.Set<String> seededCodes = seeds.stream()
+            .map(Seed::code).collect(java.util.stream.Collectors.toSet());
+        for (Asset asset : assetRepository.findAll()) {
+            String existing = asset.getType();
+            if (existing == null || existing.isBlank()) continue;
+            String code = codeFor(existing);
+            if (seededCodes.add(code)) {
+                seeds.add(new Seed(code, existing.trim(), null, false));
+            }
+        }
+
+        seedLookupType(orgs, LookupType.ASSET_TYPE, seeds);
+        backfillAssetTypeCodes();
+    }
+
+    /** Rewrite each asset's stored display string to the matching lookup code. */
+    private void backfillAssetTypeCodes() {
+        List<Asset> updated = new java.util.ArrayList<>();
+        for (Asset asset : assetRepository.findAll()) {
+            String value = asset.getType();
+            if (value == null || value.isBlank()) continue;
+            String code = codeFor(value);
+            // Already a code (re-run, or created after this release) — leave it alone
+            if (code.equals(value)) continue;
+            asset.setType(code);
+            updated.add(asset);
+        }
+        if (!updated.isEmpty()) {
+            assetRepository.saveAll(updated);
+        }
     }
 
     private static List<Seed> defaultRiskCategorySeeds() {

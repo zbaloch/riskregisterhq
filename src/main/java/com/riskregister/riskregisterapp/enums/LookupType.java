@@ -18,6 +18,14 @@ public enum LookupType {
         null,
         "Risks"),
 
+    ASSET_TYPE(
+        "Asset Type",
+        "Asset Types",
+        "How assets are classified in the register — hardware, software, data and so on. Shown when recording an asset and used to filter the asset picker.",
+        null,   // no yes/no attribute for this field
+        null,
+        "Assets"),
+
     ISSUE_SOURCE(
         "Issue Source",
         "Issue Sources",

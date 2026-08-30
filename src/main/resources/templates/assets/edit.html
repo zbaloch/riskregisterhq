@@ -54,12 +54,9 @@
                     <select id="type" name="type" required
                       class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
                       <option value="">Select type</option>
-                      <option value="Hardware" th:selected="${asset.type == 'Hardware'}">Hardware</option>
-                      <option value="Software" th:selected="${asset.type == 'Software'}">Software</option>
-                      <option value="Data" th:selected="${asset.type == 'Data'}">Data</option>
-                      <option value="Service" th:selected="${asset.type == 'Service'}">Service</option>
-                      <option value="Facility" th:selected="${asset.type == 'Facility'}">Facility</option>
-                      <option value="People" th:selected="${asset.type == 'People'}">People</option>
+                      <option th:each="t : ${assetTypes}" th:value="${t.code}"
+                        th:selected="${asset.type != null and asset.type == t.code}"
+                        th:text="${t.name} + (${t.active} ? '' : ' (inactive)')"></option>
                     </select>
                   </div>
 

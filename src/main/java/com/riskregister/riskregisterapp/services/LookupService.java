@@ -36,6 +36,9 @@ public class LookupService {
     @Autowired
     private com.riskregister.riskregisterapp.repositories.RiskRepository riskRepository;
 
+    @Autowired
+    private com.riskregister.riskregisterapp.repositories.AssetRepository assetRepository;
+
     // -----------------------------------------------------------------------
     // Read
     // -----------------------------------------------------------------------
@@ -88,6 +91,14 @@ public class LookupService {
             for (com.riskregister.riskregisterapp.entities.Risk risk : riskRepository.findAll()) {
                 if (!organizationId.equals(risk.getOrganizationId())) continue;
                 String code = risk.getRiskCategory();
+                if (code == null || code.isBlank()) continue;
+                counts.merge(code, 1L, Long::sum);
+            }
+        } else if (type == LookupType.ASSET_TYPE) {
+            // Deleted assets still carry the code, so they count for delete protection
+            for (com.riskregister.riskregisterapp.entities.Asset asset : assetRepository.findAll()) {
+                if (!organizationId.equals(asset.getOrganizationId())) continue;
+                String code = asset.getType();
                 if (code == null || code.isBlank()) continue;
                 counts.merge(code, 1L, Long::sum);
             }

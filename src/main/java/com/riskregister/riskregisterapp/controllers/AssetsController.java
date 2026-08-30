@@ -37,6 +37,9 @@ import com.riskregister.riskregisterapp.services.RiskService;
 @PreAuthorize("isAuthenticated()")
 public class AssetsController {
 
+    @Autowired
+    private com.riskregister.riskregisterapp.services.LookupService lookupService;
+
     private static final Logger log = LoggerFactory.getLogger(AssetsController.class);
 
     @Autowired
@@ -69,6 +72,7 @@ public class AssetsController {
             .collect(Collectors.toMap(u -> u.getEmail() != null ? u.getEmail() : "", u -> u.getDisplayName()));
 
         model.addAttribute("assets", assets);
+        model.addAttribute("typeMap", lookupService.map(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE, orgId));
         model.addAttribute("userMap", userMap);
         return "assets/index";
     }
@@ -87,6 +91,7 @@ public class AssetsController {
         asset.setStatus("Active");
 
         model.addAttribute("asset", asset);
+        model.addAttribute("assetTypes", lookupService.findActiveIncluding(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE, orgId, asset.getType()));
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         return "assets/create";
     }
@@ -142,6 +147,7 @@ public class AssetsController {
             .collect(Collectors.toMap(rs -> rs.getId(), rs -> rs.getName()));
 
         model.addAttribute("asset", asset);
+        model.addAttribute("typeMap", lookupService.map(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE, orgId));
         model.addAttribute("auditEntries", auditEntries);
         model.addAttribute("notes", notes);
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
@@ -192,6 +198,7 @@ public class AssetsController {
             .orElseThrow(() -> new RuntimeException("Asset not found"));
 
         model.addAttribute("asset", asset);
+        model.addAttribute("assetTypes", lookupService.findActiveIncluding(com.riskregister.riskregisterapp.enums.LookupType.ASSET_TYPE, orgId, asset.getType()));
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
         return "assets/edit";
     }
