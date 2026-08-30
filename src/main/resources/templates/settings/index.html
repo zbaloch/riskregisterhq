@@ -23,7 +23,7 @@
     <div th:replace="~{fragments/admin-nav-top}"></div>
 
     <main class="py-10">
-      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8" x-data="{ showAddModal: false, showEditModal: false, editingUser: null }">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8" x-data="{ showAddModal: false, showEditModal: false, editingUser: null }">
         <div>
           <h1 class="text-2xl font-bold tracking-tight text-gray-900">Settings</h1>
           <p class="mt-1 text-sm text-gray-500">Manage your organization and users.</p>
@@ -50,9 +50,6 @@
               </button>
               <button @click="activeTab = 'users'" :class="activeTab === 'users' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                 Users
-              </button>
-              <button @click="activeTab = 'taxonomy'" :class="activeTab === 'taxonomy' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
-                Risk Taxonomy
               </button>
               <button @click="activeTab = 'fields'" :class="activeTab === 'fields' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
                 Managed Fields
@@ -167,247 +164,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
-
-          <div x-show="activeTab === 'taxonomy'" class="mt-8"
-            x-data="{
-              catModal: false,
-              editingCat: { id: '', name: '', description: '' },
-              subModal: false,
-              editingSub: { id: '', name: '', description: '', categoryId: '' }
-            }">
-
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-              <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                <div>
-                  <h2 class="text-lg font-semibold text-gray-900">Risk Taxonomy <span class="text-sm text-gray-500" th:text="'(' + ${#lists.size(taxonomy)} + ' categories)'"></span></h2>
-                  <p class="text-sm text-gray-500 mt-1">
-                    Categories and subcategories used to classify risks. Counts are your organisation's active risks;
-                    entries still referenced by any risk, including deleted ones, cannot be removed.
-                  </p>
-                </div>
-                <button @click="editingCat = { id: '', name: '', description: '' }; catModal = true"
-                  class="inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 transition-colors shrink-0 ml-4">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                  </svg>
-                  Add Category
-                </button>
-              </div>
-
-              <div th:if="${#lists.isEmpty(taxonomy)}" class="p-12 text-center">
-                <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
-                </svg>
-                <h3 class="mt-4 text-sm font-semibold text-gray-900">No categories yet</h3>
-                <p class="mt-1 text-sm text-gray-500">Add your first risk category to build the taxonomy.</p>
-              </div>
-
-              <!-- Category accordion -->
-              <div class="divide-y divide-gray-200">
-                <div th:each="v : ${taxonomy}" x-data="{ open: false }">
-
-                  <!-- Category row -->
-                  <div class="flex items-center gap-3 px-6 py-4 hover:bg-gray-50 transition-colors">
-                    <button @click="open = !open" class="flex items-center gap-3 flex-1 min-w-0 text-left cursor-pointer">
-                      <svg class="w-4 h-4 text-gray-400 shrink-0 transition-transform" :class="open ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                      </svg>
-                      <div class="min-w-0">
-                        <span class="text-sm font-semibold text-gray-900" th:text="${v.category.name}"></span>
-                        <p class="text-xs text-gray-500 truncate" th:text="${v.category.description}"></p>
-                      </div>
-                    </button>
-                    <span class="hidden sm:inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 shrink-0"
-                      th:text="${#lists.size(v.subcategories)} + ' subcategor' + (${#lists.size(v.subcategories)} == 1 ? 'y' : 'ies')"></span>
-                    <span class="hidden sm:inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0"
-                      th:classappend="${v.riskCount > 0} ? 'bg-sky-50 text-sky-700' : 'bg-gray-100 text-gray-500'"
-                      th:title="${v.hasHiddenReferences()} ? ${v.archivedCount()} + ' deleted risk record(s) also reference this category' : null">
-                      <span th:text="${v.riskCount} + ' risk' + (${v.riskCount} == 1 ? '' : 's')"></span>
-                      <span th:if="${v.hasHiddenReferences()}" class="text-gray-400 font-normal"
-                        th:text="'+' + ${v.archivedCount()} + ' deleted'"></span>
-                    </span>
-                    <button @click="editingCat = { id: $el.dataset.id, name: $el.dataset.name, description: $el.dataset.description }; catModal = true"
-                      th:data-id="${v.category.id}"
-                      th:data-name="${v.category.name}"
-                      th:data-description="${v.category.description ?: ''}"
-                      class="text-xs font-medium text-sky-600 hover:text-sky-800 transition-colors cursor-pointer shrink-0">
-                      Edit
-                    </button>
-                    <form th:if="${v.deletable()}" method="POST" action="/settings/taxonomy/categories/delete"
-                      x-data @submit.prevent="if(confirm('Delete this category? This cannot be undone.')) $el.submit()" class="shrink-0">
-                      <input type="hidden" name="id" th:value="${v.category.id}">
-                      <button type="submit" class="text-gray-400 hover:text-red-600 transition-colors cursor-pointer" title="Delete category">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                      </button>
-                    </form>
-                    <span th:unless="${v.deletable()}" class="text-gray-300 cursor-not-allowed shrink-0"
-                      th:title="${v.riskCount > 0} ? 'In use by ' + ${v.riskCount} + ' active risk(s) — reassign them first'
-                              : (${v.referencingCount > 0} ? 'No active risks, but ' + ${v.referencingCount} + ' deleted risk record(s) still reference it'
-                              : 'Has subcategories — delete or move them first')">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                      </svg>
-                    </span>
-                  </div>
-
-                  <!-- Subcategories (expanded) -->
-                  <div x-show="open" class="bg-gray-50/60 border-t border-gray-100">
-                    <div th:each="sv : ${v.subcategories}" class="flex items-center gap-3 pl-14 pr-6 py-3 border-b border-gray-100 last:border-b-0">
-                      <div class="flex-1 min-w-0">
-                        <span class="text-sm font-medium text-gray-800" th:text="${sv.subcategory.name}"></span>
-                        <p class="text-xs text-gray-500 truncate" th:text="${sv.subcategory.description}"></p>
-                      </div>
-                      <span class="hidden sm:inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0"
-                        th:classappend="${sv.riskCount > 0} ? 'bg-sky-50 text-sky-700' : 'bg-gray-100 text-gray-500'"
-                        th:title="${sv.hasHiddenReferences()} ? ${sv.archivedCount()} + ' deleted risk record(s) also reference this subcategory' : null">
-                        <span th:text="${sv.riskCount} + ' risk' + (${sv.riskCount} == 1 ? '' : 's')"></span>
-                        <span th:if="${sv.hasHiddenReferences()}" class="text-gray-400 font-normal"
-                          th:text="'+' + ${sv.archivedCount()} + ' deleted'"></span>
-                      </span>
-                      <button @click="editingSub = { id: $el.dataset.id, name: $el.dataset.name, description: $el.dataset.description, categoryId: $el.dataset.categoryId }; subModal = true"
-                        th:data-id="${sv.subcategory.id}"
-                        th:data-name="${sv.subcategory.name}"
-                        th:data-description="${sv.subcategory.description ?: ''}"
-                        th:data-category-id="${sv.subcategory.categoryId}"
-                        class="text-xs font-medium text-sky-600 hover:text-sky-800 transition-colors cursor-pointer shrink-0">
-                        Edit
-                      </button>
-                      <form th:if="${sv.deletable()}" method="POST" action="/settings/taxonomy/subcategories/delete"
-                        x-data @submit.prevent="if(confirm('Delete this subcategory? This cannot be undone.')) $el.submit()" class="shrink-0">
-                        <input type="hidden" name="id" th:value="${sv.subcategory.id}">
-                        <button type="submit" class="text-gray-400 hover:text-red-600 transition-colors cursor-pointer" title="Delete subcategory">
-                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                          </svg>
-                        </button>
-                      </form>
-                      <span th:unless="${sv.deletable()}" class="text-gray-300 cursor-not-allowed shrink-0"
-                        th:title="${sv.riskCount > 0} ? 'In use by ' + ${sv.riskCount} + ' active risk(s) — reassign them first'
-                                : 'No active risks, but ' + ${sv.referencingCount} + ' deleted risk record(s) still reference it'">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                      </span>
-                    </div>
-                    <div class="pl-14 pr-6 py-3">
-                      <button @click="editingSub = { id: '', name: '', description: '', categoryId: $el.dataset.categoryId }; subModal = true"
-                        th:data-category-id="${v.category.id}"
-                        class="inline-flex items-center gap-1.5 text-xs font-medium text-sky-600 hover:text-sky-800 transition-colors cursor-pointer">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Add subcategory
-                      </button>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <!-- Uncategorized subcategories (legacy rows without a parent) -->
-            <div th:if="${not #lists.isEmpty(uncategorizedSubs)}" class="mt-6 bg-white rounded-xl border border-amber-200 shadow-sm overflow-hidden">
-              <div class="px-6 py-4 border-b border-amber-200 bg-amber-50">
-                <h3 class="text-sm font-semibold text-amber-900">Uncategorized Subcategories</h3>
-                <p class="text-xs text-amber-700 mt-1">These subcategories have no parent category yet. Edit each one to assign it — until then they won't appear under a category when creating risks.</p>
-              </div>
-              <div class="divide-y divide-gray-100">
-                <div th:each="sv : ${uncategorizedSubs}" class="flex items-center gap-3 px-6 py-3">
-                  <div class="flex-1 min-w-0">
-                    <span class="text-sm font-medium text-gray-800" th:text="${sv.subcategory.name}"></span>
-                    <p class="text-xs text-gray-500 truncate" th:text="${sv.subcategory.description}"></p>
-                  </div>
-                  <span class="hidden sm:inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium shrink-0"
-                    th:classappend="${sv.riskCount > 0} ? 'bg-sky-50 text-sky-700' : 'bg-gray-100 text-gray-500'">
-                    <span th:text="${sv.riskCount} + ' risk' + (${sv.riskCount} == 1 ? '' : 's')"></span>
-                    <span th:if="${sv.hasHiddenReferences()}" class="text-gray-400 font-normal"
-                      th:text="'+' + ${sv.archivedCount()} + ' deleted'"></span>
-                  </span>
-                  <button @click="editingSub = { id: $el.dataset.id, name: $el.dataset.name, description: $el.dataset.description, categoryId: '' }; subModal = true"
-                    th:data-id="${sv.subcategory.id}"
-                    th:data-name="${sv.subcategory.name}"
-                    th:data-description="${sv.subcategory.description ?: ''}"
-                    class="rounded-md border border-amber-300 bg-white px-3 py-1 text-xs font-semibold text-amber-800 hover:bg-amber-50 transition-colors cursor-pointer shrink-0">
-                    Assign Category
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Add/Edit Category Modal -->
-            <div x-cloak x-show="catModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click="catModal = false">
-              <div class="bg-white rounded-xl shadow-xl max-w-md w-full" @click.stop>
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                  <h3 class="text-lg font-semibold text-gray-900" x-text="editingCat.id ? 'Edit Category' : 'Add Category'"></h3>
-                  <button @click="catModal = false" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
-                </div>
-                <form method="POST" :action="editingCat.id ? '/settings/taxonomy/categories/update' : '/settings/taxonomy/categories/create'" class="space-y-4 p-6">
-                  <input type="hidden" name="id" :value="editingCat.id">
-                  <div>
-                    <label for="catName" class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="catName" name="name" required x-model="editingCat.name" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="e.g. Operational Risk">
-                  </div>
-                  <div>
-                    <label for="catDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="catDescription" name="description" rows="3" x-model="editingCat.description" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="What kinds of risks belong in this category?"></textarea>
-                  </div>
-                  <div class="flex gap-3 pt-4">
-                    <button type="button" @click="catModal = false" class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
-                      Cancel
-                    </button>
-                    <button type="submit" class="flex-1 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors" x-text="editingCat.id ? 'Save Changes' : 'Create Category'">
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-
-            <!-- Add/Edit Subcategory Modal -->
-            <div x-cloak x-show="subModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click="subModal = false">
-              <div class="bg-white rounded-xl shadow-xl max-w-md w-full" @click.stop>
-                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                  <h3 class="text-lg font-semibold text-gray-900" x-text="editingSub.id ? 'Edit Subcategory' : 'Add Subcategory'"></h3>
-                  <button @click="subModal = false" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
-                </div>
-                <form method="POST" :action="editingSub.id ? '/settings/taxonomy/subcategories/update' : '/settings/taxonomy/subcategories/create'" class="space-y-4 p-6">
-                  <input type="hidden" name="id" :value="editingSub.id">
-                  <div>
-                    <label for="subCategoryId" class="block text-sm font-medium text-gray-700 mb-1">Parent Category <span class="text-red-500">*</span></label>
-                    <select id="subCategoryId" name="categoryId" required x-model="editingSub.categoryId" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors">
-                      <option value="">Select a category</option>
-                      <option th:each="v : ${taxonomy}" th:value="${v.category.id}" th:text="${v.category.name}"></option>
-                    </select>
-                  </div>
-                  <div>
-                    <label for="subName" class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="subName" name="name" required x-model="editingSub.name" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="e.g. Access Control">
-                  </div>
-                  <div>
-                    <label for="subDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea id="subDescription" name="description" rows="3" x-model="editingSub.description" class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors" placeholder="What does this subcategory cover?"></textarea>
-                  </div>
-                  <div class="flex gap-3 pt-4">
-                    <button type="button" @click="subModal = false" class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
-                      Cancel
-                    </button>
-                    <button type="submit" class="flex-1 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors" x-text="editingSub.id ? 'Save Changes' : 'Create Subcategory'">
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-
           </div>
 
           <!--
@@ -778,7 +534,7 @@
     // Tab state lives in the URL so a refresh, a bookmark or a shared link reopens the
     // same tab, and so the redirects after a save land back where the user was working.
     function settingsTabs() {
-      const TABS = ['organization', 'users', 'taxonomy', 'fields', 'support'];
+      const TABS = ['organization', 'users', 'fields', 'support'];
 
       const tabFromUrl = () => {
         const tab = new URLSearchParams(window.location.search).get('tab');

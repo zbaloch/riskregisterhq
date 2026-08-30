@@ -21,7 +21,7 @@
   <div class="lg:pl-72" >
     <div th:replace="~{fragments/admin-nav-top}"></div>
     <main class="py-10">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         <!-- Breadcrumb -->
         <div class="mb-6 flex items-center gap-3">
@@ -91,7 +91,7 @@
               <button @click="activeTab = 'tasks'"
                       :class="activeTab === 'tasks' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
                       class="px-4 py-3 text-sm font-medium transition-colors">
-                Tasks <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(tasks)} + ')'"></span>
+                Remediation Actions <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(tasks)} + ')'"></span>
               </button>
               <button @click="activeTab = 'notes'"
                       :class="activeTab === 'notes' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
@@ -164,13 +164,9 @@
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Status</div>
                   <div class="text-sm text-gray-900" th:text="${risk.statusId != null ? statusMap[risk.statusId] : '—'}"></div>
                 </div>
-                <div th:if="${risk.riskCategoryId != null}">
+                <div th:if="${risk.riskCategory != null}">
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Risk Category</div>
-                  <div class="text-sm text-gray-900" th:text="${categoryMap[risk.riskCategoryId]}"></div>
-                </div>
-                <div th:if="${risk.riskSubcategoryId != null}">
-                  <div class="text-xs font-medium text-gray-500 mb-0.5">Subcategory</div>
-                  <div class="text-sm text-gray-900" th:text="${subcategoryMap[risk.riskSubcategoryId]}"></div>
+                  <div class="text-sm text-gray-900" th:text="${categoryMap[risk.riskCategory]} ?: ${risk.riskCategory}"></div>
                 </div>
                 <div th:if="${risk.riskDimensionId != null}">
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Dimension</div>
@@ -388,8 +384,8 @@
                 <!-- Header / Toolbar -->
                 <div class="flex items-center justify-between gap-4 mb-6">
                   <div class="flex-1">
-                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Tasks</h2>
-                    <p class="text-sm text-gray-600">Mitigation and remediation actions planned to manage this risk</p>
+                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Remediation Actions</h2>
+                    <p class="text-sm text-gray-600">The work planned to bring this risk within appetite. Each item is a task with an owner and a due date.</p>
                   </div>
                   <button command="show-modal" commandfor="create-task-drawer"
                           class="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 transition-colors shadow-sm">
@@ -402,7 +398,8 @@
 
                 <!-- Empty state -->
                 <div th:if="${#lists.isEmpty(tasks)}" class="text-center py-8">
-                  <p class="text-sm text-gray-400">No tasks yet. Create one to get started.</p>
+                  <p class="text-sm font-medium text-gray-500">No remediation tasks yet</p>
+                  <p class="mt-1 text-sm text-gray-400">A risk marked for mitigation with no tasks behind it is a plan nobody is executing.</p>
                 </div>
 
                 <!-- Task table -->

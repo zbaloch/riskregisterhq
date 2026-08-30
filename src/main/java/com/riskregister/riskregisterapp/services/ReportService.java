@@ -29,14 +29,11 @@ import com.riskregister.riskregisterapp.entities.AuditTrail;
 import com.riskregister.riskregisterapp.entities.EffectivenessScore;
 import com.riskregister.riskregisterapp.entities.Issue;
 import com.riskregister.riskregisterapp.entities.Risk;
-import com.riskregister.riskregisterapp.entities.RiskCategory;
-import com.riskregister.riskregisterapp.entities.RiskSubcategory;
+import com.riskregister.riskregisterapp.enums.LookupType;
 import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.enums.TaskStatus;
 import com.riskregister.riskregisterapp.lookups.RiskTreatment;
 import com.riskregister.riskregisterapp.repositories.AuditTrailRepository;
-import com.riskregister.riskregisterapp.repositories.RiskCategoryRepository;
-import com.riskregister.riskregisterapp.repositories.RiskSubcategoryRepository;
 
 /**
  * Builds the risk register reports. Everything here reads from the live register —
@@ -58,10 +55,7 @@ public class ReportService {
     private IssueService issueService;
 
     @Autowired
-    private RiskCategoryRepository riskCategoryRepository;
-
-    @Autowired
-    private RiskSubcategoryRepository riskSubcategoryRepository;
+    private LookupService lookupService;
 
     @Autowired
     private AuditTrailRepository auditTrailRepository;
@@ -111,42 +105,24 @@ public class ReportService {
     }
 
     // =======================================================================
-    // 2. Risk reduction by category / subcategory
+    // 2. Risk reduction by category
     // =======================================================================
 
     public List<ReductionRow> buildReductionReport(Long orgId) {
         List<Risk> risks = riskService.findAll(orgId);
-        Map<Long, String> catNames = categoryNames();
-        Map<Long, String> subNames = subcategoryNames();
+        Map<String, String> catNames = categoryNames(orgId);
 
-        Map<Long, List<Risk>> byCategory = risks.stream()
-            .collect(Collectors.groupingBy(r -> r.getRiskCategoryId() != null ? r.getRiskCategoryId() : -1L,
+        Map<String, List<Risk>> byCategory = risks.stream()
+            .collect(Collectors.groupingBy(r -> r.getRiskCategory() != null ? r.getRiskCategory() : "",
                                            LinkedHashMap::new, Collectors.toList()));
 
         List<ReductionRow> out = new ArrayList<>();
-        for (Map.Entry<Long, List<Risk>> e : byCategory.entrySet()) {
-            Long catId = e.getKey();
+        for (Map.Entry<String, List<Risk>> e : byCategory.entrySet()) {
+            String code = e.getKey();
             List<Risk> catRisks = e.getValue();
-            String catName = catId == -1L ? "Uncategorized" : catNames.getOrDefault(catId, "Category " + catId);
-
-            // Subcategory rows nested under the category
-            Map<Long, List<Risk>> bySub = catRisks.stream()
-                .collect(Collectors.groupingBy(r -> r.getRiskSubcategoryId() != null ? r.getRiskSubcategoryId() : -1L,
-                                               LinkedHashMap::new, Collectors.toList()));
-
-            List<ReductionRow> children = bySub.entrySet().stream()
-                .map(se -> new ReductionRow(
-                    se.getKey() == -1L ? "No subcategory" : subNames.getOrDefault(se.getKey(), "Subcategory " + se.getKey()),
-                    false,
-                    se.getValue().size(),
-                    avg(se.getValue(), true),
-                    avg(se.getValue(), false),
-                    List.of()))
-                .sorted(Comparator.comparing(ReductionRow::name))
-                .toList();
-
-            out.add(new ReductionRow(catName, true, catRisks.size(),
-                avg(catRisks, true), avg(catRisks, false), children));
+            String name = code.isEmpty() ? "Uncategorized" : catNames.getOrDefault(code, code);
+            out.add(new ReductionRow(name, true, catRisks.size(),
+                avg(catRisks, true), avg(catRisks, false), List.of()));
         }
 
         // Biggest exposure first — that is where a weak reduction matters most
@@ -205,7 +181,7 @@ public class ReportService {
     public List<GapRow> buildMitigationGapReport(Long orgId) {
         List<Risk> risks = riskService.findAll(orgId);
         List<Task> tasks = taskService.findAll(orgId);
-        Map<Long, String> catNames = categoryNames();
+        Map<String, String> catNames = categoryNames(orgId);
         LocalDate today = LocalDate.now();
 
         Map<Long, List<Task>> tasksByRisk = tasks.stream()
@@ -244,7 +220,7 @@ public class ReportService {
 
             if (gap != null) {
                 gaps.add(new GapRow(risk,
-                    risk.getRiskCategoryId() != null ? catNames.getOrDefault(risk.getRiskCategoryId(), "—") : "—",
+                    risk.getRiskCategory() != null ? catNames.getOrDefault(risk.getRiskCategory(), "—") : "—",
                     riskTasks.size(), open, overdue, gap, severity));
             }
         }
@@ -349,7 +325,7 @@ public class ReportService {
                 if (!ce.scoreChanges().isEmpty()) scoreChanges++;
             } else if ("Task".equals(e.getEntityType())) {
                 tasksTouched++;
-            } else if ("RiskCategory".equals(e.getEntityType()) || "RiskSubcategory".equals(e.getEntityType())) {
+            } else if ("LookupValue".equals(e.getEntityType())) {
                 taxonomy++;
             }
         }
@@ -379,7 +355,7 @@ public class ReportService {
 
     public List<ReviewDueRow> buildReviewsDueReport(Long orgId, boolean overdueOnly) {
         List<Risk> risks = riskService.findAll(orgId);
-        Map<Long, String> catNames = categoryNames();
+        Map<String, String> catNames = categoryNames(orgId);
 
         List<ReviewDueRow> rows = new ArrayList<>();
         for (Risk r : risks) {
@@ -392,7 +368,7 @@ public class ReportService {
             if (overdueOnly && !r.isReviewOverdue()) continue;
 
             rows.add(new ReviewDueRow(r,
-                r.getRiskCategoryId() != null ? catNames.getOrDefault(r.getRiskCategoryId(), "—") : "—",
+                r.getRiskCategory() != null ? catNames.getOrDefault(r.getRiskCategory(), "—") : "—",
                 r.getReviewFrequency().getDisplayName(), overdue, never));
         }
 
@@ -448,7 +424,7 @@ public class ReportService {
     public List<IssuesByRiskRow> buildIssuesByRiskReport(Long orgId) {
         List<Risk> risks = riskService.findAll(orgId);
         List<Issue> issues = issueService.findAll(orgId);
-        Map<Long, String> catNames = categoryNames();
+        Map<String, String> catNames = categoryNames(orgId);
 
         List<IssuesByRiskRow> rows = new ArrayList<>();
         for (Risk risk : risks) {
@@ -466,7 +442,7 @@ public class ReportService {
                 .count();
 
             rows.add(new IssuesByRiskRow(risk,
-                risk.getRiskCategoryId() != null ? catNames.getOrDefault(risk.getRiskCategoryId(), "—") : "—",
+                risk.getRiskCategory() != null ? catNames.getOrDefault(risk.getRiskCategory(), "—") : "—",
                 linked, open, severe));
         }
 
@@ -493,15 +469,15 @@ public class ReportService {
         return s != null ? s : 0;
     }
 
-    public Map<Long, String> categoryNames() {
-        return riskCategoryRepository.findAll().stream()
-            .collect(Collectors.toMap(RiskCategory::getId, RiskCategory::getName, (a, b) -> a));
+    /** code → display name for risk categories in this organisation. */
+    public Map<String, String> categoryNames(Long organizationId) {
+        Map<String, String> map = new LinkedHashMap<>();
+        for (var v : lookupService.findAll(LookupType.RISK_CATEGORY, organizationId)) {
+            map.put(v.getCode(), v.getName());
+        }
+        return map;
     }
 
-    public Map<Long, String> subcategoryNames() {
-        return riskSubcategoryRepository.findAll().stream()
-            .collect(Collectors.toMap(RiskSubcategory::getId, RiskSubcategory::getName, (a, b) -> a));
-    }
 
     /** Matches Risk.scoreToLevel banding so reports and the register agree. */
     public static String scoreLevel(int score) {
@@ -555,8 +531,7 @@ public class ReportService {
             case "Risk"            -> "Risk";
             case "Task"            -> "Task";
             case "Asset"           -> "Asset";
-            case "RiskCategory"    -> "Risk Category";
-            case "RiskSubcategory" -> "Subcategory";
+            case "LookupValue"     -> "Managed Field";
             default -> entityType;
         };
     }

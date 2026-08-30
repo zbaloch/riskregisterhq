@@ -15,7 +15,7 @@
   <div class="lg:pl-72">
     <div th:replace="~{fragments/admin-nav-top}"></div>
     <main class="py-10">
-      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8"
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8"
         x-data="{ hideClosed: true, q: '' }">
 
         <!-- Page header -->
@@ -97,8 +97,7 @@
                 th:data-closed="${risk.statusId != null and risk.statusId == 5}"
                 th:data-search="${#strings.toLowerCase(
                     (risk.riskId ?: '') + ' ' + (risk.title ?: '') + ' ' + (risk.riskOwnerName ?: '') + ' ' +
-                    (risk.riskCategoryId != null and categoryMap[risk.riskCategoryId] != null ? categoryMap[risk.riskCategoryId] : '') + ' ' +
-                    (risk.riskSubcategoryId != null and subcategoryMap[risk.riskSubcategoryId] != null ? subcategoryMap[risk.riskSubcategoryId] : ''))}"
+                    (risk.riskCategory != null and categoryMap[risk.riskCategory] != null ? categoryMap[risk.riskCategory] : ''))}"
                 x-show="(!hideClosed || $el.dataset.closed !== 'true') && (q === '' || $el.dataset.search.includes(q.toLowerCase()))">
 
                 <!-- Risk ID -->
@@ -106,9 +105,7 @@
                   <a th:href="@{/risks/{id}(id=${risk.id})}" class="text-sm font-medium text-sky-600 hover:text-sky-700 hover:underline"
                     th:text="${risk.riskId} + ' ' + ${risk.title}"></a>
                     <div>
-                      <span th:text="${risk.riskCategoryId != null ? categoryMap[risk.riskCategoryId] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
-                      <span class="text-zinc-500"> · </span>
-                      <span th:text="${risk.riskSubcategoryId != null ? subcategoryMap[risk.riskSubcategoryId] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
+                      <span th:text="${risk.riskCategory != null ? categoryMap[risk.riskCategory] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
                       <span class="text-zinc-500"> · </span>
                       <span th:text="${risk.riskDimensionId != null ? dimensionMap[risk.riskDimensionId] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
                     </div>
@@ -123,12 +120,11 @@
 
                 <!-- Category -->
                 <!-- <td class="px-5 py-4 whitespace-nowrap">
-                  <span th:text="${categoryMap[risk.riskCategoryId] ?: '—'}" class="text-sm text-gray-700"></span>
+                  <span th:text="${risk.riskCategory != null ? categoryMap[risk.riskCategory] ?: '—' : '—'}" class="text-sm text-gray-700"></span>
                 </td> -->
 
                 <!-- Subcategory -->
                 <!-- <td class="px-5 py-4 whitespace-nowrap">
-                  <span th:text="${subcategoryMap[risk.riskSubcategoryId] ?: '—'}" class="text-sm text-gray-700"></span>
                 </td> -->
 
                 <!-- Dimension -->

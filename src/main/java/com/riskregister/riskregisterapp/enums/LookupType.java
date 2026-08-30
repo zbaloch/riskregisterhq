@@ -10,6 +10,14 @@ package com.riskregister.riskregisterapp.enums;
  */
 public enum LookupType {
 
+    RISK_CATEGORY(
+        "Risk Category",
+        "Risk Categories",
+        "How risks are classified in the register. Required on every risk, and the main axis for grouping exposure when reporting.",
+        null,   // no yes/no attribute for this field
+        null,
+        "Risks"),
+
     ISSUE_SOURCE(
         "Issue Source",
         "Issue Sources",

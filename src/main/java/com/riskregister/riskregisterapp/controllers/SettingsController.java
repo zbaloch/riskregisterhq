@@ -29,7 +29,6 @@ import com.riskregister.riskregisterapp.repositories.UserRepository;
 import com.riskregister.riskregisterapp.enums.LookupType;
 import com.riskregister.riskregisterapp.services.EmailService;
 import com.riskregister.riskregisterapp.services.LookupService;
-import com.riskregister.riskregisterapp.services.RiskTaxonomyService;
 import com.riskregister.riskregisterapp.services.UserService;
 
 @Controller
@@ -54,9 +53,6 @@ public class SettingsController {
     private EmailService emailService;
 
     @Autowired
-    private RiskTaxonomyService taxonomyService;
-
-    @Autowired
     private LookupService lookupService;
 
     @GetMapping
@@ -68,8 +64,6 @@ public class SettingsController {
         model.addAttribute("users", users);
         model.addAttribute("organization", org);
         model.addAttribute("roles", Role.values());
-        model.addAttribute("taxonomy", taxonomyService.getTaxonomy(currentUser.getOrganizationId()));
-        model.addAttribute("uncategorizedSubs", taxonomyService.getUncategorizedSubcategories(currentUser.getOrganizationId()));
 
         // Managed fields: the type list drives the left pane, the selected type the right
         LookupType selected = LookupType.fromCode(fieldType);

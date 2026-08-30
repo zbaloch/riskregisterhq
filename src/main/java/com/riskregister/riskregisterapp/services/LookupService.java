@@ -33,6 +33,9 @@ public class LookupService {
     @Autowired
     private IssueRepository issueRepository;
 
+    @Autowired
+    private com.riskregister.riskregisterapp.repositories.RiskRepository riskRepository;
+
     // -----------------------------------------------------------------------
     // Read
     // -----------------------------------------------------------------------
@@ -80,7 +83,15 @@ public class LookupService {
     /** How many live records use each option code, so the admin screen can warn before deletion. */
     public Map<String, Long> usageCounts(LookupType type, Long organizationId) {
         Map<String, Long> counts = new LinkedHashMap<>();
-        if (type == LookupType.ISSUE_SOURCE
+        if (type == LookupType.RISK_CATEGORY) {
+            // Deleted risks still carry the code, so they count for delete protection
+            for (com.riskregister.riskregisterapp.entities.Risk risk : riskRepository.findAll()) {
+                if (!organizationId.equals(risk.getOrganizationId())) continue;
+                String code = risk.getRiskCategory();
+                if (code == null || code.isBlank()) continue;
+                counts.merge(code, 1L, Long::sum);
+            }
+        } else if (type == LookupType.ISSUE_SOURCE
                 || type == LookupType.ISSUE_CATEGORY
                 || type == LookupType.ISSUE_DIMENSION) {
             // Deleted issues still carry the code, so they count for delete protection
@@ -90,6 +101,7 @@ public class LookupService {
                     case ISSUE_SOURCE    -> issue.getSource();
                     case ISSUE_CATEGORY  -> issue.getCategory();
                     case ISSUE_DIMENSION -> issue.getDimension();
+                    default -> null;   // not an issue field
                 };
                 if (code == null || code.isBlank()) continue;
                 counts.merge(code, 1L, Long::sum);

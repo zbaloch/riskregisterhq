@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.riskregister.riskregisterapp.entities.Risk;
-import com.riskregister.riskregisterapp.entities.RiskCategory;
 import com.riskregister.riskregisterapp.entities.RiskStatus;
 import com.riskregister.riskregisterapp.repositories.RiskRepository;
-import com.riskregister.riskregisterapp.repositories.RiskCategoryRepository;
+import com.riskregister.riskregisterapp.enums.LookupType;
 import com.riskregister.riskregisterapp.repositories.RiskStatusRepository;
 
 @Service
@@ -25,7 +24,7 @@ public class RiskService {
     private RiskStatusRepository riskStatusRepository;
 
     @Autowired
-    private RiskCategoryRepository riskCategoryRepository;
+    private LookupService lookupService;
 
     public List<Risk> findAll(Long organizationId) {
         return riskRepository.findByOrganizationIdAndDeletedAtIsNullOrderByCreatedAtDesc(organizationId);
@@ -143,12 +142,12 @@ public class RiskService {
         return counts;
     }
 
-    public Map<RiskCategory, Long> countRisksByCategory(Long organizationId) {
-        Map<RiskCategory, Long> counts = new java.util.LinkedHashMap<>();
-        List<RiskCategory> categories = riskCategoryRepository.findAll();
-        for (RiskCategory category : categories) {
-            long count = riskRepository.countByOrganizationIdAndRiskCategoryIdAndDeletedAtIsNull(organizationId, category.getId());
-            counts.put(category, count);
+    /** Active risks per category, keyed by the category's display name, in admin order. */
+    public Map<String, Long> countRisksByCategory(Long organizationId) {
+        Map<String, Long> counts = new java.util.LinkedHashMap<>();
+        for (var category : lookupService.findAll(LookupType.RISK_CATEGORY, organizationId)) {
+            counts.put(category.getName(),
+                riskRepository.countByOrganizationIdAndRiskCategoryAndDeletedAtIsNull(organizationId, category.getCode()));
         }
         return counts;
     }
@@ -188,7 +187,7 @@ public class RiskService {
                 .ifPresent(orderedStatuses::add);
         }
 
-        List<RiskCategory> categories = riskCategoryRepository.findAll();
+        var categories = lookupService.findAll(LookupType.RISK_CATEGORY, organizationId);
 
         // Build data: for each status, count risks per category
         Map<String, Object> data = new java.util.LinkedHashMap<>();
@@ -196,8 +195,8 @@ public class RiskService {
 
         for (RiskStatus status : orderedStatuses) {
             java.util.List<Long> countsByCategory = new java.util.ArrayList<>();
-            for (RiskCategory category : categories) {
-                long count = riskRepository.countByOrganizationIdAndStatusIdAndRiskCategoryIdAndDeletedAtIsNull(organizationId, status.getId(), category.getId());
+            for (var category : categories) {
+                long count = riskRepository.countByOrganizationIdAndStatusIdAndRiskCategoryAndDeletedAtIsNull(organizationId, status.getId(), category.getCode());
                 countsByCategory.add(count);
             }
             statusData.put(status.getId(), countsByCategory);
@@ -206,7 +205,7 @@ public class RiskService {
         data.put("statuses", orderedStatuses);
         data.put("statusNames", orderedStatuses.stream().map(RiskStatus::getName).collect(java.util.stream.Collectors.toList()));
         data.put("categories", categories);
-        data.put("categoryNames", categories.stream().map(RiskCategory::getName).collect(java.util.stream.Collectors.toList()));
+        data.put("categoryNames", categories.stream().map(com.riskregister.riskregisterapp.entities.LookupValue::getName).collect(java.util.stream.Collectors.toList()));
         data.put("statusData", statusData);
 
         return data;
@@ -214,16 +213,16 @@ public class RiskService {
 
     public Map<String, Object> getRiskScoresByCategory(Long organizationId) {
         List<Risk> activeRisks = findAll(organizationId);
-        List<RiskCategory> categories = riskCategoryRepository.findAll();
+        var categories = lookupService.findAll(LookupType.RISK_CATEGORY, organizationId);
 
         // Build data structure: for each category, count risks by score level for both inherent and residual
         Map<String, Object> data = new java.util.LinkedHashMap<>();
         Map<Long, java.util.List<Long>> inherentData = new java.util.LinkedHashMap<>();
         Map<Long, java.util.List<Long>> residualData = new java.util.LinkedHashMap<>();
 
-        for (RiskCategory category : categories) {
+        for (var category : categories) {
             List<Risk> categoryRisks = activeRisks.stream()
-                .filter(r -> r.getRiskCategoryId() != null && r.getRiskCategoryId().equals(category.getId()))
+                .filter(r -> r.getRiskCategory() != null && r.getRiskCategory().equals(category.getCode()))
                 .collect(java.util.stream.Collectors.toList());
 
             // Count inherent scores for this category
@@ -250,7 +249,7 @@ public class RiskService {
         }
 
         data.put("categories", categories);
-        data.put("categoryNames", categories.stream().map(RiskCategory::getName).collect(java.util.stream.Collectors.toList()));
+        data.put("categoryNames", categories.stream().map(com.riskregister.riskregisterapp.entities.LookupValue::getName).collect(java.util.stream.Collectors.toList()));
         data.put("inherentData", inherentData);
         data.put("residualData", residualData);
 

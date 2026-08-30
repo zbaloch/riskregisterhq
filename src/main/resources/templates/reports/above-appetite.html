@@ -66,7 +66,7 @@
                     <p class="text-gray-700 mt-0.5" th:text="${r.title}"></p>
                   </td>
                   <td class="px-6 py-3.5 text-sm text-gray-600"
-                    th:text="${r.riskCategoryId != null and categoryMap[r.riskCategoryId] != null} ? ${categoryMap[r.riskCategoryId]} : '—'"></td>
+                    th:text="${r.riskCategory != null and categoryMap[r.riskCategory] != null} ? ${categoryMap[r.riskCategory]} : '—'"></td>
                   <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${r.riskOwnerName} ?: '—'"></td>
                   <td class="px-6 py-3.5 text-center">
                     <span th:replace="~{fragments/report-shell :: score(${r.inherentScore})}"></span>

@@ -42,8 +42,13 @@ public class Risk {
 
     private String riskOwnerName;
 
-    private Long riskCategoryId;
-    private Long riskSubcategoryId;
+    /**
+     * Code of the admin-managed Risk Category option (see LookupType.RISK_CATEGORY).
+     * Stored as the code rather than an id so a category can be renamed without rewriting
+     * history — the same arrangement the issue register uses.
+     */
+    private String riskCategory;
+
     private Long riskDimensionId;
 
     private String categories; // Comma-separated list of category tags

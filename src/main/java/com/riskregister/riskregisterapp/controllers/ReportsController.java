@@ -105,7 +105,7 @@ public class ReportsController {
         model.addAttribute("rows", reportService.buildReductionReport(orgId));
         model.addAttribute("reportTitle", "Risk Reduction by Category");
         model.addAttribute("reportSubtitle",
-            "Average inherent versus residual score per category and subcategory — where controls are working, and where they are not.");
+            "Average inherent versus residual score per risk category — where controls are working, and where they are not.");
         return "reports/risk-reduction";
     }
 
@@ -247,7 +247,7 @@ public class ReportsController {
 
         int threshold = threshold(orgId);
         model.addAttribute("risks", reportService.buildAboveAppetiteReport(orgId, threshold));
-        model.addAttribute("categoryMap", reportService.categoryNames());
+        model.addAttribute("categoryMap", reportService.categoryNames(orgId));
         model.addAttribute("appetiteThreshold", threshold);
         model.addAttribute("reportTitle", "Risks Above Appetite");
         model.addAttribute("reportSubtitle",

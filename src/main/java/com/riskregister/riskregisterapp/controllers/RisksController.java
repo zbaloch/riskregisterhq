@@ -23,9 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.riskregister.riskregisterapp.entities.AuditTrail;
 import com.riskregister.riskregisterapp.entities.Risk;
-import com.riskregister.riskregisterapp.entities.RiskCategory;
 import com.riskregister.riskregisterapp.entities.RiskDimension;
-import com.riskregister.riskregisterapp.entities.RiskSubcategory;
 import com.riskregister.riskregisterapp.entities.RiskNote;
 import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.entities.Asset;
@@ -34,10 +32,8 @@ import com.riskregister.riskregisterapp.repositories.AuditTrailRepository;
 import com.riskregister.riskregisterapp.enums.RiskReviewFrequency;
 import com.riskregister.riskregisterapp.lookups.RiskTreatment;
 import com.riskregister.riskregisterapp.entities.RiskStatus;
-import com.riskregister.riskregisterapp.repositories.RiskCategoryRepository;
 import com.riskregister.riskregisterapp.repositories.RiskDimensionRepository;
 import com.riskregister.riskregisterapp.repositories.RiskStatusRepository;
-import com.riskregister.riskregisterapp.repositories.RiskSubcategoryRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
 import com.riskregister.riskregisterapp.services.AuditTrailService;
 import com.riskregister.riskregisterapp.services.IssueService;
@@ -57,12 +53,6 @@ public class RisksController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RiskCategoryRepository riskCategoryRepository;
-
-    @Autowired
-    private RiskSubcategoryRepository riskSubcategoryRepository;
 
     @Autowired
     private RiskDimensionRepository riskDimensionRepository;
@@ -92,8 +82,7 @@ public class RisksController {
     public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
         Long orgId = currentUser.getOrganizationId();
         model.addAttribute("risks", riskService.findAll(orgId));
-        model.addAttribute("categoryMap", categoryNameMap());
-        model.addAttribute("subcategoryMap", subcategoryNameMap());
+        model.addAttribute("categoryMap", categoryNameMap(orgId));
         model.addAttribute("dimensionMap", dimensionNameMap());
         model.addAttribute("statusMap", statusNameMap());
         return "risks/index";
@@ -111,8 +100,8 @@ public class RisksController {
         model.addAttribute("treatments", RiskTreatment.values());
         model.addAttribute("statuses", riskStatusRepository.findAll());
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
-        model.addAttribute("riskCategories", riskCategoryRepository.findAllByOrderByNameAsc());
-        model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAllByOrderByNameAsc());
+        model.addAttribute("riskCategories",
+            lookupService.findActive(com.riskregister.riskregisterapp.enums.LookupType.RISK_CATEGORY, orgId));
         model.addAttribute("riskDimensions", riskDimensionRepository.findAll());
         return "risks/create";
     }
@@ -150,8 +139,7 @@ public class RisksController {
         Risk risk = riskService.findById(orgId, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
         model.addAttribute("risk", risk);
-        model.addAttribute("categoryMap", categoryNameMap());
-        model.addAttribute("subcategoryMap", subcategoryNameMap());
+        model.addAttribute("categoryMap", categoryNameMap(orgId));
         model.addAttribute("dimensionMap", dimensionNameMap());
         model.addAttribute("statusMap", statusNameMap());
 
@@ -221,8 +209,9 @@ public class RisksController {
         model.addAttribute("treatments", RiskTreatment.values());
         model.addAttribute("statuses", riskStatusRepository.findAll());
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
-        model.addAttribute("riskCategories", riskCategoryRepository.findAllByOrderByNameAsc());
-        model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAllByOrderByNameAsc());
+        // Keep a deactivated category selectable while editing the risk that already uses it
+        model.addAttribute("riskCategories", lookupService.findActiveIncluding(
+            com.riskregister.riskregisterapp.enums.LookupType.RISK_CATEGORY, orgId, risk.getRiskCategory()));
         model.addAttribute("riskDimensions", riskDimensionRepository.findAll());
         return "risks/edit";
     }
@@ -256,8 +245,7 @@ public class RisksController {
         risk.setTitle(form.getTitle());
         risk.setDescription(form.getDescription());
         risk.setRiskOwnerName(form.getRiskOwnerName());
-        risk.setRiskCategoryId(form.getRiskCategoryId());
-        risk.setRiskSubcategoryId(form.getRiskSubcategoryId());
+        risk.setRiskCategory(form.getRiskCategory());
         risk.setRiskDimensionId(form.getRiskDimensionId());
         risk.setCategories(form.getCategories());
         risk.setReviewFrequency(form.getReviewFrequency());
@@ -279,7 +267,7 @@ public class RisksController {
         String actorName = getActorName(actorEmail);
         auditTrailService.logRiskUpdated(
             oldSnapshot, risk,
-            categoryNameMap(), subcategoryNameMap(), dimensionNameMap(),
+            categoryNameMap(orgId), dimensionNameMap(),
             statusNameMap(),
             actorEmail, actorName, orgId
         );
@@ -371,15 +359,14 @@ public class RisksController {
         return "redirect:/risks/" + riskId + "?tab=notes";
     }
 
-    private Map<Long, String> categoryNameMap() {
-        return riskCategoryRepository.findAll().stream()
-                .collect(Collectors.toMap(RiskCategory::getId, RiskCategory::getName));
+    private Map<String, String> categoryNameMap(Long orgId) {
+        Map<String, String> map = new java.util.LinkedHashMap<>();
+        for (var v : lookupService.findAll(com.riskregister.riskregisterapp.enums.LookupType.RISK_CATEGORY, orgId)) {
+            map.put(v.getCode(), v.getName());
+        }
+        return map;
     }
 
-    private Map<Long, String> subcategoryNameMap() {
-        return riskSubcategoryRepository.findAll().stream()
-                .collect(Collectors.toMap(RiskSubcategory::getId, RiskSubcategory::getName));
-    }
 
     private Map<Long, String> dimensionNameMap() {
         return riskDimensionRepository.findAll().stream()
@@ -423,8 +410,7 @@ public class RisksController {
         snap.setTitle(r.getTitle());
         snap.setDescription(r.getDescription());
         snap.setRiskOwnerName(r.getRiskOwnerName());
-        snap.setRiskCategoryId(r.getRiskCategoryId());
-        snap.setRiskSubcategoryId(r.getRiskSubcategoryId());
+        snap.setRiskCategory(r.getRiskCategory());
         snap.setRiskDimensionId(r.getRiskDimensionId());
         snap.setCategories(r.getCategories());
         snap.setReviewFrequency(r.getReviewFrequency());

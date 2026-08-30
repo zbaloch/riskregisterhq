@@ -53,21 +53,19 @@ public class AuditTrailService {
      *
      * @param oldRisk    the entity state BEFORE the update (loaded from DB)
      * @param newRisk    the entity state AFTER the update (already saved)
-     * @param categoryMap    id→name for risk categories
-     * @param subcategoryMap id→name for subcategories
+     * @param categoryMap    code→name for risk categories
      * @param dimensionMap   id→name for dimensions
      * @param statusMap      id→name for statuses
      * @param actorEmail     the logged-in user's email
      * @param actorName      the logged-in user's display name
      */
     public void logRiskUpdated(Risk oldRisk, Risk newRisk,
-                               Map<Long, String> categoryMap,
-                               Map<Long, String> subcategoryMap,
+                               Map<String, String> categoryMap,
                                Map<Long, String> dimensionMap,
                                Map<Long, String> statusMap,
                                String actorEmail, String actorName, Long organizationId) {
         List<FieldChange> changes = diffRisk(oldRisk, newRisk,
-                                             categoryMap, subcategoryMap, dimensionMap, statusMap);
+                                             categoryMap, dimensionMap, statusMap);
         if (changes.isEmpty()) return;  // Nothing actually changed — skip
 
         String changedFieldLabels = changes.stream()
@@ -151,8 +149,7 @@ public class AuditTrailService {
     // -----------------------------------------------------------------------
 
     private List<FieldChange> diffRisk(Risk before, Risk after,
-                                       Map<Long, String> catMap,
-                                       Map<Long, String> subMap,
+                                       Map<String, String> catMap,
                                        Map<Long, String> dimMap,
                                        Map<Long, String> statusMap) {
         List<FieldChange> changes = new ArrayList<>();
@@ -174,12 +171,9 @@ public class AuditTrailService {
              enumLabel(before.getReviewFrequency()), enumLabel(after.getReviewFrequency()));
 
         // Category/subcategory/dimension — resolve names from maps
-        diff(changes, "riskCategoryId",        "Risk Category",
-             nameOrId(before.getRiskCategoryId(), catMap),
-             nameOrId(after.getRiskCategoryId(),  catMap));
-        diff(changes, "riskSubcategoryId",     "Subcategory",
-             nameOrId(before.getRiskSubcategoryId(), subMap),
-             nameOrId(after.getRiskSubcategoryId(),  subMap));
+        diff(changes, "riskCategory",          "Risk Category",
+             codeToName(before.getRiskCategory(), catMap),
+             codeToName(after.getRiskCategory(),  catMap));
         diff(changes, "riskDimensionId",       "Dimension",
              nameOrId(before.getRiskDimensionId(), dimMap),
              nameOrId(after.getRiskDimensionId(),  dimMap));
@@ -221,6 +215,13 @@ public class AuditTrailService {
 
     private static String normalize(String s) {
         return (s == null || s.isBlank()) ? "" : s.trim();
+    }
+
+    /** Resolve a managed-field code to its current label, falling back to the raw code. */
+    private static String codeToName(String code, Map<String, String> map) {
+        if (code == null || code.isBlank()) return "";
+        String name = map.get(code);
+        return name != null ? name : code;
     }
 
     private static String nameOrId(Long id, Map<Long, String> map) {
@@ -537,71 +538,11 @@ public class AuditTrailService {
     // Risk taxonomy logging (categories + subcategories)
     // -----------------------------------------------------------------------
 
-    /** Log a RiskCategory creation event. */
-    public void logCategoryCreated(com.riskregister.riskregisterapp.entities.RiskCategory category,
-                                   String actorEmail, String actorName, Long organizationId) {
-        saveEntry("RiskCategory", category.getId(), organizationId, "CREATED",
-            "Risk category created: " + category.getName(), null, actorEmail, actorName);
-    }
 
-    /** Log a RiskCategory update event with field-level changes. */
-    public void logCategoryUpdated(com.riskregister.riskregisterapp.entities.RiskCategory before,
-                                   com.riskregister.riskregisterapp.entities.RiskCategory after,
-                                   String actorEmail, String actorName, Long organizationId) {
-        List<FieldChange> changes = new ArrayList<>();
-        diff(changes, "name", "Name", before.getName(), after.getName());
-        diff(changes, "description", "Description", before.getDescription(), after.getDescription());
-        if (changes.isEmpty()) return;  // Nothing changed — skip
 
-        String changedFieldLabels = changes.stream().map(FieldChange::label).collect(Collectors.joining(", "));
-        saveEntry("RiskCategory", after.getId(), organizationId, "UPDATED",
-            "Risk category updated (" + after.getName() + "): " + changedFieldLabels,
-            toJson(changes), actorEmail, actorName);
-    }
 
-    /** Log a RiskCategory deletion event. */
-    public void logCategoryDeleted(com.riskregister.riskregisterapp.entities.RiskCategory category,
-                                   String actorEmail, String actorName, Long organizationId) {
-        saveEntry("RiskCategory", category.getId(), organizationId, "DELETED",
-            "Risk category deleted: " + category.getName(), null, actorEmail, actorName);
-    }
 
-    /** Log a RiskSubcategory creation event. */
-    public void logSubcategoryCreated(com.riskregister.riskregisterapp.entities.RiskSubcategory sub,
-                                      Map<Long, String> categoryMap,
-                                      String actorEmail, String actorName, Long organizationId) {
-        String parent = nameOrId(sub.getCategoryId(), categoryMap);
-        String summary = "Risk subcategory created: " + sub.getName()
-            + (parent.isEmpty() ? "" : " (under " + parent + ")");
-        saveEntry("RiskSubcategory", sub.getId(), organizationId, "CREATED",
-            summary, null, actorEmail, actorName);
-    }
 
-    /** Log a RiskSubcategory update event with field-level changes (parent category resolved to its name). */
-    public void logSubcategoryUpdated(com.riskregister.riskregisterapp.entities.RiskSubcategory before,
-                                      com.riskregister.riskregisterapp.entities.RiskSubcategory after,
-                                      Map<Long, String> categoryMap,
-                                      String actorEmail, String actorName, Long organizationId) {
-        List<FieldChange> changes = new ArrayList<>();
-        diff(changes, "name", "Name", before.getName(), after.getName());
-        diff(changes, "description", "Description", before.getDescription(), after.getDescription());
-        diff(changes, "categoryId", "Parent Category",
-             nameOrId(before.getCategoryId(), categoryMap),
-             nameOrId(after.getCategoryId(), categoryMap));
-        if (changes.isEmpty()) return;  // Nothing changed — skip
-
-        String changedFieldLabels = changes.stream().map(FieldChange::label).collect(Collectors.joining(", "));
-        saveEntry("RiskSubcategory", after.getId(), organizationId, "UPDATED",
-            "Risk subcategory updated (" + after.getName() + "): " + changedFieldLabels,
-            toJson(changes), actorEmail, actorName);
-    }
-
-    /** Log a RiskSubcategory deletion event. */
-    public void logSubcategoryDeleted(com.riskregister.riskregisterapp.entities.RiskSubcategory sub,
-                                      String actorEmail, String actorName, Long organizationId) {
-        saveEntry("RiskSubcategory", sub.getId(), organizationId, "DELETED",
-            "Risk subcategory deleted: " + sub.getName(), null, actorEmail, actorName);
-    }
 
     /** Shared writer for the simpler entity types that don't need bespoke summaries. */
     private void saveEntry(String entityType, Long entityId, Long organizationId,

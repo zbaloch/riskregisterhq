@@ -53,7 +53,7 @@
   <div class="lg:pl-72">
     <div th:replace="~{fragments/admin-nav-top}"></div>
     <main class="py-10">
-      <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         <!-- Page header -->
         <div class="mb-6 flex items-center gap-3">
@@ -142,28 +142,16 @@
               </div>
             </div>
 
-            <!-- Row 1: Risk Category + Subcategory (subcategories filter by selected category) -->
-            <div class="mt-5 grid grid-cols-2 gap-x-8"
-              th:attr="x-data=|categoryPicker('${risk.riskCategoryId ?: ''}', '${risk.riskSubcategoryId ?: ''}')|">
+            <!-- Row 1: Risk Category -->
+            <div class="mt-5 grid grid-cols-2 gap-x-8">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Risk Category <span class="text-red-500">*</span></label>
-                <select name="riskCategoryId" required x-model="categoryId" @change="onCategoryChange()"
+                <select name="riskCategory" required
                   class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
                   <option value="">Select category</option>
-                  <option th:each="cat : ${riskCategories}"
-                    th:value="${cat.id}"
-                    th:text="${cat.name}">
-                  </option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Subcategory <span class="text-red-500">*</span></label>
-                <select name="riskSubcategoryId" required x-model="subcategoryId" :disabled="!categoryId"
-                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400">
-                  <option value="" x-text="categoryId ? 'Select subcategory' : 'Select a category first'"></option>
-                  <template x-for="sub in filteredSubs" :key="sub.id">
-                    <option :value="String(sub.id)" x-text="sub.name" :selected="String(sub.id) === subcategoryId"></option>
-                  </template>
+                  <option th:each="cat : ${riskCategories}" th:value="${cat.code}"
+                    th:selected="${risk.riskCategory != null and risk.riskCategory == cat.code}"
+                    th:text="${cat.name} + (${cat.active} ? '' : ' (inactive)')"></option>
                 </select>
               </div>
             </div>
@@ -381,32 +369,7 @@
   <!-- Tailwind safelist for dynamically applied slider classes -->
   <div class="hidden text-green-500 text-yellow-500 text-orange-500 text-rose-400 text-red-600 bg-green-500 bg-yellow-500 bg-orange-500 bg-rose-400 bg-red-600"></div>
 
-  <script th:inline="javascript">
-    // Subcategories with their parent categoryId, for the cascading category picker
-    window.__riskSubcategories = /*[[${riskSubcategories}]]*/ [];
-  </script>
   <script>
-    // Cascading Risk Category → Subcategory selects. The current subcategory of an
-    // existing risk stays selectable even if it no longer matches the category
-    // (legacy data); changing the category clears a subcategory that doesn't belong.
-    function categoryPicker(initialCategoryId, initialSubcategoryId) {
-      return {
-        categoryId: initialCategoryId ? String(initialCategoryId) : '',
-        subcategoryId: initialSubcategoryId ? String(initialSubcategoryId) : '',
-        subs: window.__riskSubcategories || [],
-        get filteredSubs() {
-          if (!this.categoryId) return [];
-          return this.subs.filter(s =>
-            String(s.categoryId) === this.categoryId || String(s.id) === this.subcategoryId);
-        },
-        onCategoryChange() {
-          const stillValid = this.subs.some(s =>
-            String(s.id) === this.subcategoryId && String(s.categoryId) === this.categoryId);
-          if (!stillValid) this.subcategoryId = '';
-        }
-      };
-    }
-
     const LABELS        = ['', 'Very Low',        'Low',            'Medium',         'High',         'Very High'   ];
     const TEXT_CLASSES  = ['', 'text-green-500',  'text-yellow-500', 'text-orange-500', 'text-rose-400', 'text-red-600'];
     const TRACK_CLASSES = ['', 'bg-green-500',    'bg-yellow-500',   'bg-orange-500',  'bg-rose-400',  'bg-red-600'  ];
