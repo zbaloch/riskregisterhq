@@ -68,31 +68,105 @@ public class IssuesController {
     // -----------------------------------------------------------------------
 
     @GetMapping("/issues")
-    public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
+    public String index(Model model,
+                        @RequestParam(required = false) String category,
+                        @RequestParam(required = false) String status,
+                        @RequestParam(required = false) String sort,
+                        @RequestParam(required = false) String group,
+                        @RequestParam(defaultValue = "true") boolean hideClosed,
+                        @ModelAttribute("currentUser") User currentUser) {
         Long orgId = currentUser.getOrganizationId();
-        List<Issue> issues = issueService.findAll(orgId);
+        List<Issue> all = issueService.findAll(orgId);
 
-        model.addAttribute("issues", issues);
-        model.addAttribute("sourceMap", lookupService.map(LookupType.ISSUE_SOURCE, orgId));
-        model.addAttribute("categoryMap", lookupService.map(LookupType.ISSUE_CATEGORY, orgId));
-        model.addAttribute("dimensionMap", lookupService.map(LookupType.ISSUE_DIMENSION, orgId));
-        model.addAttribute("openCount", issues.stream().filter(i -> !i.isClosed()).count());
-        model.addAttribute("overdueCount", issues.stream().filter(Issue::isOverdue).count());
-        model.addAttribute("awaitingValidationCount", issues.stream().filter(Issue::isAwaitingValidation).count());
-        model.addAttribute("extendedCount", issues.stream().filter(i -> !i.isClosed() && i.isExtended()).count());
+        Map<String, com.riskregister.riskregisterapp.entities.LookupValue> categoryMap =
+            lookupService.map(LookupType.ISSUE_CATEGORY, orgId);
+        Map<String, com.riskregister.riskregisterapp.entities.LookupValue> dimensionMap =
+            lookupService.map(LookupType.ISSUE_DIMENSION, orgId);
+
+        // Tiles always describe the whole register, not the current filter
+        model.addAttribute("totalCount", all.size());
+        model.addAttribute("openCount", all.stream().filter(i -> !i.isClosed()).count());
+        model.addAttribute("overdueCount", all.stream().filter(Issue::isOverdue).count());
+        model.addAttribute("awaitingValidationCount", all.stream().filter(Issue::isAwaitingValidation).count());
+        model.addAttribute("extendedCount", all.stream().filter(i -> !i.isClosed() && i.isExtended()).count());
 
         // Where open findings concentrate. Ordered by the admin's own ordering, empties omitted.
         Map<String, Long> openByDimension = new java.util.LinkedHashMap<>();
         for (com.riskregister.riskregisterapp.entities.LookupValue d
                 : lookupService.findAll(LookupType.ISSUE_DIMENSION, orgId)) {
-            long n = issues.stream()
+            long n = all.stream()
                 .filter(i -> !i.isClosed())
                 .filter(i -> d.getCode().equals(i.getDimension()))
                 .count();
             if (n > 0) openByDimension.put(d.getName(), n);
         }
         model.addAttribute("openByDimension", openByDimension);
+
+        // --- filter ---
+        List<Issue> rows = all.stream()
+            // "Hide closed" means exactly that: Risk Accepted issues are still on the register
+            .filter(i -> !hideClosed || i.getStatus() != IssueStatus.CLOSED)
+            .filter(i -> category == null || category.isBlank() || category.equals(i.getCategory()))
+            .filter(i -> status == null || status.isBlank()
+                         || (i.getStatus() != null && status.equals(i.getStatus().name())))
+            .collect(Collectors.toCollection(java.util.ArrayList::new));
+
+        // --- sort ---
+        String activeSort = (sort == null || sort.isBlank()) ? "recent" : sort;
+        switch (activeSort) {
+            case "severity" -> rows.sort(java.util.Comparator
+                .comparing((Issue i) -> i.getSeverityScore() == null ? -1 : i.getSeverityScore()).reversed());
+            case "overdue" -> rows.sort(java.util.Comparator
+                .comparing((Issue i) -> i.getDaysOverdue() == null ? Long.MIN_VALUE : i.getDaysOverdue()).reversed());
+            case "target" -> rows.sort(java.util.Comparator
+                .comparing(Issue::getTargetDate, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
+            case "oldest" -> rows.sort(java.util.Comparator
+                .comparing(Issue::getDateRaised, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
+            default -> { /* findAll already returns newest first */ }
+        }
+
+        // --- group ---
+        String activeGroup = (group == null || group.isBlank()) ? "" : group;
+        Map<String, List<Issue>> groups = new java.util.LinkedHashMap<>();
+        if (activeGroup.isEmpty()) {
+            groups.put("", rows);   // single unlabelled block renders as a plain table
+        } else {
+            for (Issue i : rows) {
+                String key = switch (activeGroup) {
+                    case "category"  -> label(categoryMap, i.getCategory(), "No category");
+                    case "dimension" -> label(dimensionMap, i.getDimension(), "No impact area");
+                    case "status"    -> i.getStatus() != null ? i.getStatus().getDisplayName() : "No status";
+                    case "owner"     -> (i.getOwnerName() == null || i.getOwnerName().isBlank())
+                                            ? "Unassigned" : i.getOwnerName();
+                    default -> "";
+                };
+                groups.computeIfAbsent(key, k -> new java.util.ArrayList<>()).add(i);
+            }
+        }
+
+        model.addAttribute("groups", groups);
+        model.addAttribute("filteredCount", rows.size());
+        model.addAttribute("sourceMap", lookupService.map(LookupType.ISSUE_SOURCE, orgId));
+        model.addAttribute("categoryMap", categoryMap);
+        model.addAttribute("dimensionMap", dimensionMap);
+
+        // Filter controls
+        model.addAttribute("categories", lookupService.findAll(LookupType.ISSUE_CATEGORY, orgId));
+        model.addAttribute("allStatuses", IssueStatus.values());
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("activeSort", activeSort);
+        model.addAttribute("activeGroup", activeGroup);
+        model.addAttribute("hideClosed", hideClosed);
         return "issues/index";
+    }
+
+    /** Resolve a managed-field code to its label for grouping headers. */
+    private static String label(Map<String, com.riskregister.riskregisterapp.entities.LookupValue> map,
+                                String code, String fallback) {
+        if (code == null || code.isBlank()) return fallback;
+        var v = map.get(code);
+        return v != null ? v.getName() : code;
     }
 
     // -----------------------------------------------------------------------

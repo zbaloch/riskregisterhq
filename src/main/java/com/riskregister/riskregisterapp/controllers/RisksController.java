@@ -78,14 +78,95 @@ public class RisksController {
     @Autowired
     private com.riskregister.riskregisterapp.services.LookupService lookupService;
 
+    /** Status id 5 is Closed — the only status "hide closed" should remove. */
+    private static final Long CLOSED_STATUS_ID = 5L;
+
     @GetMapping("/risks")
-    public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
+    public String index(Model model,
+                        @RequestParam(required = false) String category,
+                        @RequestParam(required = false) String owner,
+                        @RequestParam(required = false) String sort,
+                        @RequestParam(required = false) String group,
+                        @RequestParam(defaultValue = "true") boolean hideClosed,
+                        @ModelAttribute("currentUser") User currentUser) {
         Long orgId = currentUser.getOrganizationId();
-        model.addAttribute("risks", riskService.findAll(orgId));
-        model.addAttribute("categoryMap", categoryNameMap(orgId));
+        List<Risk> all = riskService.findAll(orgId);
+        Map<String, String> categoryMap = categoryNameMap(orgId);
+        Map<Long, String> statusMap = statusNameMap();
+
+        // --- filter ---
+        List<Risk> rows = all.stream()
+            .filter(r -> !hideClosed || !CLOSED_STATUS_ID.equals(r.getStatusId()))
+            .filter(r -> category == null || category.isBlank() || category.equals(r.getRiskCategory()))
+            .filter(r -> owner == null || owner.isBlank() || owner.equals(r.getRiskOwnerName()))
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        // --- sort ---
+        String activeSort = (sort == null || sort.isBlank()) ? "recent" : sort;
+        switch (activeSort) {
+            case "residual" -> rows.sort(java.util.Comparator
+                .comparing((Risk r) -> r.getResidualScore() == null ? -1 : r.getResidualScore()).reversed());
+            case "inherent" -> rows.sort(java.util.Comparator
+                .comparing((Risk r) -> r.getInherentScore() == null ? -1 : r.getInherentScore()).reversed());
+            case "riskId" -> rows.sort(java.util.Comparator
+                .comparing(Risk::getRiskId, java.util.Comparator.nullsLast(String::compareToIgnoreCase)));
+            case "updated" -> rows.sort(java.util.Comparator
+                .comparing(Risk::getUpdatedAt, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())).reversed());
+            default -> { /* findAll already returns newest first */ }
+        }
+
+        // --- group ---
+        String activeGroup = (group == null || group.isBlank()) ? "" : group;
+        Map<String, List<Risk>> groups = new java.util.LinkedHashMap<>();
+        if (activeGroup.isEmpty()) {
+            groups.put("", rows);
+        } else {
+            for (Risk r : rows) {
+                String key = switch (activeGroup) {
+                    case "category" -> r.getRiskCategory() == null || r.getRiskCategory().isBlank()
+                        ? "No category" : categoryMap.getOrDefault(r.getRiskCategory(), r.getRiskCategory());
+                    case "status"   -> r.getStatusId() == null ? "No status"
+                        : statusMap.getOrDefault(r.getStatusId(), "No status");
+                    case "owner"    -> (r.getRiskOwnerName() == null || r.getRiskOwnerName().isBlank())
+                        ? "Unassigned" : r.getRiskOwnerName();
+                    case "treatment" -> r.getRiskTreatment() == null ? "Not set"
+                        : capitalise(r.getRiskTreatment().name());
+                    default -> "";
+                };
+                groups.computeIfAbsent(key, k -> new ArrayList<>()).add(r);
+            }
+        }
+
+        model.addAttribute("groups", groups);
+        model.addAttribute("totalCount", all.size());
+        model.addAttribute("filteredCount", rows.size());
+        model.addAttribute("categoryMap", categoryMap);
         model.addAttribute("dimensionMap", dimensionNameMap());
-        model.addAttribute("statusMap", statusNameMap());
+        model.addAttribute("statusMap", statusMap);
+
+        // Filter controls
+        model.addAttribute("categories", lookupService.findAll(com.riskregister.riskregisterapp.enums.LookupType.RISK_CATEGORY, orgId));
+        model.addAttribute("owners", all.stream()
+            .map(Risk::getRiskOwnerName)
+            .filter(o -> o != null && !o.isBlank())
+            .distinct().sorted().toList());
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("selectedOwner", owner);
+        model.addAttribute("activeSort", activeSort);
+        model.addAttribute("activeGroup", activeGroup);
+        model.addAttribute("hideClosed", hideClosed);
         return "risks/index";
+    }
+
+    /** AWAITING_ASSESSMENT -> "Awaiting Assessment", for group headings. */
+    private static String capitalise(String enumName) {
+        StringBuilder sb = new StringBuilder();
+        for (String word : enumName.replace('_', ' ').split(" ")) {
+            if (word.isEmpty()) continue;
+            if (!sb.isEmpty()) sb.append(' ');
+            sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
+        }
+        return sb.toString();
     }
 
     @GetMapping("/risks/new")
