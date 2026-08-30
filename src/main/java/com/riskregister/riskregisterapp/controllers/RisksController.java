@@ -187,6 +187,10 @@ public class RisksController {
 
         // Findings raised against this risk's controls. Open severe ones mean the residual
         // score assumes controls that are demonstrably not working.
+        // Notes thread, plus who is reading it so only their own notes offer Delete
+        model.addAttribute("riskNotes", riskNoteService.findNotesByRisk(id));
+        model.addAttribute("currentUserEmail", currentUser.getEmail());
+
         model.addAttribute("linkedIssues", issueService.findByRisk(orgId, id));
         model.addAttribute("openSevereIssues", issueService.findOpenSevereByRisk(orgId, id));
         model.addAttribute("sourceMap", lookupService.map(
@@ -329,27 +333,42 @@ public class RisksController {
     }
 
     @PostMapping("/risks/{riskId}/notes")
-    public ResponseEntity<?> addNote(@PathVariable Long riskId,
-                                     @RequestParam(value = "content", required = true) String content,
-                                     Principal principal) {
+    public String addNote(@PathVariable Long riskId,
+                          @RequestParam String content,
+                          @ModelAttribute("currentUser") User currentUser,
+                          RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
+        // Confirm the risk is ours before hanging a note off it
+        riskService.findById(orgId, riskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
+
         String authorId = principal != null ? principal.getName() : "system";
-        String authorName = getActorName(authorId);
-        RiskNote newNote = riskNoteService.addNote(riskId, content, authorId, authorName);
-        return ResponseEntity.ok(newNote);
+        try {
+            riskNoteService.addNote(riskId, content, authorId, getActorName(authorId));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttrs.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/risks/" + riskId + "?tab=notes";
     }
 
-    @GetMapping("/api/risks/{riskId}/notes")
-    public ResponseEntity<List<RiskNote>> getNotes(@PathVariable Long riskId) {
-        List<RiskNote> notes = riskNoteService.findNotesByRisk(riskId);
-        return ResponseEntity.ok(notes);
-    }
+    @PostMapping("/risks/{riskId}/notes/{noteId}/delete")
+    public String deleteNote(@PathVariable Long riskId,
+                             @PathVariable Long noteId,
+                             @ModelAttribute("currentUser") User currentUser,
+                             RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
+        // Resolving the risk in this organisation is what scopes the note deletion
+        riskService.findById(orgId, riskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Risk not found"));
 
-    @DeleteMapping("/risks/{riskId}/notes/{noteId}")
-    public ResponseEntity<Map<String, String>> deleteNote(
-            @PathVariable Long riskId,
-            @PathVariable Long noteId) {
-        riskNoteService.deleteNote(noteId);
-        return ResponseEntity.ok(Map.of("success", "true"));
+        String requesterId = principal != null ? principal.getName() : "system";
+        try {
+            riskNoteService.deleteNote(noteId, riskId, requesterId);
+            redirectAttrs.addFlashAttribute("success", "Note removed.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttrs.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/risks/" + riskId + "?tab=notes";
     }
 
     private Map<Long, String> categoryNameMap() {

@@ -60,6 +60,9 @@ public class IssuesController {
     @Autowired
     private com.riskregister.riskregisterapp.services.LookupService lookupService;
 
+    @Autowired
+    private com.riskregister.riskregisterapp.services.IssueNoteService issueNoteService;
+
     // -----------------------------------------------------------------------
     // List
     // -----------------------------------------------------------------------
@@ -164,6 +167,10 @@ public class IssuesController {
         // Remediation actions
         model.addAttribute("tasks", taskService.findAllByIssue(orgId, id));
 
+        // Notes thread, plus who is reading it so only their own comments offer Delete
+        model.addAttribute("notes", issueNoteService.findByIssue(orgId, id));
+        model.addAttribute("currentUserEmail", currentUser.getEmail());
+
         // Audit trail, with field changes already parsed for the timeline
         List<AuditTrail> entries = auditTrailService.findByIssue(orgId, id);
         Map<Long, List<FieldChange>> changes = entries.stream()
@@ -172,6 +179,44 @@ public class IssuesController {
         model.addAttribute("auditChanges", changes);
 
         return "issues/view";
+    }
+
+    // -----------------------------------------------------------------------
+    // Notes
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/issues/{id}/notes")
+    public String addNote(@PathVariable Long id,
+                          @RequestParam String content,
+                          @ModelAttribute("currentUser") User currentUser,
+                          RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
+        // Confirm the issue is ours before hanging a comment off it
+        issueService.findById(orgId, id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Issue not found"));
+
+        String actorEmail = actorEmail(principal);
+        try {
+            issueNoteService.add(orgId, id, content, actorEmail, actorName(actorEmail));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttrs.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/issues/" + id + "?tab=notes";
+    }
+
+    @PostMapping("/issues/{id}/notes/{noteId}/delete")
+    public String deleteNote(@PathVariable Long id,
+                             @PathVariable Long noteId,
+                             @ModelAttribute("currentUser") User currentUser,
+                             RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
+        try {
+            issueNoteService.delete(orgId, noteId, actorEmail(principal));
+            redirectAttrs.addFlashAttribute("success", "Comment removed.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttrs.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/issues/" + id + "?tab=notes";
     }
 
     // -----------------------------------------------------------------------

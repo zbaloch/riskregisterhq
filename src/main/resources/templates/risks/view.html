@@ -42,6 +42,12 @@
           </svg>
           <p class="text-sm font-medium text-green-800" th:text="${success}"></p>
         </div>
+        <div th:if="${error}" class="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
 
         <!-- Page header -->
         <div class="flex items-start justify-between mb-6">
@@ -90,8 +96,7 @@
               <button @click="activeTab = 'notes'"
                       :class="activeTab === 'notes' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
                       class="px-4 py-3 text-sm font-medium transition-colors relative">
-                Notes <span class="text-xs text-gray-400" x-text="'(' + (riskNotes || []).length + ')'"></span>
-                <!-- <span x-show="riskNotes && riskNotes.length > 0" class="absolute inline-block h-2 w-2 rounded-full bg-sky-600"></span> -->
+                Notes <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(riskNotes)} + ')'"></span>
               </button>
               <button @click="activeTab = 'assets'"
                       :class="activeTab === 'assets' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
@@ -785,72 +790,57 @@
           </div><!-- /Tasks Tab -->
 
           <!-- Notes Tab -->
-          <div x-show="activeTab === 'notes'" class="space-y-6" x-data="notesList()">
-
-            <!-- Notes Container -->
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-
-              <!-- Header -->
-              <div class="flex items-center justify-between gap-4 mb-6">
-                <div class="flex-1">
-                  <div class="flex items-center gap-3">
-                    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Notes</h2>
-                    <!-- <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-sky-600 text-xs font-semibold text-white"
-                          x-text="(riskNotes || []).length"></span> -->
-                  </div>
-                  <p class="text-sm text-gray-600 mt-1">Add and manage notes for this risk</p>
-                </div>
+          <div x-show="activeTab === 'notes'" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-base font-semibold text-gray-900">Notes</h2>
+                <p class="text-sm text-gray-500 mt-0.5">
+                  Context and decisions about this risk. Notes cannot be edited, and only their author can remove one.
+                </p>
               </div>
 
-              <!-- Notes List -->
-              <div class="space-y-3">
-                <div x-show="!riskNotes || riskNotes.length === 0" class="text-sm text-gray-500 italic">
-                  No notes yet. Add your first note below.
-                </div>
-                <template x-for="note in (riskNotes || [])" :key="note.id">
-                  <div class="flex justify-between gap-x-4 py-4 border-t border-gray-100 first:border-t-0">
-                    <!-- User profile -->
-                    <div class="flex min-w-0 gap-x-3">
-                      <img :src="window.AvatarUtils ? window.AvatarUtils.getAvatarUrl(note.authorName || 'User', 40) : `https://ui-avatars.com/api/?name=${encodeURIComponent(note.authorName || 'User')}&background=random&color=fff&bold=true`"
-                           :alt="note.authorName"
-                           class="size-10 flex-none rounded-full bg-gray-50">
-                      <div class="min-w-0 flex-auto">
-                        <p class="text-sm font-semibold text-gray-900" x-text="note.authorName || 'Unknown'"></p>
-                        <p class="mt-0.5 text-xs text-gray-500" x-text="note.createdAtFormatted"></p>
-                        <p class="mt-1 text-sm text-gray-900" x-text="note.content || 'No content'"></p>
-                      </div>
+              <div th:if="${#lists.isEmpty(riskNotes)}" class="px-6 py-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                <h3 class="mt-4 text-sm font-semibold text-gray-900">No notes yet</h3>
+                <p class="mt-1 text-sm text-gray-500">Add the first note below.</p>
+              </div>
+
+              <ul th:unless="${#lists.isEmpty(riskNotes)}" class="divide-y divide-gray-100">
+                <li th:each="n : ${riskNotes}" class="px-6 py-4 flex gap-3">
+                  <img th:src="'https://ui-avatars.com/api/?name=' + ${#strings.replace(n.authorName ?: 'User', ' ', '+')} + '&amp;background=random&amp;color=fff&amp;bold=true&amp;size=32'"
+                    th:alt="${n.authorName}" class="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-gray-50">
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-baseline gap-x-2">
+                      <span class="text-sm font-medium text-gray-900" th:text="${n.authorName} ?: ${n.authorId}"></span>
+                      <span class="text-xs text-gray-500" th:text="${n.createdAtFormatted}"></span>
+                      <!-- Delete is offered only on your own notes; the server enforces it too -->
+                      <form th:if="${n.authorId != null and currentUserEmail != null and #strings.equalsIgnoreCase(n.authorId, currentUserEmail)}"
+                        th:action="@{/risks/{riskId}/notes/{noteId}/delete(riskId=${risk.id}, noteId=${n.id})}" method="POST"
+                        class="ml-auto" x-data @submit.prevent="if(confirm('Delete this note?')) $el.submit()">
+                        <button type="submit" class="text-xs font-medium text-gray-400 hover:text-red-600 transition-colors cursor-pointer">Delete</button>
+                      </form>
                     </div>
-                    <!-- Delete button -->
-                    <button type="button"
-                            @click="deleteNote(note.id)"
-                            class="flex-shrink-0 p-1 text-gray-300 hover:text-red-600 transition-colors"
-                            title="Delete note">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                      </svg>
-                    </button>
+                    <p class="mt-1 text-sm text-gray-700 whitespace-pre-line break-words" th:text="${n.content}"></p>
                   </div>
-                </template>
-              </div>
+                </li>
+              </ul>
 
-
-              <!-- Add Note Form (AJAX) -->
-              <div class="space-y-4 mt-6">
-                <h3 class="text-sm font-semibold text-gray-900">Add a Note</h3>
-                <form @submit.prevent="submitNote()" class="flex flex-col gap-3">
-                  <div id="note-editor"></div>
-                  <input type="hidden" id="note-content" x-ref="noteContent"/>
+              <div class="border-t border-gray-200 bg-gray-50 px-6 py-4">
+                <form th:action="@{/risks/{riskId}/notes(riskId=${risk.id})}" method="POST" class="space-y-3">
+                  <label for="riskNoteContent" class="sr-only">Add a note</label>
+                  <textarea id="riskNoteContent" name="content" rows="3" required maxlength="5000"
+                    placeholder="Add a note…"
+                    class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
                   <div class="flex justify-end">
-                    <button type="submit"
-                            class="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">
+                    <button type="submit" class="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 transition-colors">
                       Add Note
                     </button>
                   </div>
                 </form>
               </div>
-
             </div>
-
           </div><!-- /Notes Tab -->
 
           <!-- Assets Tab -->
@@ -1310,30 +1300,21 @@
         const params = new URLSearchParams(window.location.search);
         return params.get('tab') || 'details';
       })(),
-      riskNotes: [],
 
       init() {
-        // Load notes to show indicator
-        this.loadNotes();
-
         // Watch for changes to activeTab and update URL
         this.$watch('activeTab', (value) => {
           const url = new URL(window.location);
+          if (url.searchParams.get('tab') === value) return;
           url.searchParams.set('tab', value);
           window.history.pushState({}, '', url);
         });
-      },
 
-      loadNotes() {
-        fetch(`/api/risks/${riskId}/notes`)
-          .then(res => res.json())
-          .then(notes => {
-            this.riskNotes = notes || [];
-          })
-          .catch(err => {
-            console.error('Failed to load notes:', err);
-            this.riskNotes = [];
-          });
+        // Keep Back and Forward moving between tabs rather than stranding the URL
+        window.addEventListener('popstate', () => {
+          const params = new URLSearchParams(window.location.search);
+          this.activeTab = params.get('tab') || 'details';
+        });
       }
     };
   }
@@ -1528,102 +1509,6 @@
     return text.replace(/[&<>"']/g, (m) => map[m]);
   }
 
-  function notesList() {
-    return {
-      riskNotes: [],
-
-      init() {
-        this.loadNotes();
-        setTimeout(() => {
-          const el = document.getElementById('note-editor');
-          if (el && !el.innerHTML) {
-            window.LexicalEditor.init('note-editor', 'note-content', '').catch(err => {
-              console.error('Failed to init note editor:', err);
-            });
-          }
-        }, 100);
-      },
-
-      loadNotes() {
-        fetch(`/api/risks/${riskId}/notes`)
-          .then(res => res.json())
-          .then(notes => {
-            this.riskNotes.splice(0, this.riskNotes.length, ...(notes || []));
-            console.log('Loaded notes:', this.riskNotes);
-          })
-          .catch(err => {
-            console.error('Failed to fetch notes:', err);
-          });
-      },
-
-      submitNote() {
-        const content = document.getElementById('note-content').value.trim();
-        if (!content) return;
-
-        const url = `/risks/${riskId}/notes`;
-        const formData = new FormData();
-        formData.append('content', content);
-
-        fetch(url, {
-          method: 'POST',
-          body: formData
-        })
-        .then(response => response.json())
-        .catch(error => {
-          console.error('Error submitting note:', error);
-          alert('Failed to add note. Please try again.');
-        });
-
-        // Optimistically add to UI and clear form
-        const userInfoEl = document.getElementById('current-user-info');
-        const currentUserName = userInfoEl?.dataset.userName || 'You';
-
-        const newNote = {
-          id: Date.now(),
-          content: content,
-          authorName: currentUserName,
-          createdAtFormatted: new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-        };
-
-        this.riskNotes.push(newNote);
-
-        // Clear the editor
-        document.getElementById('note-content').value = '';
-        const editorEl = document.getElementById('note-editor');
-        if (editorEl) {
-          editorEl.innerHTML = '';
-        }
-      },
-
-      deleteNote(noteId) {
-        if (!confirm('Delete this note?')) return;
-
-        const url = `/risks/${riskId}/notes/${noteId}`;
-
-        fetch(url, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => {
-          if (!response.ok) throw new Error('Failed to delete');
-          return response.json();
-        })
-        .then(() => {
-          // Remove from UI
-          const index = (this.riskNotes || []).findIndex(n => n.id === noteId);
-          if (index !== -1) {
-            this.riskNotes.splice(index, 1);
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting note:', error);
-          alert('Failed to delete note. Please try again.');
-        });
-      }
-    };
-  }
 
   function assetManager() {
     // Parse linked asset IDs
