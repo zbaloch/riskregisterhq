@@ -44,4 +44,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         """)
     List<Task> findByAssigneeIdAndOrganizationIdWithRiskAndDeletedAtIsNull(
         @Param("assigneeId") String assigneeId, @Param("organizationId") Long organizationId);
+
+    // Remediation actions hanging off an issue
+    List<Task> findByOrganizationIdAndIssueIdAndDeletedAtIsNullOrderByCreatedAtDesc(
+        Long organizationId, Long issueId);
 }

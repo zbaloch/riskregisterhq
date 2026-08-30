@@ -40,6 +40,7 @@ import com.riskregister.riskregisterapp.repositories.RiskStatusRepository;
 import com.riskregister.riskregisterapp.repositories.RiskSubcategoryRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
 import com.riskregister.riskregisterapp.services.AuditTrailService;
+import com.riskregister.riskregisterapp.services.IssueService;
 import com.riskregister.riskregisterapp.services.RiskService;
 import com.riskregister.riskregisterapp.services.RiskNoteService;
 import com.riskregister.riskregisterapp.services.TaskService;
@@ -81,6 +82,12 @@ public class RisksController {
     @Autowired
     private AssetService assetService;
 
+    @Autowired
+    private IssueService issueService;
+
+    @Autowired
+    private com.riskregister.riskregisterapp.services.LookupService lookupService;
+
     @GetMapping("/risks")
     public String index(Model model, @ModelAttribute("currentUser") User currentUser) {
         Long orgId = currentUser.getOrganizationId();
@@ -97,13 +104,15 @@ public class RisksController {
         Long orgId = currentUser.getOrganizationId();
         Risk newRisk = new Risk();
         newRisk.setRiskTreatment(RiskTreatment.AWAITING_ASSESSMENT);
+        // Suggest the next reference; the user can overwrite it with their own numbering
+        newRisk.setRiskId(riskService.suggestNextRiskId(orgId));
         model.addAttribute("risk", newRisk);
         model.addAttribute("reviewFrequencies", RiskReviewFrequency.values());
         model.addAttribute("treatments", RiskTreatment.values());
         model.addAttribute("statuses", riskStatusRepository.findAll());
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
-        model.addAttribute("riskCategories", riskCategoryRepository.findAll());
-        model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAll());
+        model.addAttribute("riskCategories", riskCategoryRepository.findAllByOrderByNameAsc());
+        model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAllByOrderByNameAsc());
         model.addAttribute("riskDimensions", riskDimensionRepository.findAll());
         return "risks/create";
     }
@@ -115,6 +124,14 @@ public class RisksController {
         if (principal != null) {
             risk.setCreatedByEmail(principal.getName());
         }
+
+        try {
+            risk.setRiskId(riskService.validateRiskId(risk.getRiskId(), orgId, null));
+        } catch (IllegalArgumentException e) {
+            redirectAttrs.addFlashAttribute("error", e.getMessage());
+            return "redirect:/risks/new";
+        }
+
         // status is already set by form binding
         riskService.save(risk);
 
@@ -168,6 +185,13 @@ public class RisksController {
         model.addAttribute("allAssets", allAssets);
         model.addAttribute("linkedAssetIds", linkedAssetIds);
 
+        // Findings raised against this risk's controls. Open severe ones mean the residual
+        // score assumes controls that are demonstrably not working.
+        model.addAttribute("linkedIssues", issueService.findByRisk(orgId, id));
+        model.addAttribute("openSevereIssues", issueService.findOpenSevereByRisk(orgId, id));
+        model.addAttribute("sourceMap", lookupService.map(
+            com.riskregister.riskregisterapp.enums.LookupType.ISSUE_SOURCE, orgId));
+
         // Audit entries for this risk (both Risk and Task entries, newest first)
         List<AuditTrail> allAuditEntries = new ArrayList<>();
         // Add Risk entries
@@ -193,8 +217,8 @@ public class RisksController {
         model.addAttribute("treatments", RiskTreatment.values());
         model.addAttribute("statuses", riskStatusRepository.findAll());
         model.addAttribute("users", userRepository.findByOrganizationIdAndApprovedTrueOrderByFirstNameAscLastNameAsc(orgId));
-        model.addAttribute("riskCategories", riskCategoryRepository.findAll());
-        model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAll());
+        model.addAttribute("riskCategories", riskCategoryRepository.findAllByOrderByNameAsc());
+        model.addAttribute("riskSubcategories", riskSubcategoryRepository.findAllByOrderByNameAsc());
         model.addAttribute("riskDimensions", riskDimensionRepository.findAll());
         return "risks/edit";
     }
@@ -210,8 +234,21 @@ public class RisksController {
         // === SNAPSHOT old state before any mutations ===
         Risk oldSnapshot = snapshotRisk(risk);
 
+        // Only vet the reference when it actually changes. Registers created before this check
+        // may already hold duplicates, and blocking every edit to those risks would be a
+        // regression — but a deliberate change to a taken reference is still refused.
+        String submittedId = form.getRiskId() == null ? "" : form.getRiskId().trim();
+        if (!submittedId.equalsIgnoreCase(risk.getRiskId() == null ? "" : risk.getRiskId().trim())) {
+            try {
+                submittedId = riskService.validateRiskId(submittedId, orgId, id);
+            } catch (IllegalArgumentException e) {
+                redirectAttrs.addFlashAttribute("error", e.getMessage());
+                return "redirect:/risks/" + id + "/edit";
+            }
+        }
+
         // Apply all form fields
-        risk.setRiskId(form.getRiskId());
+        risk.setRiskId(submittedId);
         risk.setTitle(form.getTitle());
         risk.setDescription(form.getDescription());
         risk.setRiskOwnerName(form.getRiskOwnerName());
@@ -262,6 +299,33 @@ public class RisksController {
 
         redirectAttrs.addFlashAttribute("success", "Risk has been removed.");
         return "redirect:/risks";
+    }
+
+    /**
+     * Record that a periodic review happened, resetting the risk's review clock.
+     * Kept separate from a normal edit so "we looked at this and it still stands"
+     * is captured even when nothing about the risk changed.
+     */
+    @PostMapping("/risks/{id}/mark-reviewed")
+    public String markReviewed(@PathVariable Long id,
+                               @RequestParam(required = false) String returnTo,
+                               @ModelAttribute("currentUser") User currentUser,
+                               RedirectAttributes redirectAttrs, Principal principal) {
+        Long orgId = currentUser.getOrganizationId();
+        String actorEmail = principal != null ? principal.getName() : "system";
+        String actorName = getActorName(actorEmail);
+
+        Risk risk = riskService.markReviewed(orgId, id, actorName).orElse(null);
+        if (risk == null) {
+            redirectAttrs.addFlashAttribute("error", "Risk not found.");
+            return "redirect:/risks";
+        }
+
+        auditTrailService.logRiskReviewed(risk, actorEmail, actorName, orgId);
+
+        redirectAttrs.addFlashAttribute("success",
+            "Review recorded for " + risk.getRiskId() + ". Next review due " + risk.getNextReviewDateFormatted() + ".");
+        return "redirect:" + (returnTo != null && returnTo.startsWith("/") ? returnTo : "/risks/" + id);
     }
 
     @PostMapping("/risks/{riskId}/notes")

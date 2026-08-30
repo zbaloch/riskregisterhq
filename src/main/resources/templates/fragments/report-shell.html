@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Shared chrome for every report page: back link, title, subtitle, generated-on stamp
+  and a print button. Pages pass their body in via the `content` fragment slot.
+-->
+<div th:fragment="header(title, subtitle)">
+  <div class="flex items-start justify-between gap-4">
+    <div class="min-w-0">
+      <a href="/reports" class="inline-flex items-center gap-1.5 text-sm font-medium text-sky-600 hover:text-sky-800 transition-colors print:hidden">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        All reports
+      </a>
+      <h1 class="mt-2 text-2xl font-bold tracking-tight text-gray-900" th:text="${title}"></h1>
+      <p class="mt-1 text-sm text-gray-500 max-w-3xl" th:text="${subtitle}"></p>
+    </div>
+    <button onclick="window.print()"
+      class="shrink-0 inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-colors print:hidden">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+      </svg>
+      Print
+    </button>
+  </div>
+</div>
+
+<!-- Empty-state card used when a report has nothing to show -->
+<div th:fragment="empty(heading, message)" class="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+  <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+  </svg>
+  <h3 class="mt-4 text-sm font-semibold text-gray-900" th:text="${heading}"></h3>
+  <p class="mt-1 text-sm text-gray-500" th:text="${message}"></p>
+</div>
+
+<!-- Score pill: colour banding matches the register's own thresholds -->
+<span th:fragment="score(value)"
+  th:if="${value != null}"
+  class="inline-flex items-center justify-center rounded-md px-2 py-0.5 text-xs font-semibold ring-1 ring-inset"
+  th:classappend="${value <= 2 ? 'bg-green-50 text-green-700 ring-green-600/20'
+                 : (value <= 4 ? 'bg-yellow-50 text-yellow-700 ring-yellow-600/20'
+                 : (value <= 9 ? 'bg-orange-50 text-orange-700 ring-orange-600/20'
+                 : (value <= 16 ? 'bg-rose-50 text-rose-700 ring-rose-600/20'
+                 : 'bg-red-50 text-red-700 ring-red-600/20')))}"
+  th:text="${value}"></span>
+
+</body>
+</html>

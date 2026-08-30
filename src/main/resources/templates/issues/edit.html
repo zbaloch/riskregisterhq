@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Edit Issue – RiskRegisterHQ</title>
+  <style>
+    input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; }
+    input[type=range]::-webkit-slider-runnable-track { height: 0.5rem; border-radius: 9999px; background: #e5e7eb; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -0.3rem; height: 1.1rem; width: 1.1rem; border-radius: 9999px; background: #fff; border: 2px solid #0284c7; cursor: pointer; }
+    input[type=range]::-moz-range-track { height: 0.5rem; border-radius: 9999px; background: #e5e7eb; }
+    input[type=range]::-moz-range-thumb { height: 1.1rem; width: 1.1rem; border-radius: 9999px; background: #fff; border: 2px solid #0284c7; cursor: pointer; }
+  </style>
+</head>
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='issues')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-4xl sm:px-6 lg:px-8">
+
+        <div class="mb-6">
+          <a th:href="@{/issues/{id}(id=${issue.id})}" class="inline-flex items-center gap-1.5 text-sm font-medium text-sky-600 hover:text-sky-800 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <span th:text="${issue.issueRef}"></span>
+          </a>
+          <h1 class="mt-2 text-2xl font-bold tracking-tight text-gray-900">Edit Issue</h1>
+        </div>
+
+        <div th:if="${error}" class="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
+
+        <form method="POST" th:action="@{/issues/{id}(id=${issue.id})}" th:object="${issue}"
+          th:attr="x-data=|issueForm(${issue.impact ?: 3}, ${issue.pervasiveness ?: 3}, '${issue.targetDate ?: ''}')|">
+
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+            <h2 class="text-lg font-semibold text-gray-900">The Finding</h2>
+
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-[10rem_1fr] gap-x-8 gap-y-5">
+              <div>
+                <label for="issueRef" class="block text-sm font-medium text-gray-700 mb-1">Issue ID <span class="text-red-500">*</span></label>
+                <input type="text" id="issueRef" name="issueRef" th:field="*{issueRef}" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                <p class="mt-1 text-xs text-gray-500">Changing this is recorded in the audit trail.</p>
+              </div>
+              <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
+                <input type="text" id="title" name="title" th:field="*{title}" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              </div>
+            </div>
+
+            <div class="mt-5">
+              <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea id="description" name="description" th:field="*{description}" rows="4"
+                class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+              <div>
+                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category <span class="text-red-500">*</span></label>
+                <select id="category" name="category" th:field="*{category}" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select category</option>
+                  <option th:each="c : ${categories}" th:value="${c.code}"
+                    th:text="${c.name} + (${c.active} ? '' : ' (inactive)')"></option>
+                </select>
+                <p th:if="${issue.category == null}" class="mt-1 text-xs text-amber-700">
+                  This issue predates categories — choose one to save your changes.
+                </p>
+              </div>
+              <div>
+                <label for="source" class="block text-sm font-medium text-gray-700 mb-1">Source <span class="text-red-500">*</span></label>
+                <select id="source" name="source" th:field="*{source}" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select source</option>
+                  <!-- Includes this issue's current option even if it has since been deactivated -->
+                  <option th:each="s : ${sources}" th:value="${s.code}"
+                    th:text="${s.name} + (${s.active} ? '' : ' (inactive)')"></option>
+                </select>
+              </div>
+              <div>
+                <label for="dimension" class="block text-sm font-medium text-gray-700 mb-1">Impact Area <span class="text-red-500">*</span></label>
+                <select id="dimension" name="dimension" th:field="*{dimension}" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select impact area</option>
+                  <option th:each="d : ${dimensions}" th:value="${d.code}"
+                    th:text="${d.name} + (${d.active} ? '' : ' (inactive)')"></option>
+                </select>
+                <p th:if="${issue.dimension == null}" class="mt-1 text-xs text-amber-700">
+                  This issue predates impact areas — choose one to save your changes.
+                </p>
+              </div>
+              <div>
+                <label for="externalReference" class="block text-sm font-medium text-gray-700 mb-1">External Reference</label>
+                <input type="text" id="externalReference" name="externalReference" th:field="*{externalReference}"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h2 class="text-lg font-semibold text-gray-900">Severity</h2>
+                <p class="mt-1 text-sm text-gray-500 max-w-lg">Impact and pervasiveness. No likelihood — the issue has already occurred.</p>
+              </div>
+              <div class="shrink-0 text-center rounded-lg px-5 py-3" :class="bandClass">
+                <div class="text-3xl font-bold leading-none" x-text="score"></div>
+                <div class="text-xs font-medium mt-1" x-text="band"></div>
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6">
+              <div>
+                <div class="flex items-baseline justify-between mb-2">
+                  <label for="impact" class="text-sm font-medium text-gray-700">Impact if unremediated</label>
+                  <span class="text-sm font-semibold text-gray-900" x-text="impactLabel"></span>
+                </div>
+                <input type="range" id="impact" name="impact" min="1" max="5" step="1" x-model.number="impact" class="w-full">
+                <div class="flex justify-between mt-1 text-[0.625rem] text-gray-400">
+                  <span>Very Low</span><span>Low</span><span>Medium</span><span>High</span><span>Very High</span>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-baseline justify-between mb-2">
+                  <label for="pervasiveness" class="text-sm font-medium text-gray-700">Pervasiveness</label>
+                  <span class="text-sm font-semibold text-gray-900" x-text="pervasivenessLabel"></span>
+                </div>
+                <input type="range" id="pervasiveness" name="pervasiveness" min="1" max="5" step="1" x-model.number="pervasiveness" class="w-full">
+                <div class="flex justify-between mt-1 text-[0.625rem] text-gray-400">
+                  <span>Isolated</span><span>Limited</span><span>Moderate</span><span>Widespread</span><span>Pervasive</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+            <h2 class="text-lg font-semibold text-gray-900">Cause &amp; Remediation</h2>
+
+            <div class="mt-5">
+              <label for="rootCause" class="block text-sm font-medium text-gray-700 mb-1">Root Cause</label>
+              <textarea id="rootCause" name="rootCause" th:field="*{rootCause}" rows="3"
+                class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+            </div>
+
+            <div class="mt-5">
+              <label for="remediationPlan" class="block text-sm font-medium text-gray-700 mb-1">Remediation Plan</label>
+              <textarea id="remediationPlan" name="remediationPlan" th:field="*{remediationPlan}" rows="3"
+                class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+              <div>
+                <label for="ownerName" class="block text-sm font-medium text-gray-700 mb-1">Remediation Owner</label>
+                <select id="ownerName" name="ownerName" th:field="*{ownerName}"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select owner</option>
+                  <option th:each="u : ${users}" th:value="${u.displayName}" th:text="${u.displayName}"></option>
+                </select>
+              </div>
+              <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select id="status" name="status" th:field="*{status}"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.displayName}"></option>
+                </select>
+              </div>
+              <div>
+                <label for="dateRaised" class="block text-sm font-medium text-gray-700 mb-1">Date Raised <span class="text-red-500">*</span></label>
+                <input type="date" id="dateRaised" name="dateRaised" th:field="*{dateRaised}" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+              </div>
+              <div>
+                <label for="targetDate" class="block text-sm font-medium text-gray-700 mb-1">Target Closure Date</label>
+                <input type="date" id="targetDate" name="targetDate" th:field="*{targetDate}" x-model="targetDate"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+
+                <!-- Warn before the extension is recorded, not after -->
+                <p x-show="isExtension" x-cloak class="mt-1.5 text-xs text-amber-700 font-medium">
+                  Pushing this date out is recorded as an extension and stays on the issue's record.
+                </p>
+                <p th:if="${issue.originalTargetDate != null}" class="mt-1 text-xs text-gray-500">
+                  Original target: <span th:text="${issue.originalTargetDateFormatted}"></span>
+                  <span th:if="${issue.extended}" class="text-amber-700 font-medium"
+                    th:text="'· ' + ${issue.extensionCount} + ' extension(s) already recorded'"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+            <h2 class="text-lg font-semibold text-gray-900">Links</h2>
+            <div class="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-5">
+              <div>
+                <label for="linkedRiskIds" class="block text-sm font-medium text-gray-700 mb-1">Related Risks</label>
+                <select id="linkedRiskIds" name="linkedRiskIds" multiple size="6"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option th:each="r : ${risks}" th:value="${r.id}"
+                    th:selected="${issue.linkedRiskIdList.contains(r.id)}"
+                    th:text="${r.riskId} + ' — ' + ${r.title}"></option>
+                </select>
+                <p class="mt-1 text-xs text-gray-500">Hold Ctrl (Cmd on Mac) to select more than one.</p>
+              </div>
+              <div>
+                <label for="linkedAssetIds" class="block text-sm font-medium text-gray-700 mb-1">Related Assets</label>
+                <select id="linkedAssetIds" name="linkedAssetIds" multiple size="6"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                  <option th:each="a : ${assets}" th:value="${a.id}"
+                    th:selected="${issue.linkedAssetIdList.contains(a.id)}"
+                    th:text="${a.name}"></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex items-center justify-end gap-3">
+            <a th:href="@{/issues/{id}(id=${issue.id})}" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">Cancel</a>
+            <button type="submit" class="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 transition-colors">
+              Save Changes
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="hidden bg-yellow-50 text-yellow-700 bg-orange-50 text-orange-700 bg-rose-50 text-rose-700 bg-red-50 text-red-700"></div>
+
+  <script>
+    const IMPACT_LABELS = ['', 'Very Low', 'Low', 'Medium', 'High', 'Very High'];
+    const PERVASIVENESS_LABELS = ['', 'Isolated', 'Limited', 'Moderate', 'Widespread', 'Pervasive'];
+
+    function issueForm(initialImpact, initialPervasiveness, initialTargetDate) {
+      return {
+        impact: initialImpact,
+        pervasiveness: initialPervasiveness,
+        originalTargetDate: initialTargetDate,
+        targetDate: initialTargetDate,
+        get score() { return this.impact * this.pervasiveness; },
+        get impactLabel() { return IMPACT_LABELS[this.impact] || ''; },
+        get pervasivenessLabel() { return PERVASIVENESS_LABELS[this.pervasiveness] || ''; },
+        // Mirrors the server rule: only a push-out counts, not a pull-in or a first commitment
+        get isExtension() {
+          return this.originalTargetDate && this.targetDate && this.targetDate > this.originalTargetDate;
+        },
+        get band() {
+          const s = this.score;
+          if (s <= 4) return 'Low';
+          if (s <= 9) return 'Medium';
+          if (s <= 16) return 'High';
+          return 'Critical';
+        },
+        get bandClass() {
+          const s = this.score;
+          if (s <= 4) return 'bg-yellow-50 text-yellow-700';
+          if (s <= 9) return 'bg-orange-50 text-orange-700';
+          if (s <= 16) return 'bg-rose-50 text-rose-700';
+          return 'bg-red-50 text-red-700';
+        }
+      };
+    }
+  </script>
+</body>
+</html>

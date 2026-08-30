@@ -26,7 +26,10 @@ import com.riskregister.riskregisterapp.entities.Role;
 import com.riskregister.riskregisterapp.entities.User;
 import com.riskregister.riskregisterapp.repositories.OrganizationRepository;
 import com.riskregister.riskregisterapp.repositories.UserRepository;
+import com.riskregister.riskregisterapp.enums.LookupType;
 import com.riskregister.riskregisterapp.services.EmailService;
+import com.riskregister.riskregisterapp.services.LookupService;
+import com.riskregister.riskregisterapp.services.RiskTaxonomyService;
 import com.riskregister.riskregisterapp.services.UserService;
 
 @Controller
@@ -50,13 +53,31 @@ public class SettingsController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private RiskTaxonomyService taxonomyService;
+
+    @Autowired
+    private LookupService lookupService;
+
     @GetMapping
-    public String settingsPage(Model model, Principal principal, @ModelAttribute("currentUser") User currentUser) {
+    public String settingsPage(Model model, Principal principal,
+                               @RequestParam(required = false) String fieldType,
+                               @ModelAttribute("currentUser") User currentUser) {
         List<User> users = userRepository.findByOrganizationIdOrderByFirstNameAscLastNameAsc(currentUser.getOrganizationId());
         Organization org = organizationRepository.findById(currentUser.getOrganizationId()).orElse(null);
         model.addAttribute("users", users);
         model.addAttribute("organization", org);
         model.addAttribute("roles", Role.values());
+        model.addAttribute("taxonomy", taxonomyService.getTaxonomy(currentUser.getOrganizationId()));
+        model.addAttribute("uncategorizedSubs", taxonomyService.getUncategorizedSubcategories(currentUser.getOrganizationId()));
+
+        // Managed fields: the type list drives the left pane, the selected type the right
+        LookupType selected = LookupType.fromCode(fieldType);
+        if (selected == null) selected = LookupType.values()[0];
+        model.addAttribute("fieldTypes", LookupType.values());
+        model.addAttribute("selectedFieldType", selected);
+        model.addAttribute("fieldValues", lookupService.findAll(selected, currentUser.getOrganizationId()));
+        model.addAttribute("fieldUsage", lookupService.usageCounts(selected, currentUser.getOrganizationId()));
         return "settings/index";
     }
 
@@ -73,7 +94,7 @@ public class SettingsController {
         User existingUser = userRepository.findByEmail(email);
         if (existingUser != null) {
             redirectAttrs.addFlashAttribute("errorMessage", "User with this email already exists.");
-            return "redirect:/settings";
+            return "redirect:/settings?tab=users";
         }
 
         try {
@@ -106,7 +127,7 @@ public class SettingsController {
             redirectAttrs.addFlashAttribute("errorMessage", "Error creating user: " + e.getMessage());
         }
 
-        return "redirect:/settings";
+        return "redirect:/settings?tab=users";
     }
 
     @PostMapping("/users/suspend")
@@ -121,7 +142,7 @@ public class SettingsController {
                 // Verify user belongs to current organization
                 if (!user.getOrganizationId().equals(currentUser.getOrganizationId())) {
                     redirectAttrs.addFlashAttribute("errorMessage", "Unauthorized to modify this user.");
-                    return "redirect:/settings";
+                    return "redirect:/settings?tab=users";
                 }
                 user.setApproved(false);
                 userRepository.save(user);
@@ -135,7 +156,7 @@ public class SettingsController {
             redirectAttrs.addFlashAttribute("errorMessage", "Error suspending user: " + e.getMessage());
         }
 
-        return "redirect:/settings";
+        return "redirect:/settings?tab=users";
     }
 
     @PostMapping("/users/activate")
@@ -150,7 +171,7 @@ public class SettingsController {
                 // Verify user belongs to current organization
                 if (!user.getOrganizationId().equals(currentUser.getOrganizationId())) {
                     redirectAttrs.addFlashAttribute("errorMessage", "Unauthorized to modify this user.");
-                    return "redirect:/settings";
+                    return "redirect:/settings?tab=users";
                 }
                 user.setApproved(true);
                 userRepository.save(user);
@@ -164,7 +185,7 @@ public class SettingsController {
             redirectAttrs.addFlashAttribute("errorMessage", "Error activating user: " + e.getMessage());
         }
 
-        return "redirect:/settings";
+        return "redirect:/settings?tab=users";
     }
 
     @PostMapping("/users/update")
@@ -183,7 +204,7 @@ public class SettingsController {
                 // Verify user belongs to current organization
                 if (!user.getOrganizationId().equals(currentUser.getOrganizationId())) {
                     redirectAttrs.addFlashAttribute("errorMessage", "Unauthorized to modify this user.");
-                    return "redirect:/settings";
+                    return "redirect:/settings?tab=users";
                 }
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
@@ -200,19 +221,28 @@ public class SettingsController {
             redirectAttrs.addFlashAttribute("errorMessage", "Error updating user: " + e.getMessage());
         }
 
-        return "redirect:/settings";
+        return "redirect:/settings?tab=users";
     }
 
     @PostMapping("/organization")
     public String updateOrganization(
             @RequestParam String name,
             @RequestParam(required = false) String description,
+            @RequestParam(required = false) Integer riskAppetiteThreshold,
             @ModelAttribute("currentUser") User currentUser,
             RedirectAttributes redirectAttrs) {
         Organization org = organizationRepository.findById(currentUser.getOrganizationId()).orElse(null);
         if (org != null) {
+            if (riskAppetiteThreshold != null && (riskAppetiteThreshold < 1 || riskAppetiteThreshold > 25)) {
+                redirectAttrs.addFlashAttribute("errorMessage",
+                    "Risk appetite threshold must be between 1 and 25 (the range of possible residual scores).");
+                return "redirect:/settings?tab=organization";
+            }
             org.setName(name);
             org.setDescription(description);
+            if (riskAppetiteThreshold != null) {
+                org.setRiskAppetiteThreshold(riskAppetiteThreshold);
+            }
             org.setUpdatedAt(java.time.Instant.now());
             organizationRepository.save(org);
             redirectAttrs.addFlashAttribute("successMessage", "Organization updated.");

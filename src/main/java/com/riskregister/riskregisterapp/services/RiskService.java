@@ -35,6 +35,57 @@ public class RiskService {
         return riskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id);
     }
 
+    private static final java.util.regex.Pattern RISK_ID_SEQUENCE =
+        java.util.regex.Pattern.compile("(?i)^RISK-(\\d+)$");
+
+    /**
+     * Next reference in the RISK-nnn sequence — offered as the default on the create form,
+     * where the user is free to overwrite it with their own numbering.
+     *
+     * Counts soft-deleted risks too, so a suggestion never reuses a number that already
+     * appears in the audit history.
+     */
+    public String suggestNextRiskId(Long organizationId) {
+        int highest = 0;
+        for (Risk risk : riskRepository.findAll()) {
+            if (!organizationId.equals(risk.getOrganizationId())) continue;
+            if (risk.getRiskId() == null) continue;
+            var matcher = RISK_ID_SEQUENCE.matcher(risk.getRiskId().trim());
+            if (matcher.matches()) {
+                try {
+                    highest = Math.max(highest, Integer.parseInt(matcher.group(1)));
+                } catch (NumberFormatException ignored) {
+                    // Absurdly long number — ignore it rather than fail the form
+                }
+            }
+        }
+        return "RISK-" + String.format("%03d", highest + 1);
+    }
+
+    /**
+     * Reject a Risk ID that another live risk already uses.
+     *
+     * On edit this only runs when the value actually changes: registers created before this
+     * check may already hold duplicates, and those risks must stay editable.
+     *
+     * @param excludeId the risk being edited, so it never clashes with itself
+     */
+    public String validateRiskId(String riskId, Long organizationId, Long excludeId) {
+        String clean = riskId == null ? "" : riskId.trim();
+        if (clean.isEmpty()) {
+            throw new IllegalArgumentException("Risk ID is required.");
+        }
+        boolean taken = riskRepository
+            .findByOrganizationIdAndRiskIdIgnoreCaseAndDeletedAtIsNull(organizationId, clean)
+            .stream()
+            .anyMatch(other -> !other.getId().equals(excludeId));
+        if (taken) {
+            throw new IllegalArgumentException("Risk ID \"" + clean
+                + "\" is already used by another risk. Choose a different reference.");
+        }
+        return clean;
+    }
+
     public Risk save(Risk risk) {
         Instant now = Instant.now();
         if (risk.getId() == null) {
@@ -42,6 +93,19 @@ public class RiskService {
         }
         risk.setUpdatedAt(now);
         return riskRepository.save(risk);
+    }
+
+    /**
+     * Record a completed periodic review, resetting the risk's review clock.
+     * Returns the saved risk, or empty when it does not exist in this organisation.
+     */
+    public Optional<Risk> markReviewed(Long organizationId, Long id, String reviewerName) {
+        return riskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id)
+            .map(risk -> {
+                risk.setLastReviewedAt(Instant.now());
+                risk.setLastReviewedByName(reviewerName);
+                return riskRepository.save(risk);
+            });
     }
 
     public void softDelete(Long organizationId, Long id) {

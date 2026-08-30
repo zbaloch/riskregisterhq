@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Reviews Due - RiskRegisterHQ</title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='reports')}"></div>
+
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
+
+        <div th:replace="~{fragments/report-shell :: header(${reportTitle}, ${reportSubtitle})}"></div>
+
+        <div th:if="${success}" class="mt-6 rounded-lg bg-green-50 border border-green-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <p class="text-sm font-medium text-green-800" th:text="${success}"></p>
+        </div>
+        <div th:if="${error}" class="mt-6 rounded-lg bg-red-50 border border-red-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
+
+        <!-- Scope switch -->
+        <div class="mt-6 flex gap-2 print:hidden">
+          <a th:href="@{/reports/reviews-due(overdueOnly=true)}"
+            class="rounded-md px-3.5 py-2 text-sm font-medium transition-colors"
+            th:classappend="${overdueOnly} ? 'bg-sky-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'">
+            Overdue only
+          </a>
+          <a th:href="@{/reports/reviews-due(overdueOnly=false)}"
+            class="rounded-md px-3.5 py-2 text-sm font-medium transition-colors"
+            th:classappend="${!overdueOnly} ? 'bg-sky-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'">
+            All risks on a review cycle
+          </a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(rows)}" class="mt-8">
+          <div th:replace="~{fragments/report-shell :: empty('Nothing due', 'Every risk with a review frequency is within its review cycle.')}"></div>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(rows)}" class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Risk</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Residual</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Frequency</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Reviewed</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider print:hidden">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr th:each="row : ${rows}" class="hover:bg-gray-50"
+                  th:classappend="${row.severelyOverdue or row.neverReviewed} ? 'bg-red-50/40' : ''">
+                  <td class="px-6 py-3.5 text-sm">
+                    <a th:href="@{'/risks/' + ${row.risk.id}}" class="font-medium text-sky-600 hover:text-sky-800" th:text="${row.risk.riskId}"></a>
+                    <p class="text-gray-700 mt-0.5" th:text="${row.risk.title}"></p>
+                  </td>
+                  <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${row.categoryName}"></td>
+                  <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${row.risk.riskOwnerName} ?: '—'"></td>
+                  <td class="px-6 py-3.5 text-center">
+                    <span th:replace="~{fragments/report-shell :: score(${row.risk.residualScore})}"></span>
+                    <span th:if="${row.risk.residualScore == null}" class="text-xs text-gray-400">—</span>
+                  </td>
+                  <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${row.frequencyLabel}"></td>
+                  <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${row.risk.lastReviewedAtFormatted} ?: '—'"></td>
+                  <td class="px-6 py-3.5 text-sm">
+                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                      th:classappend="${row.neverReviewed} ? 'bg-red-100 text-red-800'
+                                    : (${row.severelyOverdue} ? 'bg-red-100 text-red-800'
+                                    : (${row.overdue} ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'))"
+                      th:text="${row.dueLabel()}"></span>
+                  </td>
+                  <td class="px-6 py-3.5 text-right print:hidden">
+                    <form th:action="@{'/risks/' + ${row.risk.id} + '/mark-reviewed'}" method="POST" class="inline"
+                      x-data @submit.prevent="if(confirm('Record a completed review for this risk? This resets its review clock.')) $el.submit()">
+                      <input type="hidden" name="returnTo" th:value="${overdueOnly} ? '/reports/reviews-due?overdueOnly=true' : '/reports/reviews-due?overdueOnly=false'">
+                      <button type="submit" class="whitespace-nowrap rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+                        Mark reviewed
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="border-t border-gray-200 bg-gray-50 px-6 py-3">
+            <p class="text-xs text-gray-500">
+              The due date is the last review date plus the risk's review frequency. Closed risks and risks with no frequency set are excluded.
+              "Mark reviewed" records the review against your name in the audit trail without changing the risk itself.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

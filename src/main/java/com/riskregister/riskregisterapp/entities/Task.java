@@ -33,6 +33,12 @@ public class Task {
 
     private Long riskId;  // FK to risks.id (bare Long, same pattern as riskCategoryId)
 
+    /**
+     * FK to issues.id. A task hangs off a risk OR an issue — when it belongs to an issue
+     * it is one of the remediation actions closing that finding.
+     */
+    private Long issueId;
+
     private Long organizationId;
 
     @ManyToOne(fetch = FetchType.LAZY)

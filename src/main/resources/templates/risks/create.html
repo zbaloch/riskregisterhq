@@ -72,6 +72,13 @@
           <p class="mt-1 text-sm text-gray-500">Document a new risk scenario and its assessment details.</p>
         </div>
 
+        <div th:if="${error}" class="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
+
         <form action="/risks" method="post" x-data="riskForm()">
 
           <!-- Basic Information Card -->
@@ -103,8 +110,10 @@
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1" for="riskId">Risk ID <span class="text-red-500">*</span></label>
                 <input type="text" name="riskId" id="riskId" required
+                  th:value="${risk.riskId}"
                   class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                   placeholder="e.g., R-1, RISK-001"/>
+                <p class="mt-1 text-xs text-gray-500">Suggested — change it to match your own numbering.</p>
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
@@ -129,11 +138,11 @@
               </div>
             </div>
 
-            <!-- Row 1: Risk Category + Subcategory -->
-            <div class="mt-5 grid grid-cols-2 gap-x-8">
+            <!-- Row 1: Risk Category + Subcategory (subcategories filter by selected category) -->
+            <div class="mt-5 grid grid-cols-2 gap-x-8" x-data="categoryPicker('', '')">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Risk Category <span class="text-red-500">*</span></label>
-                <select name="riskCategoryId" required
+                <select name="riskCategoryId" required x-model="categoryId" @change="onCategoryChange()"
                   class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
                   <option value="">Select category</option>
                   <option th:each="cat : ${riskCategories}"
@@ -144,13 +153,12 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Subcategory <span class="text-red-500">*</span></label>
-                <select name="riskSubcategoryId" required
-                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
-                  <option value="">Select subcategory</option>
-                  <option th:each="sub : ${riskSubcategories}"
-                    th:value="${sub.id}"
-                    th:text="${sub.name}">
-                  </option>
+                <select name="riskSubcategoryId" required x-model="subcategoryId" :disabled="!categoryId"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm bg-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-gray-50 disabled:text-gray-400">
+                  <option value="" x-text="categoryId ? 'Select subcategory' : 'Select a category first'"></option>
+                  <template x-for="sub in filteredSubs" :key="sub.id">
+                    <option :value="String(sub.id)" x-text="sub.name" :selected="String(sub.id) === subcategoryId"></option>
+                  </template>
                 </select>
               </div>
             </div>
@@ -362,7 +370,32 @@
   <!-- Tailwind safelist for dynamically applied slider classes -->
   <div class="hidden text-green-500 text-yellow-500 text-orange-500 text-rose-400 text-red-600 bg-green-500 bg-yellow-500 bg-orange-500 bg-rose-400 bg-red-600"></div>
 
+  <script th:inline="javascript">
+    // Subcategories with their parent categoryId, for the cascading category picker
+    window.__riskSubcategories = /*[[${riskSubcategories}]]*/ [];
+  </script>
   <script>
+    // Cascading Risk Category → Subcategory selects. The current subcategory of an
+    // existing risk stays selectable even if it no longer matches the category
+    // (legacy data); changing the category clears a subcategory that doesn't belong.
+    function categoryPicker(initialCategoryId, initialSubcategoryId) {
+      return {
+        categoryId: initialCategoryId ? String(initialCategoryId) : '',
+        subcategoryId: initialSubcategoryId ? String(initialSubcategoryId) : '',
+        subs: window.__riskSubcategories || [],
+        get filteredSubs() {
+          if (!this.categoryId) return [];
+          return this.subs.filter(s =>
+            String(s.categoryId) === this.categoryId || String(s.id) === this.subcategoryId);
+        },
+        onCategoryChange() {
+          const stillValid = this.subs.some(s =>
+            String(s.id) === this.subcategoryId && String(s.categoryId) === this.categoryId);
+          if (!stillValid) this.subcategoryId = '';
+        }
+      };
+    }
+
     const LABELS        = ['', 'Very Low',        'Low',            'Medium',         'High',         'Very High'   ];
     const TEXT_CLASSES  = ['', 'text-green-500',  'text-yellow-500', 'text-orange-500', 'text-rose-400', 'text-red-600'];
     const TRACK_CLASSES = ['', 'bg-green-500',    'bg-yellow-500',   'bg-orange-500',  'bg-rose-400',  'bg-red-600'  ];

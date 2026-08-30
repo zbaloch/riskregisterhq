@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title th:text="${issue.issueRef} + ' – RiskRegisterHQ'">Issue – RiskRegisterHQ</title>
+</head>
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='issues')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-6xl sm:px-6 lg:px-8"
+        x-data="{ tab: 'details', showValidate: false }">
+
+        <!-- Flash messages -->
+        <div th:if="${success}" class="mb-4 rounded-lg bg-green-50 border border-green-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <p class="text-sm font-medium text-green-800" th:text="${success}"></p>
+        </div>
+        <div th:if="${error}" class="mb-4 rounded-lg bg-red-50 border border-red-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
+
+        <!-- Header -->
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <a href="/issues" class="inline-flex items-center gap-1.5 text-sm font-medium text-sky-600 hover:text-sky-800 transition-colors">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Issues
+            </a>
+            <div class="mt-2 flex flex-wrap items-center gap-2.5">
+              <span class="text-sm font-semibold text-gray-500" th:text="${issue.issueRef}"></span>
+              <span th:if="${issue.status != null}"
+                class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                th:classappend="${issue.status.name() == 'CLOSED'} ? 'bg-green-100 text-green-800' :
+                                (${issue.status.name() == 'RISK_ACCEPTED'} ? 'bg-gray-200 text-gray-800' :
+                                (${issue.status.name() == 'REMEDIATED'} ? 'bg-sky-100 text-sky-800' :
+                                (${issue.status.name() == 'IN_REMEDIATION'} ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800')))"
+                th:text="${issue.status.displayName}"></span>
+              <span th:if="${issue.overdue}" class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800"
+                th:text="${issue.daysOverdue} + ' days overdue'"></span>
+              <span th:if="${issue.extended}" class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800"
+                th:text="${issue.extensionCount} + '&times; extended'"></span>
+            </div>
+            <h1 class="mt-1.5 text-2xl font-bold tracking-tight text-gray-900" th:text="${issue.title}"></h1>
+          </div>
+          <div class="shrink-0 flex items-center gap-2">
+            <a th:href="@{/issues/{id}/edit(id=${issue.id})}"
+              class="rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">Edit</a>
+            <form th:action="@{/issues/{id}/delete(id=${issue.id})}" method="POST"
+              x-data @submit.prevent="if(confirm('Remove this issue? It will no longer appear in the register.')) $el.submit()">
+              <button type="submit" class="rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors cursor-pointer">Delete</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Awaiting validation banner: the fix is claimed done but unverified -->
+        <div th:if="${issue.awaitingValidation}" class="mt-6 rounded-lg bg-sky-50 border border-sky-200 p-4 flex items-start justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-sky-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-sky-900">Remediation complete, awaiting independent validation</p>
+              <p class="text-sm text-sky-800 mt-0.5">This issue cannot close until someone other than the remediation owner confirms the fix works.</p>
+            </div>
+          </div>
+          <button @click="showValidate = true" class="shrink-0 rounded-md bg-sky-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors cursor-pointer">
+            Validate &amp; Close
+          </button>
+        </div>
+
+        <!-- Severity cards -->
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Impact</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900" th:text="${issue.impact} ?: '—'"></p>
+            <p class="text-xs text-gray-500 mt-0.5" th:text="${issue.impactLabel}"></p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pervasiveness</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900" th:text="${issue.pervasiveness} ?: '—'"></p>
+            <p class="text-xs text-gray-500 mt-0.5" th:text="${issue.pervasivenessLabel}"></p>
+          </div>
+          <div class="rounded-xl border shadow-sm p-6 text-center"
+            th:classappend="${issue.severityLevel == 'Low'} ? 'bg-yellow-50 border-yellow-200' :
+                            (${issue.severityLevel == 'Medium'} ? 'bg-orange-50 border-orange-200' :
+                            (${issue.severityLevel == 'High'} ? 'bg-rose-50 border-rose-200' :
+                            (${issue.severityLevel == 'Critical'} ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200')))">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Severity</p>
+            <p class="mt-2 text-3xl font-bold"
+              th:classappend="${issue.severityLevel == 'Low'} ? 'text-yellow-700' :
+                              (${issue.severityLevel == 'Medium'} ? 'text-orange-700' :
+                              (${issue.severityLevel == 'High'} ? 'text-rose-700' :
+                              (${issue.severityLevel == 'Critical'} ? 'text-red-700' : 'text-gray-400')))"
+              th:text="${issue.severityScore} ?: '—'"></p>
+            <p class="text-xs font-medium mt-0.5 text-gray-600" th:text="${issue.severityLevel}"></p>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mt-8 border-b border-gray-200">
+          <nav class="flex gap-8" aria-label="Tabs">
+            <button @click="tab = 'details'" :class="tab === 'details' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">Details</button>
+            <button @click="tab = 'actions'" :class="tab === 'actions' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+              Remediation Actions <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(tasks)} + ')'"></span>
+            </button>
+            <button @click="tab = 'audit'" :class="tab === 'audit' ? 'border-sky-600 text-sky-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+              Audit Trail <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(auditEntries)} + ')'"></span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- DETAILS -->
+        <div x-show="tab === 'details'" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-900">Description</h2>
+              <p class="mt-2 text-sm text-gray-700 whitespace-pre-line" th:text="${issue.description} ?: '—'"></p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-900">Root Cause</h2>
+              <p class="mt-2 text-sm text-gray-700 whitespace-pre-line" th:text="${issue.rootCause} ?: '—'"></p>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-900">Remediation Plan</h2>
+              <p class="mt-2 text-sm text-gray-700 whitespace-pre-line" th:text="${issue.remediationPlan} ?: '—'"></p>
+            </div>
+
+            <!-- Linked risks -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-900">Related Risks</h2>
+              <p th:if="${#lists.isEmpty(linkedRisks)}" class="mt-2 text-sm text-gray-500">
+                Not linked to any risk. Linking tells you which risk assessments this finding calls into question.
+              </p>
+              <ul th:unless="${#lists.isEmpty(linkedRisks)}" class="mt-3 space-y-2">
+                <li th:each="r : ${linkedRisks}" class="flex items-center gap-2 text-sm">
+                  <a th:href="@{/risks/{id}(id=${r.id})}" class="font-medium text-sky-600 hover:text-sky-800 shrink-0" th:text="${r.riskId}"></a>
+                  <span class="text-gray-700 truncate" th:text="${r.title}"></span>
+                  <span th:if="${r.residualScore != null}" class="ml-auto shrink-0 inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700"
+                    th:text="'Residual ' + ${r.residualScore}"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Category</div>
+                <th:block th:with="cat=${issue.category != null} ? ${categoryMap[issue.category]} : null">
+                  <div class="text-sm" th:classappend="${cat != null} ? 'text-gray-900' : 'text-amber-700'"
+                    th:text="${cat != null} ? ${cat.name} : (${issue.category} ?: 'Not set')"></div>
+                  <div th:if="${cat != null and !cat.active}" class="text-xs text-gray-500 mt-0.5">This option is no longer offered for new issues</div>
+                </th:block>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Impact Area</div>
+                <th:block th:with="dim=${issue.dimension != null} ? ${dimensionMap[issue.dimension]} : null">
+                  <div class="text-sm" th:classappend="${dim != null} ? 'text-gray-900' : 'text-amber-700'"
+                    th:text="${dim != null} ? ${dim.name} : (${issue.dimension} ?: 'Not set')"></div>
+                </th:block>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Source</div>
+                <th:block th:with="src=${issue.source != null} ? ${sourceMap[issue.source]} : null">
+                  <div class="text-sm text-gray-900" th:text="${src != null} ? ${src.name} : (${issue.source} ?: '—')"></div>
+                  <div th:if="${src != null and src.flagged}" class="text-xs text-purple-700 mt-0.5">Independently raised</div>
+                  <div th:if="${src != null and !src.active}" class="text-xs text-gray-500 mt-0.5">This option is no longer offered for new issues</div>
+                </th:block>
+              </div>
+              <div th:if="${issue.externalReference != null and !#strings.isEmpty(issue.externalReference)}">
+                <div class="text-xs font-medium text-gray-500 mb-0.5">External Reference</div>
+                <div class="text-sm text-gray-900" th:text="${issue.externalReference}"></div>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Remediation Owner</div>
+                <div class="text-sm text-gray-900" th:text="${issue.ownerName} ?: '—'"></div>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Date Raised</div>
+                <div class="text-sm text-gray-900" th:text="${issue.dateRaisedFormatted} ?: '—'"></div>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Target Date</div>
+                <div class="text-sm" th:classappend="${issue.overdue} ? 'text-red-700 font-semibold' : 'text-gray-900'"
+                  th:text="${issue.targetDateFormatted} ?: '—'"></div>
+                <!-- Extensions are shown, never quietly overwritten -->
+                <div th:if="${issue.extended}" class="text-xs text-amber-700 mt-0.5">
+                  Originally <span th:text="${issue.originalTargetDateFormatted}"></span> ·
+                  <span th:text="${issue.extensionCount}"></span> extension(s)
+                </div>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Age</div>
+                <div class="text-sm text-gray-900" th:text="${issue.ageDays != null} ? ${issue.ageDays} + ' days (' + ${issue.ageBand} + ')' : '—'"></div>
+              </div>
+              <div th:if="${issue.closedDate != null}">
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Closed</div>
+                <div class="text-sm text-gray-900" th:text="${issue.closedDateFormatted}"></div>
+              </div>
+              <div>
+                <div class="text-xs font-medium text-gray-500 mb-0.5">Validation</div>
+                <div th:if="${issue.validated}" class="text-sm text-green-700">
+                  <span th:text="${issue.validatedByName}"></span>
+                  <div class="text-xs text-gray-500" th:text="${issue.validatedAtFormatted}"></div>
+                </div>
+                <div th:unless="${issue.validated}" class="text-sm text-gray-400">Not yet validated</div>
+              </div>
+            </div>
+
+            <!-- Status transitions -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-900">Move Status</h2>
+              <form th:action="@{/issues/{id}/status(id=${issue.id})}" method="POST" class="mt-3 space-y-3">
+                <select name="status"
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                  <option th:each="s : ${statuses}" th:value="${s}"
+                    th:selected="${issue.status != null and issue.status.name() == s.name()}"
+                    th:text="${s.displayName}"></option>
+                </select>
+                <button type="submit" class="w-full rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors cursor-pointer">
+                  Update Status
+                </button>
+              </form>
+              <button th:unless="${issue.validated}" @click="showValidate = true"
+                class="mt-3 w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+                Validate &amp; Close
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- REMEDIATION ACTIONS -->
+        <div x-show="tab === 'actions'" x-cloak class="mt-6">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h2 class="text-base font-semibold text-gray-900">Remediation Actions</h2>
+              <p class="text-sm text-gray-500 mt-0.5">The work closing this finding. Actions are tasks linked to this issue.</p>
+            </div>
+
+            <div th:if="${#lists.isEmpty(tasks)}" class="p-12 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+              <h3 class="mt-4 text-sm font-semibold text-gray-900">No actions yet</h3>
+              <p class="mt-1 text-sm text-gray-500">An issue with a remediation plan but no actions is a plan nobody is executing.</p>
+            </div>
+
+            <table th:unless="${#lists.isEmpty(tasks)}" class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Action</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Assignee</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Due</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr th:each="t : ${tasks}" class="hover:bg-gray-50">
+                  <td class="px-6 py-3.5 text-sm text-gray-900" th:text="${t.title}"></td>
+                  <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${t.assigneeName} ?: '—'"></td>
+                  <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${t.dueDateFormatted} ?: '—'"></td>
+                  <td class="px-6 py-3.5 text-sm">
+                    <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700" th:text="${t.statusLabel}"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AUDIT TRAIL -->
+        <div x-show="tab === 'audit'" x-cloak class="mt-6">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div th:if="${#lists.isEmpty(auditEntries)}" class="p-12 text-center">
+              <p class="text-sm text-gray-500">No audit entries yet.</p>
+            </div>
+            <ul th:unless="${#lists.isEmpty(auditEntries)}" class="divide-y divide-gray-200">
+              <li th:each="e : ${auditEntries}" class="px-6 py-4">
+                <div class="flex items-start gap-3">
+                  <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
+                    th:classappend="${e.action == 'CREATED'} ? 'bg-green-100 text-green-700' :
+                                    (${e.action == 'DELETED'} ? 'bg-red-100 text-red-700' :
+                                    (${e.action == 'VALIDATED'} ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700'))">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm text-gray-800" th:text="${e.summary}"></p>
+                    <p class="mt-1 text-xs text-gray-500">
+                      <span th:text="${e.actorName} ?: ${e.actorEmail}"></span> · <span th:text="${e.createdAtFormatted}"></span>
+                    </p>
+                    <div th:with="changes=${auditChanges[e.id]}"
+                      th:if="${changes != null and !#lists.isEmpty(changes)}"
+                      class="mt-2 rounded-lg bg-gray-50 border border-gray-200 divide-y divide-gray-200">
+                      <div th:each="c : ${changes}" class="px-3 py-2 text-xs">
+                        <span class="font-medium text-gray-700" th:text="${c.label}"></span>
+                        <div class="mt-0.5 flex flex-wrap items-center gap-1.5">
+                          <span class="rounded bg-red-50 px-1.5 py-0.5 text-red-700 line-through decoration-red-300"
+                            th:text="${#strings.isEmpty(c.oldValue)} ? '(empty)' : ${#strings.abbreviate(c.oldValue, 80)}"></span>
+                          <svg class="w-3 h-3 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                          </svg>
+                          <span class="rounded bg-green-50 px-1.5 py-0.5 text-green-800"
+                            th:text="${#strings.isEmpty(c.newValue)} ? '(empty)' : ${#strings.abbreviate(c.newValue, 80)}"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Validate modal -->
+        <div x-cloak x-show="showValidate" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" @click="showValidate = false">
+          <div class="bg-white rounded-xl shadow-xl max-w-md w-full" @click.stop>
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900">Validate &amp; Close</h3>
+              <button @click="showValidate = false" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <form th:action="@{/issues/{id}/validate(id=${issue.id})}" method="POST" class="p-6 space-y-4">
+              <p class="text-sm text-gray-600">
+                Record who independently confirmed the remediation actually worked. This closes the issue.
+              </p>
+              <div>
+                <label for="validatedByName" class="block text-sm font-medium text-gray-700 mb-1">Validated By <span class="text-red-500">*</span></label>
+                <select id="validatedByName" name="validatedByName" required
+                  class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+                  <option value="">Select validator</option>
+                  <option th:each="u : ${users}" th:value="${u.displayName}" th:text="${u.displayName}"></option>
+                </select>
+                <p class="mt-1 text-xs text-gray-500">
+                  Cannot be the remediation owner<span th:if="${issue.ownerName != null}" th:text="' (' + ${issue.ownerName} + ')'"></span> — validation must be independent.
+                </p>
+              </div>
+              <div class="flex gap-3 pt-2">
+                <button type="button" @click="showValidate = false" class="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">Validate &amp; Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

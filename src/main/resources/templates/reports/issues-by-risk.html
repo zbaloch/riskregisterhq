@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Issues by Risk - RiskRegisterHQ</title>
+</head>
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='reports')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
+
+        <div th:replace="~{fragments/report-shell :: header(${reportTitle}, ${reportSubtitle})}"></div>
+
+        <div class="mt-6 rounded-lg bg-sky-50 border border-sky-200 p-4 flex items-start gap-3">
+          <svg class="w-5 h-5 text-sky-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-sm text-sky-900">
+            A residual score is a claim that controls are working. An open <strong>High</strong> or <strong>Critical</strong> finding
+            against those controls is evidence to the contrary — so any risk flagged below should be re-assessed before its score is relied on.
+          </p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(rows)}" class="mt-6">
+          <div th:replace="~{fragments/report-shell :: empty('No linked findings', 'No issues are currently linked to a risk. Link findings from the issue register to see which risk assessments they call into question.')}"></div>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(rows)}" class="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Risk</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Residual</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Open Findings</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Severe</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Score Confidence</th>
+                </tr>
+              </thead>
+
+              <!-- One tbody per risk so its findings expand inside the same Alpine scope -->
+              <tbody th:each="row : ${rows}" x-data="{ open: false }" class="border-t border-gray-200">
+                <tr class="hover:bg-gray-50" th:classappend="${row.scoreInDoubt()} ? 'bg-amber-50/40' : ''">
+                  <td class="px-6 py-4 text-sm">
+                    <button @click="open = !open" class="flex items-start gap-2 text-left cursor-pointer group">
+                      <svg class="w-3.5 h-3.5 mt-1 text-gray-400 transition-transform shrink-0" :class="open ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                      <span>
+                        <span class="font-medium text-sky-700 group-hover:text-sky-900" th:text="${row.risk.riskId}"></span>
+                        <span class="block text-gray-700" th:text="${row.risk.title}"></span>
+                      </span>
+                    </button>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-600" th:text="${row.categoryName}"></td>
+                  <td class="px-6 py-4 text-center">
+                    <span th:replace="~{fragments/report-shell :: score(${row.risk.residualScore})}"></span>
+                    <span th:if="${row.risk.residualScore == null}" class="text-xs text-gray-400">—</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-right font-medium"
+                    th:classappend="${row.openIssues > 0} ? 'text-gray-900' : 'text-gray-400'"
+                    th:text="${row.openIssues}"></td>
+                  <td class="px-6 py-4 text-sm text-right font-semibold"
+                    th:classappend="${row.openSevere > 0} ? 'text-red-700' : 'text-gray-400'"
+                    th:text="${row.openSevere}"></td>
+                  <td class="px-6 py-4 text-sm">
+                    <span th:if="${row.scoreInDoubt()}" class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
+                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5 19h14a2 2 0 001.84-2.75L13.74 4a2 2 0 00-3.5 0l-7.1 12.25A2 2 0 004.99 19z"/>
+                      </svg>
+                      Likely optimistic
+                    </span>
+                    <span th:unless="${row.scoreInDoubt()}" class="text-xs text-gray-500">No severe findings open</span>
+                  </td>
+                </tr>
+
+                <tr x-show="open" x-cloak>
+                  <td colspan="6" class="px-6 pb-4 pt-0 bg-gray-50/60">
+                    <ul class="space-y-1.5 pl-8">
+                      <li th:each="i : ${row.issues}" class="text-sm flex flex-wrap items-center gap-2">
+                        <a th:href="@{/issues/{id}(id=${i.id})}" class="font-medium text-sky-600 hover:text-sky-800 shrink-0" th:text="${i.issueRef}"></a>
+                        <span class="text-gray-700" th:text="${i.title}"></span>
+                        <span th:if="${i.severityScore != null}" class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold shrink-0"
+                          th:classappend="${i.severityLevel == 'Low'} ? 'bg-yellow-50 text-yellow-700' :
+                                          (${i.severityLevel == 'Medium'} ? 'bg-orange-50 text-orange-700' :
+                                          (${i.severityLevel == 'High'} ? 'bg-rose-50 text-rose-700' : 'bg-red-50 text-red-700'))"
+                          th:text="${i.severityLevel}"></span>
+                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[0.625rem] font-medium shrink-0"
+                          th:classappend="${i.closed} ? 'bg-green-100 text-green-800' : 'bg-rose-100 text-rose-800'"
+                          th:text="${i.status != null} ? ${i.status.displayName} : '—'"></span>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Findings not yet mapped to any risk -->
+        <div th:if="${not #lists.isEmpty(unlinked)}" class="mt-6 bg-white rounded-xl border border-amber-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-amber-200 bg-amber-50">
+            <h2 class="text-sm font-semibold text-amber-900">Open Findings Not Linked to Any Risk</h2>
+            <p class="text-xs text-amber-800 mt-1">
+              These are real deficiencies with no risk attached, so they never reach the risk committee's view.
+              Link each one to the risk whose controls it undermines.
+            </p>
+          </div>
+          <ul class="divide-y divide-gray-100">
+            <li th:each="i : ${unlinked}" class="px-6 py-3 flex flex-wrap items-center gap-2 text-sm">
+              <a th:href="@{/issues/{id}(id=${i.id})}" class="font-medium text-sky-600 hover:text-sky-800 shrink-0" th:text="${i.issueRef}"></a>
+              <span class="text-gray-700" th:text="${i.title}"></span>
+              <span th:if="${i.severityScore != null}" class="ml-auto shrink-0 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                th:classappend="${i.severityLevel == 'Low'} ? 'bg-yellow-50 text-yellow-700' :
+                                (${i.severityLevel == 'Medium'} ? 'bg-orange-50 text-orange-700' :
+                                (${i.severityLevel == 'High'} ? 'bg-rose-50 text-rose-700' : 'bg-red-50 text-red-700'))"
+                th:text="${i.severityScore} + ' · ' + ${i.severityLevel}"></span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

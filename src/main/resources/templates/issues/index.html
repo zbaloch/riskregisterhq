@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Issues – RiskRegisterHQ</title>
+</head>
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='issues')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8"
+        x-data="{ hideClosed: true, q: '' }">
+
+        <!-- Page header -->
+        <div class="flex items-center justify-between mb-6 gap-4">
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Issues <span class="text-sm text-gray-500" th:text="'(' + ${#lists.size(issues)} + ')'"></span></h1>
+            <p class="mt-1 text-sm text-gray-500">Control deficiencies and findings, tracked to validated closure.</p>
+          </div>
+          <a href="/issues/new"
+            class="shrink-0 inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Raise Issue
+          </a>
+        </div>
+
+        <!-- Flash messages -->
+        <div th:if="${success}" class="mb-4 rounded-lg bg-green-50 border border-green-200 p-4 flex gap-3 items-start">
+          <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <p class="text-sm font-medium text-green-800" th:text="${success}"></p>
+        </div>
+        <div th:if="${error}" class="mb-4 rounded-lg bg-red-50 border border-red-200 p-4">
+          <p class="text-sm font-medium text-red-800" th:text="${error}"></p>
+        </div>
+
+        <!-- Summary tiles -->
+        <div th:if="${not #lists.isEmpty(issues)}" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Open</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900" th:text="${openCount}"></p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Overdue</p>
+            <p class="mt-2 text-3xl font-bold" th:classappend="${overdueCount > 0} ? 'text-red-600' : 'text-gray-900'" th:text="${overdueCount}"></p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Awaiting Validation</p>
+            <p class="mt-2 text-3xl font-bold" th:classappend="${awaitingValidationCount > 0} ? 'text-amber-600' : 'text-gray-900'" th:text="${awaitingValidationCount}"></p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Date Extended</p>
+            <p class="mt-2 text-3xl font-bold" th:classappend="${extendedCount > 0} ? 'text-amber-600' : 'text-gray-900'" th:text="${extendedCount}"></p>
+          </div>
+        </div>
+
+        <!-- Where the open backlog concentrates, by impact area -->
+        <div th:if="${not #maps.isEmpty(openByDimension)}"
+          class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Open findings by impact area</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span th:each="e : ${openByDimension}"
+              class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+              <span th:text="${e.key}"></span>
+              <span class="font-bold text-gray-900" th:text="${e.value}"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div th:if="${#lists.isEmpty(issues)}"
+          class="bg-white rounded-xl border border-gray-200 shadow-sm p-16 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <h3 class="mt-4 text-sm font-semibold text-gray-900">No issues recorded</h3>
+          <p class="mt-1 text-sm text-gray-500 max-w-md mx-auto">
+            Issues are things that are already true — audit findings, control weaknesses, regulatory findings.
+            For things that might happen, use the risk register instead.
+          </p>
+          <a href="/issues/new"
+            class="mt-6 inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Raise Issue
+          </a>
+        </div>
+
+        <!-- Filters -->
+        <div th:if="${not #lists.isEmpty(issues)}" class="mb-4 flex flex-wrap items-center gap-4">
+          <input type="search" x-model="q" placeholder="Search issues…"
+            class="rounded-lg border border-gray-300 px-3.5 py-2 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors w-64">
+          <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input type="checkbox" x-model="hideClosed" class="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
+            Hide closed
+          </label>
+        </div>
+
+        <!-- Issue table -->
+        <div th:if="${not #lists.isEmpty(issues)}"
+          class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Issue</th>
+                  <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Source</th>
+                  <th class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Severity</th>
+                  <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                  <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Target</th>
+                  <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Age</th>
+                  <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 bg-white">
+                <tr th:each="issue : ${issues}" class="hover:bg-gray-50 transition-colors"
+                  th:data-closed="${issue.closed}"
+                  th:data-search="${#strings.toLowerCase(issue.issueRef + ' ' + issue.title + ' ' + (issue.ownerName ?: ''))}"
+                  x-show="(!hideClosed || $el.dataset.closed !== 'true') && (q === '' || $el.dataset.search.includes(q.toLowerCase()))">
+
+                  <!-- Reference + title -->
+                  <td class="px-5 py-4">
+                    <a th:href="@{/issues/{id}(id=${issue.id})}" class="text-sm font-medium text-sky-600 hover:text-sky-700 hover:underline"
+                      th:text="${issue.issueRef} + ' ' + ${issue.title}"></a>
+                    <div class="mt-0.5 flex flex-wrap items-center gap-1.5">
+                      <span th:with="cat=${issue.category != null} ? ${categoryMap[issue.category]} : null"
+                        class="text-xs" th:classappend="${cat != null} ? 'text-gray-600' : 'text-amber-700'"
+                        th:text="${cat != null} ? ${cat.name} : (${issue.category} ?: 'No category')"></span>
+                      <span th:with="dim=${issue.dimension != null} ? ${dimensionMap[issue.dimension]} : null"
+                        th:if="${dim != null}" class="text-xs text-gray-500" th:text="'· ' + ${dim.name}"></span>
+                      <span th:if="${issue.externalReference != null and !#strings.isEmpty(issue.externalReference)}"
+                        class="text-xs text-gray-500" th:text="'· ' + ${issue.externalReference}"></span>
+                      <span th:if="${issue.extended}"
+                        class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[0.625rem] font-medium text-amber-800"
+                        th:text="${issue.extensionCount} + '&times; extended'"></span>
+                      <span th:if="${issue.validated}"
+                        class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-[0.625rem] font-medium text-green-800">Validated</span>
+                    </div>
+                  </td>
+
+                  <!-- Source -->
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <th:block th:with="src=${issue.source != null} ? ${sourceMap[issue.source]} : null">
+                      <span th:if="${src != null}" class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                        th:classappend="${src.flagged} ? 'bg-purple-50 text-purple-700' : 'bg-gray-100 text-gray-700'"
+                        th:text="${src.name}"></span>
+                      <span th:if="${src == null and issue.source != null}" class="text-sm text-gray-500" th:text="${issue.source}"></span>
+                      <span th:if="${issue.source == null}" class="text-sm text-gray-400">—</span>
+                    </th:block>
+                  </td>
+
+                  <!-- Severity (impact x pervasiveness — never likelihood) -->
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <div th:if="${issue.severityScore != null}" class="flex flex-col items-center gap-1.5">
+                      <span class="text-xl font-bold"
+                        th:text="${issue.severityScore}"
+                        th:classappend="${issue.severityLevel == 'Low'} ? 'text-yellow-600' :
+                                        (${issue.severityLevel == 'Medium'} ? 'text-orange-600' :
+                                        (${issue.severityLevel == 'High'} ? 'text-rose-600' : 'text-red-600'))"></span>
+                      <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                        th:text="${issue.severityLevel}"
+                        th:classappend="${issue.severityLevel == 'Low'} ? 'bg-yellow-50 text-yellow-600' :
+                                        (${issue.severityLevel == 'Medium'} ? 'bg-orange-50 text-orange-600' :
+                                        (${issue.severityLevel == 'High'} ? 'bg-rose-50 text-rose-600' : 'bg-red-50 text-red-600'))"></span>
+                    </div>
+                    <span th:unless="${issue.severityScore != null}" class="text-sm text-gray-400">—</span>
+                  </td>
+
+                  <!-- Owner -->
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <span class="text-sm text-gray-700" th:text="${issue.ownerName} ?: '—'"></span>
+                  </td>
+
+                  <!-- Target date -->
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <span th:if="${issue.targetDate != null}" class="text-sm"
+                      th:classappend="${issue.overdue} ? 'text-red-700 font-semibold' : 'text-gray-700'"
+                      th:text="${issue.targetDateFormatted}"></span>
+                    <span th:unless="${issue.targetDate != null}" class="text-sm text-gray-400">—</span>
+                    <div th:if="${issue.overdue}" class="text-xs text-red-600"
+                      th:text="${issue.daysOverdue} + ' days overdue'"></div>
+                  </td>
+
+                  <!-- Age -->
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <span class="text-sm text-gray-600" th:text="${issue.ageDays != null} ? ${issue.ageDays} + 'd' : '—'"></span>
+                  </td>
+
+                  <!-- Status -->
+                  <td class="px-5 py-4 whitespace-nowrap">
+                    <span th:if="${issue.status != null}"
+                      class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                      th:classappend="${issue.status.name() == 'CLOSED'} ? 'bg-green-50 text-green-700' :
+                                      (${issue.status.name() == 'RISK_ACCEPTED'} ? 'bg-gray-100 text-gray-700' :
+                                      (${issue.status.name() == 'REMEDIATED'} ? 'bg-sky-50 text-sky-700' :
+                                      (${issue.status.name() == 'IN_REMEDIATION'} ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700')))"
+                      th:text="${issue.status.displayName}"></span>
+                    <span th:unless="${issue.status != null}" class="text-sm text-gray-400">—</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="border-t border-gray-200 bg-gray-50 px-5 py-3">
+            <p class="text-xs text-gray-500">
+              Issues are rated on <strong>severity</strong> (impact &times; pervasiveness), not likelihood — a finding has already occurred, so its probability is certain.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

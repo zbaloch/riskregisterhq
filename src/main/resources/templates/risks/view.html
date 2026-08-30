@@ -98,11 +98,45 @@
                       class="px-4 py-3 text-sm font-medium transition-colors">
                 Assets <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(linkedAssets)} + ')'"></span>
               </button>
+              <button @click="activeTab = 'issues'"
+                      :class="activeTab === 'issues' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
+                      class="px-4 py-3 text-sm font-medium transition-colors">
+                Issues <span class="text-xs text-gray-400" th:text="'(' + ${#lists.size(linkedIssues)} + ')'"></span>
+                <span th:if="${not #lists.isEmpty(openSevereIssues)}" class="ml-1 inline-block h-2 w-2 rounded-full bg-red-500"></span>
+              </button>
               <button @click="activeTab = 'audit'"
                       :class="activeTab === 'audit' ? 'border-b-2 border-sky-500 text-sky-600' : 'text-gray-600 hover:text-gray-900'"
                       class="px-4 py-3 text-sm font-medium transition-colors">
                 Audit Trail
               </button>
+            </div>
+          </div>
+
+          <!--
+            Score-confidence warning. Open High/Critical findings against this risk's controls
+            are direct evidence that the residual score assumes controls that are not working.
+          -->
+          <div th:if="${not #lists.isEmpty(openSevereIssues)}"
+            class="mt-4 rounded-lg bg-amber-50 border border-amber-300 p-4 flex items-start gap-3">
+            <svg class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5 19h14a2 2 0 001.84-2.75L13.74 4a2 2 0 00-3.5 0l-7.1 12.25A2 2 0 004.99 19z"/>
+            </svg>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-amber-900">
+                Residual score may be optimistic —
+                <span th:text="${#lists.size(openSevereIssues)}"></span>
+                open <span th:text="${#lists.size(openSevereIssues)} == 1 ? 'finding' : 'findings'"></span>
+                against this risk's controls
+              </p>
+              <p class="text-sm text-amber-800 mt-0.5">
+                The residual assessment assumes controls that current findings show are not operating as intended. Re-assess before relying on this score.
+              </p>
+              <ul class="mt-2 space-y-1">
+                <li th:each="i : ${openSevereIssues}" class="text-sm">
+                  <a th:href="@{/issues/{id}(id=${i.id})}" class="font-medium text-amber-900 underline hover:text-amber-950" th:text="${i.issueRef}"></a>
+                  <span class="text-amber-800" th:text="' — ' + ${i.title} + ' (' + ${i.severityLevel} + ')'"></span>
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -143,6 +177,25 @@
                     <span th:text="${risk.reviewFrequency.displayName}"></span>
                   </div>
                   <div class="text-sm text-gray-400" th:unless="${risk.reviewFrequency != null}">—</div>
+                </div>
+                <div>
+                  <div class="text-xs font-medium text-gray-500 mb-0.5">Last Reviewed</div>
+                  <div class="text-sm">
+                    <span th:if="${risk.lastReviewedAt != null}" class="text-gray-900" th:text="${risk.lastReviewedAtFormatted}"></span>
+                    <span th:if="${risk.lastReviewedAt == null}" class="text-gray-400">Never</span>
+                    <span th:if="${risk.reviewOverdue}"
+                      class="ml-1.5 inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[0.625rem] font-medium text-amber-800">Overdue</span>
+                  </div>
+                  <div th:if="${risk.nextReviewDate != null and !risk.reviewOverdue}" class="text-xs text-gray-500 mt-0.5">
+                    Next due <span th:text="${risk.nextReviewDateFormatted}"></span>
+                  </div>
+                  <form th:if="${risk.reviewFrequency != null}"
+                    th:action="@{'/risks/' + ${risk.id} + '/mark-reviewed'}" method="POST" class="mt-1.5"
+                    x-data @submit.prevent="if(confirm('Record a completed review for this risk? This resets its review clock.')) $el.submit()">
+                    <button type="submit" class="text-xs font-medium text-sky-600 hover:text-sky-800 transition-colors cursor-pointer">
+                      Mark reviewed
+                    </button>
+                  </form>
                 </div>
                 <div>
                   <div class="text-xs font-medium text-gray-500 mb-0.5">Risk Treatment</div>
@@ -1007,6 +1060,73 @@
               </div>
             </div>
           </div><!-- /Assets Tab -->
+
+          <!-- Issues Tab -->
+          <div x-show="activeTab === 'issues'" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between gap-3">
+                <div>
+                  <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Linked Issues</h2>
+                  <p class="text-sm text-gray-500 mt-1">Findings raised against the controls this risk relies on.</p>
+                </div>
+                <a href="/issues/new" class="shrink-0 inline-flex items-center gap-2 rounded-md bg-sky-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-sky-500 transition-colors">
+                  Raise Issue
+                </a>
+              </div>
+
+              <div th:if="${#lists.isEmpty(linkedIssues)}" class="p-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
+                </svg>
+                <h3 class="mt-4 text-sm font-semibold text-gray-900">No issues linked</h3>
+                <p class="mt-1 text-sm text-gray-500 max-w-md mx-auto">
+                  No control deficiencies have been recorded against this risk. Link findings from the issue register to see whether this risk's controls actually hold up.
+                </p>
+              </div>
+
+              <table th:unless="${#lists.isEmpty(linkedIssues)}" class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Issue</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Source</th>
+                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Severity</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Target</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr th:each="i : ${linkedIssues}" class="hover:bg-gray-50"
+                    th:classappend="${!i.closed and i.severityScore != null and i.severityScore >= 10} ? 'bg-amber-50/40' : ''">
+                    <td class="px-6 py-3.5 text-sm">
+                      <a th:href="@{/issues/{id}(id=${i.id})}" class="font-medium text-sky-600 hover:text-sky-800" th:text="${i.issueRef}"></a>
+                      <p class="text-gray-700 mt-0.5" th:text="${i.title}"></p>
+                    </td>
+                    <td class="px-6 py-3.5 text-sm text-gray-600"
+                      th:with="src=${i.source != null} ? ${sourceMap[i.source]} : null"
+                      th:text="${src != null} ? ${src.name} : (${i.source} ?: '—')"></td>
+                    <td class="px-6 py-3.5 text-center">
+                      <span th:if="${i.severityScore != null}" class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                        th:classappend="${i.severityLevel == 'Low'} ? 'bg-yellow-50 text-yellow-700' :
+                                        (${i.severityLevel == 'Medium'} ? 'bg-orange-50 text-orange-700' :
+                                        (${i.severityLevel == 'High'} ? 'bg-rose-50 text-rose-700' : 'bg-red-50 text-red-700'))"
+                        th:text="${i.severityScore} + ' · ' + ${i.severityLevel}"></span>
+                      <span th:unless="${i.severityScore != null}" class="text-xs text-gray-400">—</span>
+                    </td>
+                    <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${i.ownerName} ?: '—'"></td>
+                    <td class="px-6 py-3.5 text-sm"
+                      th:classappend="${i.overdue} ? 'text-red-700 font-semibold' : 'text-gray-600'"
+                      th:text="${i.targetDateFormatted} ?: '—'"></td>
+                    <td class="px-6 py-3.5 text-sm">
+                      <span th:if="${i.status != null}" class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                        th:classappend="${i.closed} ? 'bg-green-50 text-green-700' : 'bg-rose-50 text-rose-700'"
+                        th:text="${i.status.displayName}"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div><!-- /Issues Tab -->
 
           <!-- Audit Log Tab -->
           <div x-show="activeTab === 'audit'" class="space-y-6" style="display: block !important;">

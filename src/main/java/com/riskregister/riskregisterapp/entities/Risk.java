@@ -81,6 +81,11 @@ public class Risk {
     private String createdByEmail;
     private String updatedByEmail;
 
+    // Periodic review tracking — drives the "Reviews Due" report.
+    // null = never formally reviewed since the risk was raised.
+    private Instant lastReviewedAt;
+    private String lastReviewedByName;
+
     // --- Computed helpers (not persisted) ---
 
     public Integer getInherentScore() {
@@ -134,4 +139,47 @@ public class Risk {
 
     public String getCreatedAtFormatted()  { return createdAt  != null ? DISPLAY_FMT.format(createdAt)  : null; }
     public String getUpdatedAtFormatted()  { return updatedAt  != null ? DISPLAY_FMT.format(updatedAt)  : null; }
+
+    // --- Periodic review helpers ---
+
+    private static final DateTimeFormatter DATE_FMT =
+            DateTimeFormatter.ofPattern("dd MMM yyyy").withZone(ZoneId.systemDefault());
+
+    public String getLastReviewedAtFormatted() {
+        return lastReviewedAt != null ? DATE_FMT.format(lastReviewedAt) : null;
+    }
+
+    /** True when the risk has never been formally reviewed. */
+    public boolean isNeverReviewed() {
+        return lastReviewedAt == null;
+    }
+
+    /** Date the next review falls due, or null when never reviewed or no frequency set. */
+    public java.time.LocalDate getNextReviewDate() {
+        if (lastReviewedAt == null || reviewFrequency == null) return null;
+        return reviewFrequency.nextReviewDate(lastReviewedAt.atZone(ZoneId.systemDefault()).toLocalDate());
+    }
+
+    public String getNextReviewDateFormatted() {
+        java.time.LocalDate d = getNextReviewDate();
+        return d != null ? d.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")) : null;
+    }
+
+    /**
+     * Days past the review due date. Positive = overdue, negative = still within cycle,
+     * null when it cannot be determined (never reviewed or no frequency).
+     */
+    public Long getDaysOverdueForReview() {
+        java.time.LocalDate due = getNextReviewDate();
+        if (due == null) return null;
+        return java.time.temporal.ChronoUnit.DAYS.between(due, java.time.LocalDate.now());
+    }
+
+    /** A never-reviewed risk with a frequency set counts as overdue, as does one past its due date. */
+    public boolean isReviewOverdue() {
+        if (reviewFrequency == null) return false;
+        if (lastReviewedAt == null) return true;
+        Long overdue = getDaysOverdueForReview();
+        return overdue != null && overdue > 0;
+    }
 }

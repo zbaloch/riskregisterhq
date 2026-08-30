@@ -17,4 +17,8 @@ public interface AuditTrailRepository extends JpaRepository<AuditTrail, Long> {
     // Organization-scoped query
     List<AuditTrail> findByOrganizationIdAndEntityTypeAndEntityIdOrderByCreatedAtDesc(
         Long organizationId, String entityType, Long entityId);
+
+    // Period query for the change report
+    List<AuditTrail> findByOrganizationIdAndCreatedAtBetweenOrderByCreatedAtDesc(
+        Long organizationId, java.time.Instant from, java.time.Instant to);
 }

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Owner Accountability - RiskRegisterHQ</title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='reports')}"></div>
+
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
+
+        <div th:replace="~{fragments/report-shell :: header(${reportTitle}, ${reportSubtitle})}"></div>
+
+        <div th:if="${#lists.isEmpty(rows)}" class="mt-8">
+          <div th:replace="~{fragments/report-shell :: empty('No risks yet', 'Once risks are raised and assigned an owner, this report shows what each person is carrying.')}"></div>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(rows)}" class="mt-8 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Risks</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Highest Residual</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Above Appetite</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Reviews Overdue</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Open Tasks</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Overdue Tasks</th>
+                </tr>
+              </thead>
+
+              <!-- One tbody per owner so their risk list expands within the same Alpine scope -->
+              <tbody th:each="row : ${rows}" x-data="{ open: false }" class="border-t border-gray-200">
+                <tr class="hover:bg-gray-50" th:classappend="${row.unassigned} ? 'bg-amber-50/50' : ''">
+                  <td class="px-6 py-4 text-sm">
+                    <button @click="open = !open" class="flex items-center gap-2.5 text-left cursor-pointer group">
+                      <svg class="w-3.5 h-3.5 text-gray-400 transition-transform shrink-0" :class="open ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                      <img th:unless="${row.unassigned}"
+                        th:src="'https://ui-avatars.com/api/?name=' + ${#strings.replace(row.ownerLabel(), ' ', '+')} + '&background=random&size=32'"
+                        th:alt="${row.ownerLabel()}" class="h-8 w-8 rounded-full shrink-0">
+                      <span th:if="${row.unassigned}" class="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700 shrink-0">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5 19h14a2 2 0 001.84-2.75L13.74 4a2 2 0 00-3.5 0l-7.1 12.25A2 2 0 004.99 19z"/>
+                        </svg>
+                      </span>
+                      <span class="font-medium text-gray-900 group-hover:text-sky-700" th:text="${row.ownerLabel()}"></span>
+                    </button>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-right font-medium text-gray-700" th:text="${row.riskCount()}"></td>
+                  <td class="px-6 py-4 text-center">
+                    <span th:replace="~{fragments/report-shell :: score(${row.maxResidual})}"></span>
+                    <span th:if="${row.maxResidual == null}" class="text-xs text-gray-400">—</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-right"
+                    th:classappend="${row.aboveAppetite > 0} ? 'text-rose-700 font-semibold' : 'text-gray-400'"
+                    th:text="${row.aboveAppetite}"></td>
+                  <td class="px-6 py-4 text-sm text-right"
+                    th:classappend="${row.reviewsOverdue > 0} ? 'text-amber-700 font-semibold' : 'text-gray-400'"
+                    th:text="${row.reviewsOverdue}"></td>
+                  <td class="px-6 py-4 text-sm text-right text-gray-700" th:text="${row.openTasks}"></td>
+                  <td class="px-6 py-4 text-sm text-right"
+                    th:classappend="${row.overdueTasks > 0} ? 'text-red-700 font-semibold' : 'text-gray-400'"
+                    th:text="${row.overdueTasks}"></td>
+                </tr>
+
+                <tr x-show="open" x-cloak>
+                  <td colspan="7" class="px-6 pb-4 pt-0 bg-gray-50/60">
+                    <ul class="space-y-1.5 pl-11">
+                      <li th:each="r : ${row.risks}" class="text-sm flex items-center gap-2">
+                        <a th:href="@{'/risks/' + ${r.id}}" class="font-medium text-sky-600 hover:text-sky-800 shrink-0" th:text="${r.riskId}"></a>
+                        <span class="text-gray-700 truncate" th:text="${r.title}"></span>
+                        <span th:replace="~{fragments/report-shell :: score(${r.residualScore})}"></span>
+                        <span th:if="${r.reviewOverdue}" class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[0.625rem] font-medium text-amber-800 shrink-0">Review overdue</span>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border-t border-gray-200 bg-gray-50 px-6 py-3">
+            <p class="text-xs text-gray-500">
+              "Above appetite" counts risks with a residual score of <span th:text="${appetiteThreshold}"></span> or higher, set in Settings.
+              Risks with no owner recorded are grouped as <strong>Unassigned</strong> — that row is itself a finding.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

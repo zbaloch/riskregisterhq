@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.riskregister.riskregisterapp.entities.Asset;
 import com.riskregister.riskregisterapp.entities.AuditTrail;
 import com.riskregister.riskregisterapp.entities.EffectivenessScore;
+import com.riskregister.riskregisterapp.entities.LookupValue;
 import com.riskregister.riskregisterapp.entities.Organization;
 import com.riskregister.riskregisterapp.entities.Risk;
 import com.riskregister.riskregisterapp.entities.RiskCategory;
@@ -20,6 +21,7 @@ import com.riskregister.riskregisterapp.entities.RiskSubcategory;
 import com.riskregister.riskregisterapp.entities.Role;
 import com.riskregister.riskregisterapp.entities.Task;
 import com.riskregister.riskregisterapp.entities.User;
+import com.riskregister.riskregisterapp.enums.LookupType;
 import com.riskregister.riskregisterapp.enums.RiskReviewFrequency;
 import com.riskregister.riskregisterapp.lookups.RiskTreatment;
 import com.riskregister.riskregisterapp.repositories.AssetRepository;
@@ -70,14 +72,21 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private AuditTrailRepository auditTrailRepository;
 
+    @Autowired
+    private com.riskregister.riskregisterapp.repositories.LookupValueRepository lookupValueRepository;
+
     @Override
     public void run(ApplicationArguments args) {
         ensureDefaultOrganization();
         fixUserNames();
         seedRiskCategories();
         seedRiskSubcategories();
+        backfillSubcategoryParents();
+        backfillLastReviewedAt();
+        backfillRiskAppetiteThreshold();
         seedRiskDimensions();
         seedRiskStatuses();
+        seedLookupValues();
         // seedAdminUser();
         // seedRisks();
         // seedEffectivenessScores();
@@ -167,25 +176,121 @@ public class DataInitializer implements ApplicationRunner {
         ));
     }
 
+    // Category ids from seedRiskCategories: 1=Operational, 3=Counterparty, 6=Security
     private void seedRiskSubcategories() {
         if (riskSubcategoryRepository.count() > 0) return;
 
         riskSubcategoryRepository.saveAll(List.of(
-            subcategory(1L,  "Access Control",        "Authentication, authorization, user management"),
-            subcategory(3L,  "Asset Management",      "Hardware, software, data asset tracking"),
-            subcategory(4L,  "Business Continuity",   "Disaster recovery, backup procedures"),
-            subcategory(5L,  "Change Management",     "System changes, deployment processes"),
-            subcategory(6L,  "Cryptography",          "Encryption, key management, certificates"),
-            subcategory(7L,  "Data Protection",       "Data handling, classification, retention"),
-            subcategory(8L,  "Human Resources",       "Personnel security, training, background checks"),
-            subcategory(9L,  "Incident Response",     "Security incidents, breach response"),
-            subcategory(10L, "Information Security",  "Security policies, awareness, governance"),
-            subcategory(11L, "Network Security",      "Firewalls, network monitoring, segmentation"),
-            subcategory(12L, "Physical Security",     "Facility access, equipment protection"),
-            subcategory(13L, "Risk Management",       "Risk assessment, treatment, monitoring"),
-            subcategory(14L, "System Operations",     "System monitoring, maintenance, logging"),
-            subcategory(15L, "Vendor Management",     "Third-party risk, supplier assessment")
+            subcategory(1L,  "Access Control",        "Authentication, authorization, user management", 6L),
+            subcategory(3L,  "Asset Management",      "Hardware, software, data asset tracking", 1L),
+            subcategory(4L,  "Business Continuity",   "Disaster recovery, backup procedures", 1L),
+            subcategory(5L,  "Change Management",     "System changes, deployment processes", 1L),
+            subcategory(6L,  "Cryptography",          "Encryption, key management, certificates", 6L),
+            subcategory(7L,  "Data Protection",       "Data handling, classification, retention", 6L),
+            subcategory(8L,  "Human Resources",       "Personnel security, training, background checks", 1L),
+            subcategory(9L,  "Incident Response",     "Security incidents, breach response", 6L),
+            subcategory(10L, "Information Security",  "Security policies, awareness, governance", 6L),
+            subcategory(11L, "Network Security",      "Firewalls, network monitoring, segmentation", 6L),
+            subcategory(12L, "Physical Security",     "Facility access, equipment protection", 6L),
+            subcategory(13L, "Risk Management",       "Risk assessment, treatment, monitoring", 1L),
+            subcategory(14L, "System Operations",     "System monitoring, maintenance, logging", 1L),
+            subcategory(15L, "Vendor Management",     "Third-party risk, supplier assessment", 3L)
         ));
+    }
+
+    /**
+     * One-time migration for databases created before subcategories had a parent
+     * category. For each subcategory still lacking one, adopt the category most
+     * often paired with it on existing risks; otherwise fall back to the curated
+     * defaults used for fresh seeds. Anything unresolved stays null and shows up
+     * as "Uncategorized" in Settings → Risk Taxonomy for manual assignment.
+     */
+    private void backfillSubcategoryParents() {
+        List<RiskSubcategory> orphans = riskSubcategoryRepository.findByCategoryIdIsNullOrderByNameAsc();
+        if (orphans.isEmpty()) return;
+
+        // subcategoryId -> (categoryId -> risk count) from actual risk usage
+        java.util.Map<Long, java.util.Map<Long, Long>> usage = new java.util.HashMap<>();
+        for (Object[] row : riskRepository.countRisksGroupedBySubcategoryAndCategory()) {
+            usage.computeIfAbsent((Long) row[0], k -> new java.util.HashMap<>())
+                 .merge((Long) row[1], (Long) row[2], Long::sum);
+        }
+
+        java.util.Set<Long> validCategoryIds = riskCategoryRepository.findAll().stream()
+            .map(RiskCategory::getId)
+            .collect(java.util.stream.Collectors.toSet());
+
+        java.util.Map<String, Long> seedDefaults = java.util.Map.ofEntries(
+            java.util.Map.entry("access control", 6L),
+            java.util.Map.entry("asset management", 1L),
+            java.util.Map.entry("business continuity", 1L),
+            java.util.Map.entry("change management", 1L),
+            java.util.Map.entry("cryptography", 6L),
+            java.util.Map.entry("data protection", 6L),
+            java.util.Map.entry("human resources", 1L),
+            java.util.Map.entry("incident response", 6L),
+            java.util.Map.entry("information security", 6L),
+            java.util.Map.entry("network security", 6L),
+            java.util.Map.entry("physical security", 6L),
+            java.util.Map.entry("risk management", 1L),
+            java.util.Map.entry("system operations", 1L),
+            java.util.Map.entry("vendor management", 3L)
+        );
+
+        List<RiskSubcategory> updated = new java.util.ArrayList<>();
+        for (RiskSubcategory sub : orphans) {
+            Long parentId = usage.getOrDefault(sub.getId(), java.util.Map.of()).entrySet().stream()
+                .max(java.util.Map.Entry.comparingByValue())
+                .map(java.util.Map.Entry::getKey)
+                .orElse(null);
+            if (parentId == null && sub.getName() != null) {
+                parentId = seedDefaults.get(sub.getName().trim().toLowerCase());
+            }
+            if (parentId != null && validCategoryIds.contains(parentId)) {
+                sub.setCategoryId(parentId);
+                updated.add(sub);
+            }
+        }
+        if (!updated.isEmpty()) {
+            riskSubcategoryRepository.saveAll(updated);
+        }
+    }
+
+    /**
+     * One-time migration for risks created before review tracking existed. An edit is the
+     * best available evidence the risk was actually looked at, so seed last_reviewed_at from
+     * updated_at (falling back to created_at). Without this every existing risk would report
+     * as "never reviewed" on day one, which is noise rather than signal.
+     */
+    private void backfillLastReviewedAt() {
+        List<Risk> risks = riskRepository.findAll();
+        List<Risk> updated = new java.util.ArrayList<>();
+        for (Risk risk : risks) {
+            if (risk.getLastReviewedAt() != null) continue;
+            Instant seed = risk.getUpdatedAt() != null ? risk.getUpdatedAt() : risk.getCreatedAt();
+            if (seed != null) {
+                risk.setLastReviewedAt(seed);
+                updated.add(risk);
+            }
+        }
+        if (!updated.isEmpty()) {
+            riskRepository.saveAll(updated);
+        }
+    }
+
+    /** Give organisations created before the setting existed the default appetite threshold. */
+    private void backfillRiskAppetiteThreshold() {
+        List<Organization> orgs = organizationRepository.findAll();
+        List<Organization> updated = new java.util.ArrayList<>();
+        for (Organization org : orgs) {
+            if (org.getRiskAppetiteThreshold() == null) {
+                org.setRiskAppetiteThreshold(15);
+                updated.add(org);
+            }
+        }
+        if (!updated.isEmpty()) {
+            organizationRepository.saveAll(updated);
+        }
     }
 
     private void seedRiskDimensions() {
@@ -219,11 +324,12 @@ public class DataInitializer implements ApplicationRunner {
         return c;
     }
 
-    private static RiskSubcategory subcategory(Long id, String name, String description) {
+    private static RiskSubcategory subcategory(Long id, String name, String description, Long categoryId) {
         RiskSubcategory s = new RiskSubcategory();
         s.setId(id);
         s.setName(name);
         s.setDescription(description);
+        s.setCategoryId(categoryId);
         return s;
     }
 
@@ -249,6 +355,100 @@ public class DataInitializer implements ApplicationRunner {
             status(5L, "Closed",
                 "Risk is no longer active and has been formally closed")
         ));
+    }
+
+    /**
+     * Seed the admin-managed dropdown options, per organisation.
+     *
+     * The Issue Source codes match the enum names that {@code issues.source} already stores,
+     * so existing issues keep resolving without any data migration.
+     *
+     * Seeding runs only while a field has no options at all. After that the administrator owns
+     * the list outright — otherwise deleting a supplied option would silently reappear on the
+     * next restart. A later release that needs to add a built-in option should do it in a
+     * migration rather than here.
+     */
+    /** One starting option for a managed field. */
+    private record Seed(String code, String name, String description, boolean flag) {}
+
+    private void seedLookupValues() {
+        List<Organization> orgs = organizationRepository.findAll();
+        if (orgs.isEmpty()) return;
+
+        // Codes match the enum names issues.source already stores, so existing rows resolve unchanged
+        seedLookupType(orgs, LookupType.ISSUE_SOURCE, List.of(
+            new Seed("INTERNAL_AUDIT",  "Internal Audit",  "Raised by the internal audit function", true),
+            new Seed("EXTERNAL_AUDIT",  "External Audit",  "Raised by the external auditor", true),
+            new Seed("REGULATOR",       "Regulator",       "Raised by a regulator or supervisory body", true),
+            new Seed("CONTROL_TESTING", "Control Testing", "Identified through control testing or monitoring", false),
+            new Seed("SELF_IDENTIFIED", "Self-Identified", "Identified by the business itself", false),
+            new Seed("INCIDENT",        "Incident",        "Arising from an incident or loss event", false),
+            new Seed("OTHER",           "Other",           "Any other source", false)
+        ));
+
+        seedLookupType(orgs, LookupType.ISSUE_CATEGORY, List.of(
+            new Seed("GOVERNANCE",        "Governance & Oversight",  "Committee structures, delegated authority, management information", false),
+            new Seed("POLICY_PROCEDURE",  "Policy & Procedure",      "Missing, outdated or unfollowed policies and procedures", false),
+            new Seed("ACCESS_MANAGEMENT", "Access Management",       "User access, privileged accounts, segregation of duties", false),
+            new Seed("DATA_PROTECTION",   "Data Protection",         "Handling, retention, classification and privacy of data", false),
+            new Seed("TECHNOLOGY",        "Technology & Infrastructure", "Platforms, resilience, patching and change control", false),
+            new Seed("THIRD_PARTY",       "Third Party Management",  "Vendor due diligence, contracts and ongoing oversight", false),
+            new Seed("PROCESS_CONTROLS",  "Process & Operational Controls", "Day-to-day operating controls and reconciliations", false),
+            new Seed("REGULATORY",        "Regulatory Compliance",   "Compliance with applicable laws, rules and regulations", false),
+            new Seed("FINANCIAL",         "Financial Controls",      "Financial reporting, reconciliation and accounting controls", false),
+            new Seed("OTHER",             "Other",                   "Anything not covered by another category", false)
+        ));
+
+        // Mirrors the risk_dimensions list so findings and risks share one impact vocabulary
+        seedLookupType(orgs, LookupType.ISSUE_DIMENSION, List.of(
+            new Seed("FINANCIAL",        "Financial",                  "Direct financial loss or misstatement", false),
+            new Seed("CUSTOMER",         "Customer",                   "Customer detriment, service quality or retention", false),
+            new Seed("OPPORTUNITY",      "Opportunity",                "Missed opportunity or competitive disadvantage", false),
+            new Seed("COMMERCIAL",       "Commercial",                 "Contracts, suppliers and commercial relationships", false),
+            new Seed("STAFF",            "Staff",                      "Employees, capability and workforce impact", false),
+            new Seed("BRAND_REPUTATION", "Brand/Reputation",           "Reputation and stakeholder confidence", false),
+            new Seed("MEDIA",            "Media",                      "Media coverage and public relations", false),
+            new Seed("REGULATORY",       "Regulatory",                 "Regulatory censure, penalties or enforcement", false),
+            new Seed("ENVIRONMENTAL",    "Environmental",              "Environmental impact and sustainability", false),
+            new Seed("HEALTH_SAFETY",    "Health & Safety",            "Workplace safety and health of people", false),
+            new Seed("TECHNOLOGY",       "Technology",                 "Technology platforms, data and cyber security", false),
+            new Seed("OPERATIONAL",      "Operational",                "Business operations and service delivery", false),
+            new Seed("LEGAL",            "Legal",                      "Litigation, intellectual property and contracts", false),
+            new Seed("STRATEGIC",        "Strategic",                  "Strategy, market position and long-term goals", false),
+            new Seed("PROJECT",          "Project",                    "Project delivery, timelines and benefits", false),
+            new Seed("FINANCIAL_CRIME",  "Financial Crime (AML/CFT)",  "Fraud, money laundering and terrorist financing", false)
+        ));
+    }
+
+    /** Populate one managed field for every organisation that has none of its options yet. */
+    private void seedLookupType(List<Organization> orgs, LookupType type, List<Seed> seeds) {
+        List<LookupValue> toSave = new java.util.ArrayList<>();
+        for (Organization org : orgs) {
+            // Only populate an empty field; never re-add what an administrator removed
+            long existing = lookupValueRepository
+                .countByOrganizationIdAndLookupType(org.getId(), type.name());
+            if (existing > 0) continue;
+
+            int order = 0;
+            for (Seed seed : seeds) {
+                LookupValue value = new LookupValue();
+                value.setLookupType(type.name());
+                value.setCode(seed.code());
+                value.setName(seed.name());
+                value.setDescription(seed.description());
+                value.setFlagValue(type.hasFlag() && seed.flag());
+                value.setActive(true);
+                value.setSystemDefault(true);
+                value.setSortOrder(order++);
+                value.setOrganizationId(org.getId());
+                value.setCreatedAt(Instant.now());
+                value.setUpdatedAt(Instant.now());
+                toSave.add(value);
+            }
+        }
+        if (!toSave.isEmpty()) {
+            lookupValueRepository.saveAll(toSave);
+        }
     }
 
     private static RiskStatus status(Long id, String name, String description) {

@@ -32,6 +32,11 @@ public class TaskService {
         return taskRepository.findAllWithRiskByOrganizationIdAndDeletedAtIsNull(organizationId);
     }
 
+    /** Remediation actions attached to an issue. */
+    public List<Task> findAllByIssue(Long organizationId, Long issueId) {
+        return taskRepository.findByOrganizationIdAndIssueIdAndDeletedAtIsNullOrderByCreatedAtDesc(organizationId, issueId);
+    }
+
     public Optional<Task> findById(Long organizationId, Long id) {
         return taskRepository.findByOrganizationIdAndIdAndDeletedAtIsNull(organizationId, id);
     }

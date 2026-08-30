@@ -20,4 +20,8 @@ public class RiskSubcategory {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    /** Parent risk category. Null = uncategorized (legacy rows awaiting assignment). */
+    @Column(name = "category_id")
+    private Long categoryId;
 }

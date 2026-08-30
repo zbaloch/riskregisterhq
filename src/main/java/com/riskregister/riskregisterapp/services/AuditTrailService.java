@@ -26,6 +26,9 @@ public class AuditTrailService {
     @Autowired
     private ObjectMapper objectMapper;  // Auto-configured by spring-boot-starter-web
 
+    @Autowired
+    private LookupService lookupService;
+
     // -----------------------------------------------------------------------
     // Public API
     // -----------------------------------------------------------------------
@@ -94,6 +97,26 @@ public class AuditTrailService {
         entry.setOrganizationId(organizationId);
         entry.setAction("DELETED");
         entry.setSummary("Risk deleted (" + risk.getRiskId() + "): " + risk.getTitle());
+        entry.setChangesJson(null);
+        entry.setActorEmail(actorEmail);
+        entry.setActorName(actorName);
+        entry.setCreatedAt(Instant.now());
+        auditTrailRepository.save(entry);
+    }
+
+    /**
+     * Log that a periodic review was carried out. Recorded as its own action so the
+     * trail distinguishes "reviewed, no change needed" from an ordinary edit.
+     */
+    public void logRiskReviewed(Risk risk, String actorEmail, String actorName, Long organizationId) {
+        AuditTrail entry = new AuditTrail();
+        entry.setEntityType("Risk");
+        entry.setEntityId(risk.getId());
+        entry.setOrganizationId(organizationId);
+        entry.setAction("REVIEWED");
+        String next = risk.getNextReviewDateFormatted();
+        entry.setSummary("Risk reviewed (" + risk.getRiskId() + "): " + risk.getTitle()
+            + (next != null ? " — next review due " + next : ""));
         entry.setChangesJson(null);
         entry.setActorEmail(actorEmail);
         entry.setActorName(actorName);
@@ -395,6 +418,206 @@ public class AuditTrailService {
              after.getAvailability() != null ? after.getAvailability().toString() : "");
 
         return changes;
+    }
+
+    // -----------------------------------------------------------------------
+    // Issue logging (control deficiencies / audit findings)
+    // -----------------------------------------------------------------------
+
+    public void logIssueCreated(com.riskregister.riskregisterapp.entities.Issue issue,
+                                String actorEmail, String actorName, Long organizationId) {
+        saveEntry("Issue", issue.getId(), organizationId, "CREATED",
+            "Issue raised (" + issue.getIssueRef() + "): " + issue.getTitle(),
+            null, actorEmail, actorName);
+    }
+
+    public void logIssueUpdated(com.riskregister.riskregisterapp.entities.Issue before,
+                                com.riskregister.riskregisterapp.entities.Issue after,
+                                String actorEmail, String actorName, Long organizationId) {
+        List<FieldChange> changes = diffIssue(before, after);
+        if (changes.isEmpty()) return;  // Nothing actually changed — skip
+
+        String changedFieldLabels = changes.stream().map(FieldChange::label).collect(Collectors.joining(", "));
+        saveEntry("Issue", after.getId(), organizationId, "UPDATED",
+            "Issue updated (" + after.getIssueRef() + "): " + changedFieldLabels,
+            toJson(changes), actorEmail, actorName);
+    }
+
+    public void logIssueDeleted(com.riskregister.riskregisterapp.entities.Issue issue,
+                                String actorEmail, String actorName, Long organizationId) {
+        saveEntry("Issue", issue.getId(), organizationId, "DELETED",
+            "Issue removed (" + issue.getIssueRef() + "): " + issue.getTitle(),
+            null, actorEmail, actorName);
+    }
+
+    /** Status transitions get their own action so the lifecycle is legible in the change report. */
+    public void logIssueStatusChanged(com.riskregister.riskregisterapp.entities.Issue issue,
+                                      String oldStatus, String newStatus,
+                                      String actorEmail, String actorName, Long organizationId) {
+        List<FieldChange> changes = List.of(new FieldChange("status", "Status", oldStatus, newStatus));
+        saveEntry("Issue", issue.getId(), organizationId, "STATUS_CHANGED",
+            "Issue " + issue.getIssueRef() + " moved to " + newStatus,
+            toJson(changes), actorEmail, actorName);
+    }
+
+    /** Independent sign-off that a remediation actually worked. */
+    public void logIssueValidated(com.riskregister.riskregisterapp.entities.Issue issue,
+                                  String actorEmail, String actorName, Long organizationId) {
+        saveEntry("Issue", issue.getId(), organizationId, "VALIDATED",
+            "Issue " + issue.getIssueRef() + " validated and closed by " + issue.getValidatedByName(),
+            null, actorEmail, actorName);
+    }
+
+    public List<AuditTrail> findByIssue(Long organizationId, Long issueId) {
+        return auditTrailRepository.findByOrganizationIdAndEntityTypeAndEntityIdOrderByCreatedAtDesc(
+            organizationId, "Issue", issueId);
+    }
+
+    private List<FieldChange> diffIssue(com.riskregister.riskregisterapp.entities.Issue before,
+                                         com.riskregister.riskregisterapp.entities.Issue after) {
+        List<FieldChange> changes = new ArrayList<>();
+
+        diff(changes, "issueRef", "Issue ID", before.getIssueRef(), after.getIssueRef());
+        diff(changes, "title", "Title", before.getTitle(), after.getTitle());
+        diff(changes, "description", "Description", before.getDescription(), after.getDescription());
+        // Source and category are managed lookup codes; resolve to their current labels
+        // so the trail reads plainly rather than showing raw codes
+        diff(changes, "category", "Category",
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ISSUE_CATEGORY,
+                         before.getCategory(), before.getOrganizationId()),
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ISSUE_CATEGORY,
+                         after.getCategory(), after.getOrganizationId()));
+        diff(changes, "dimension", "Impact Area",
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ISSUE_DIMENSION,
+                         before.getDimension(), before.getOrganizationId()),
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ISSUE_DIMENSION,
+                         after.getDimension(), after.getOrganizationId()));
+        diff(changes, "source", "Source",
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ISSUE_SOURCE,
+                         before.getSource(), before.getOrganizationId()),
+             lookupLabel(com.riskregister.riskregisterapp.enums.LookupType.ISSUE_SOURCE,
+                         after.getSource(), after.getOrganizationId()));
+        diff(changes, "externalReference", "External Reference",
+             before.getExternalReference(), after.getExternalReference());
+        diff(changes, "impact", "Impact",
+             severityPart(before.getImpact(), before.getImpactLabel()),
+             severityPart(after.getImpact(), after.getImpactLabel()));
+        diff(changes, "pervasiveness", "Pervasiveness",
+             severityPart(before.getPervasiveness(), before.getPervasivenessLabel()),
+             severityPart(after.getPervasiveness(), after.getPervasivenessLabel()));
+        diff(changes, "rootCause", "Root Cause", before.getRootCause(), after.getRootCause());
+        diff(changes, "remediationPlan", "Remediation Plan", before.getRemediationPlan(), after.getRemediationPlan());
+        diff(changes, "ownerName", "Remediation Owner", before.getOwnerName(), after.getOwnerName());
+        diff(changes, "status", "Status",
+             before.getStatus() != null ? before.getStatus().getDisplayName() : "",
+             after.getStatus() != null ? after.getStatus().getDisplayName() : "");
+        diff(changes, "dateRaised", "Date Raised",
+             before.getDateRaisedFormatted(), after.getDateRaisedFormatted());
+        diff(changes, "targetDate", "Target Date",
+             before.getTargetDateFormatted(), after.getTargetDateFormatted());
+
+        return changes;
+    }
+
+    private String lookupLabel(com.riskregister.riskregisterapp.enums.LookupType type,
+                               String code, Long organizationId) {
+        if (code == null || code.isBlank()) return "";
+        if (organizationId == null) return code;
+        return lookupService.find(type, organizationId, code)
+            .map(com.riskregister.riskregisterapp.entities.LookupValue::getName)
+            .orElse(code);
+    }
+
+    private static String severityPart(Integer value, String label) {
+        if (value == null) return "";
+        return value + " – " + label;
+    }
+
+    // -----------------------------------------------------------------------
+    // Risk taxonomy logging (categories + subcategories)
+    // -----------------------------------------------------------------------
+
+    /** Log a RiskCategory creation event. */
+    public void logCategoryCreated(com.riskregister.riskregisterapp.entities.RiskCategory category,
+                                   String actorEmail, String actorName, Long organizationId) {
+        saveEntry("RiskCategory", category.getId(), organizationId, "CREATED",
+            "Risk category created: " + category.getName(), null, actorEmail, actorName);
+    }
+
+    /** Log a RiskCategory update event with field-level changes. */
+    public void logCategoryUpdated(com.riskregister.riskregisterapp.entities.RiskCategory before,
+                                   com.riskregister.riskregisterapp.entities.RiskCategory after,
+                                   String actorEmail, String actorName, Long organizationId) {
+        List<FieldChange> changes = new ArrayList<>();
+        diff(changes, "name", "Name", before.getName(), after.getName());
+        diff(changes, "description", "Description", before.getDescription(), after.getDescription());
+        if (changes.isEmpty()) return;  // Nothing changed — skip
+
+        String changedFieldLabels = changes.stream().map(FieldChange::label).collect(Collectors.joining(", "));
+        saveEntry("RiskCategory", after.getId(), organizationId, "UPDATED",
+            "Risk category updated (" + after.getName() + "): " + changedFieldLabels,
+            toJson(changes), actorEmail, actorName);
+    }
+
+    /** Log a RiskCategory deletion event. */
+    public void logCategoryDeleted(com.riskregister.riskregisterapp.entities.RiskCategory category,
+                                   String actorEmail, String actorName, Long organizationId) {
+        saveEntry("RiskCategory", category.getId(), organizationId, "DELETED",
+            "Risk category deleted: " + category.getName(), null, actorEmail, actorName);
+    }
+
+    /** Log a RiskSubcategory creation event. */
+    public void logSubcategoryCreated(com.riskregister.riskregisterapp.entities.RiskSubcategory sub,
+                                      Map<Long, String> categoryMap,
+                                      String actorEmail, String actorName, Long organizationId) {
+        String parent = nameOrId(sub.getCategoryId(), categoryMap);
+        String summary = "Risk subcategory created: " + sub.getName()
+            + (parent.isEmpty() ? "" : " (under " + parent + ")");
+        saveEntry("RiskSubcategory", sub.getId(), organizationId, "CREATED",
+            summary, null, actorEmail, actorName);
+    }
+
+    /** Log a RiskSubcategory update event with field-level changes (parent category resolved to its name). */
+    public void logSubcategoryUpdated(com.riskregister.riskregisterapp.entities.RiskSubcategory before,
+                                      com.riskregister.riskregisterapp.entities.RiskSubcategory after,
+                                      Map<Long, String> categoryMap,
+                                      String actorEmail, String actorName, Long organizationId) {
+        List<FieldChange> changes = new ArrayList<>();
+        diff(changes, "name", "Name", before.getName(), after.getName());
+        diff(changes, "description", "Description", before.getDescription(), after.getDescription());
+        diff(changes, "categoryId", "Parent Category",
+             nameOrId(before.getCategoryId(), categoryMap),
+             nameOrId(after.getCategoryId(), categoryMap));
+        if (changes.isEmpty()) return;  // Nothing changed — skip
+
+        String changedFieldLabels = changes.stream().map(FieldChange::label).collect(Collectors.joining(", "));
+        saveEntry("RiskSubcategory", after.getId(), organizationId, "UPDATED",
+            "Risk subcategory updated (" + after.getName() + "): " + changedFieldLabels,
+            toJson(changes), actorEmail, actorName);
+    }
+
+    /** Log a RiskSubcategory deletion event. */
+    public void logSubcategoryDeleted(com.riskregister.riskregisterapp.entities.RiskSubcategory sub,
+                                      String actorEmail, String actorName, Long organizationId) {
+        saveEntry("RiskSubcategory", sub.getId(), organizationId, "DELETED",
+            "Risk subcategory deleted: " + sub.getName(), null, actorEmail, actorName);
+    }
+
+    /** Shared writer for the simpler entity types that don't need bespoke summaries. */
+    private void saveEntry(String entityType, Long entityId, Long organizationId,
+                           String action, String summary, String changesJson,
+                           String actorEmail, String actorName) {
+        AuditTrail entry = new AuditTrail();
+        entry.setEntityType(entityType);
+        entry.setEntityId(entityId);
+        entry.setOrganizationId(organizationId);
+        entry.setAction(action);
+        entry.setSummary(summary);
+        entry.setChangesJson(changesJson);
+        entry.setActorEmail(actorEmail);
+        entry.setActorName(actorName);
+        entry.setCreatedAt(Instant.now());
+        auditTrailRepository.save(entry);
     }
 
     private String toJson(List<FieldChange> changes) {

@@ -15,7 +15,8 @@
   <div class="lg:pl-72">
     <div th:replace="~{fragments/admin-nav-top}"></div>
     <main class="py-10">
-      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8">
+      <div class="mx-auto px-4 max-w-5xl sm:px-6 lg:px-8"
+        x-data="{ hideClosed: true, q: '' }">
 
         <!-- Page header -->
         <div class="flex items-center justify-between mb-6">
@@ -61,6 +62,16 @@
           </a>
         </div>
 
+        <!-- Filters -->
+        <div th:if="${not #lists.isEmpty(risks)}" class="mb-4 flex flex-wrap items-center gap-4">
+          <input type="search" x-model="q" placeholder="Search risks…"
+            class="rounded-lg border border-gray-300 px-3.5 py-2 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors w-64">
+          <label class="inline-flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input type="checkbox" x-model="hideClosed" class="h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500">
+            Hide closed
+          </label>
+        </div>
+
         <!-- Risk table -->
         <div th:if="${not #lists.isEmpty(risks)}"
           class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -81,7 +92,14 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100 bg-white">
-              <tr th:each="risk : ${risks}" class="hover:bg-gray-50 transition-colors">
+              <!-- Status id 5 is Closed; searchable text covers id, title, owner and taxonomy -->
+              <tr th:each="risk : ${risks}" class="hover:bg-gray-50 transition-colors"
+                th:data-closed="${risk.statusId != null and risk.statusId == 5}"
+                th:data-search="${#strings.toLowerCase(
+                    (risk.riskId ?: '') + ' ' + (risk.title ?: '') + ' ' + (risk.riskOwnerName ?: '') + ' ' +
+                    (risk.riskCategoryId != null and categoryMap[risk.riskCategoryId] != null ? categoryMap[risk.riskCategoryId] : '') + ' ' +
+                    (risk.riskSubcategoryId != null and subcategoryMap[risk.riskSubcategoryId] != null ? subcategoryMap[risk.riskSubcategoryId] : ''))}"
+                x-show="(!hideClosed || $el.dataset.closed !== 'true') && (q === '' || $el.dataset.search.includes(q.toLowerCase()))">
 
                 <!-- Risk ID -->
                 <td class="px-5 py-4">

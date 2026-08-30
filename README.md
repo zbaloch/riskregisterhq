@@ -51,3 +51,11 @@ mvn spring-boot:run --define spring-boot.run.arguments="--spring.profiles.active
 mvn spring-boot:run -Dspring.profiles.active=demo
 mvn spring-boot:run --define spring-boot.run.arguments="--spring.profiles.active=demo"
 ```
+
+How a risk is defined?
+
+"[cause] may lead to [event], resulting in [consequence]":
+
+That's scoreable, ownable, and you can write a treatment plan against it.
+
+A problem is defined by its relationship to incidents; an issue is defined by its relationship to controls and obligations. 

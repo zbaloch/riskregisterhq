@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Risk Reduction by Category - RiskRegisterHQ</title>
+</head>
+
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='reports')}"></div>
+
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
+
+        <div th:replace="~{fragments/report-shell :: header(${reportTitle}, ${reportSubtitle})}"></div>
+
+        <div th:if="${#lists.isEmpty(rows)}" class="mt-8">
+          <div th:replace="~{fragments/report-shell :: empty('No scored risks', 'Add risks with inherent and residual scores to see how much your controls reduce exposure.')}"></div>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(rows)}" class="mt-8 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Category / Subcategory</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Risks</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Inherent</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Residual</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Reduction</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-56">Effectiveness</th>
+                </tr>
+              </thead>
+              <!-- One tbody per category so the Alpine open state wraps its subcategory rows -->
+              <tbody th:each="row : ${rows}" x-data="{ open: false }" class="divide-y divide-gray-200 border-t border-gray-200">
+
+                  <!-- Category row -->
+                  <tr class="bg-gray-50/60">
+                    <td class="px-6 py-3.5 text-sm">
+                      <button @click="open = !open" class="flex items-center gap-2 text-left cursor-pointer group">
+                        <svg class="w-3.5 h-3.5 text-gray-400 transition-transform shrink-0" :class="open ? 'rotate-90' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                        <span class="font-semibold text-gray-900 group-hover:text-sky-700" th:text="${row.name}"></span>
+                      </button>
+                    </td>
+                    <td class="px-6 py-3.5 text-sm text-right text-gray-700 font-medium" th:text="${row.riskCount}"></td>
+                    <td class="px-6 py-3.5 text-sm text-right text-gray-700" th:text="${row.avgInherentLabel()}"></td>
+                    <td class="px-6 py-3.5 text-sm text-right text-gray-700" th:text="${row.avgResidualLabel()}"></td>
+                    <td class="px-6 py-3.5 text-sm text-right font-semibold"
+                      th:classappend="${row.reduction() != null and row.reduction() > 0} ? 'text-green-700' : (${row.reduction() != null and row.reduction() < 0} ? 'text-red-700' : 'text-gray-400')"
+                      th:text="${row.reductionLabel()}"></td>
+                    <td class="px-6 py-3.5">
+                      <div th:if="${row.reductionPct() != null}" class="flex items-center gap-2">
+                        <div class="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
+                          <div class="h-full rounded-full"
+                            th:classappend="${row.weak} ? 'bg-amber-500' : 'bg-green-500'"
+                            th:style="'width: ' + ${row.reductionPct() < 0 ? 0 : (row.reductionPct() > 100 ? 100 : row.reductionPct())} + '%'"></div>
+                        </div>
+                        <span class="text-xs font-semibold w-10 text-right"
+                          th:classappend="${row.weak} ? 'text-amber-700' : 'text-green-700'"
+                          th:text="${row.reductionPctLabel()}"></span>
+                      </div>
+                      <span th:if="${row.reductionPct() == null}" class="text-xs text-gray-400">Not scored</span>
+                    </td>
+                  </tr>
+
+                  <!-- Subcategory rows, revealed with the category -->
+                  <tr th:each="child : ${row.children}" x-show="open" x-cloak class="hover:bg-gray-50">
+                    <td class="pl-14 pr-6 py-3 text-sm text-gray-700" th:text="${child.name}"></td>
+                    <td class="px-6 py-3 text-sm text-right text-gray-600" th:text="${child.riskCount}"></td>
+                    <td class="px-6 py-3 text-sm text-right text-gray-600" th:text="${child.avgInherentLabel()}"></td>
+                    <td class="px-6 py-3 text-sm text-right text-gray-600" th:text="${child.avgResidualLabel()}"></td>
+                    <td class="px-6 py-3 text-sm text-right"
+                      th:classappend="${child.reduction() != null and child.reduction() > 0} ? 'text-green-700' : (${child.reduction() != null and child.reduction() < 0} ? 'text-red-700' : 'text-gray-400')"
+                      th:text="${child.reductionLabel()}"></td>
+                    <td class="px-6 py-3">
+                      <div th:if="${child.reductionPct() != null}" class="flex items-center gap-2">
+                        <div class="flex-1 h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                          <div class="h-full rounded-full"
+                            th:classappend="${child.weak} ? 'bg-amber-400' : 'bg-green-400'"
+                            th:style="'width: ' + ${child.reductionPct() < 0 ? 0 : (child.reductionPct() > 100 ? 100 : child.reductionPct())} + '%'"></div>
+                        </div>
+                        <span class="text-xs w-10 text-right text-gray-600" th:text="${child.reductionPctLabel()}"></span>
+                      </div>
+                      <span th:if="${child.reductionPct() == null}" class="text-xs text-gray-400">—</span>
+                    </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="border-t border-gray-200 bg-gray-50 px-6 py-3">
+            <p class="text-xs text-gray-500">
+              Reduction is average inherent score minus average residual score; the bar shows what proportion of inherent exposure the controls remove.
+              Anything under 20% is flagged amber — the controls in that group are barely moving the risk.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

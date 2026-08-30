@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  class="h-full bg-[#f6f2ef]">
+<head>
+  <div th:replace="~{fragments/head}"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <title>Issue Aging - RiskRegisterHQ</title>
+</head>
+<body class="h-full">
+
+  <div th:replace="~{fragments/admin-nav(activePage='reports')}"></div>
+  <div class="lg:pl-72">
+    <div th:replace="~{fragments/admin-nav-top}"></div>
+    <main class="py-10">
+      <div class="mx-auto px-4 max-w-7xl sm:px-6 lg:px-8">
+
+        <div th:replace="~{fragments/report-shell :: header(${reportTitle}, ${reportSubtitle})}"></div>
+
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Open Issues</p>
+            <p class="mt-2 text-3xl font-bold text-gray-900" th:text="${openCount}"></p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Overdue</p>
+            <p class="mt-2 text-3xl font-bold" th:classappend="${overdueCount > 0} ? 'text-red-600' : 'text-gray-900'" th:text="${overdueCount}"></p>
+          </div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Awaiting Validation</p>
+            <p class="mt-2 text-3xl font-bold" th:classappend="${awaitingValidation > 0} ? 'text-amber-600' : 'text-gray-900'" th:text="${awaitingValidation}"></p>
+          </div>
+        </div>
+
+        <div th:if="${openCount == 0}" class="mt-8">
+          <div th:replace="~{fragments/report-shell :: empty('No open issues', 'Every finding in the register has been closed.')}"></div>
+        </div>
+
+        <div th:unless="${openCount == 0}" class="mt-6 space-y-6">
+          <div th:each="band : ${bands}" th:if="${not #lists.isEmpty(band.value)}"
+            class="bg-white rounded-xl border shadow-sm overflow-hidden"
+            th:classappend="${band.key == 'Over a year' or band.key == '181–365 days'} ? 'border-red-200' : 'border-gray-200'">
+
+            <div class="px-6 py-4 border-b flex items-center justify-between gap-3"
+              th:classappend="${band.key == 'Over a year' or band.key == '181–365 days'} ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'">
+              <h2 class="text-base font-semibold text-gray-900" th:text="${band.key}"></h2>
+              <span class="text-sm font-semibold text-gray-600" th:text="${#lists.size(band.value)} + (${#lists.size(band.value)} == 1 ? ' issue' : ' issues')"></span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Issue</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Source</th>
+                    <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Severity</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                    <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Age</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Target</th>
+                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                  <tr th:each="i : ${band.value}" class="hover:bg-gray-50">
+                    <td class="px-6 py-3.5 text-sm">
+                      <a th:href="@{/issues/{id}(id=${i.id})}" class="font-medium text-sky-600 hover:text-sky-800" th:text="${i.issueRef}"></a>
+                      <p class="text-gray-700 mt-0.5" th:text="${i.title}"></p>
+                      <span th:if="${i.extended}" class="mt-1 inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[0.625rem] font-medium text-amber-800"
+                        th:text="${i.extensionCount} + '&times; extended · originally ' + ${i.originalTargetDateFormatted}"></span>
+                    </td>
+                    <td class="px-6 py-3.5 text-sm">
+                      <th:block th:with="src=${i.source != null} ? ${sourceMap[i.source]} : null">
+                        <span th:if="${src != null}" class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                          th:classappend="${src.flagged} ? 'bg-purple-50 text-purple-700' : 'bg-gray-100 text-gray-700'"
+                          th:text="${src.name}"></span>
+                        <span th:if="${src == null and i.source != null}" class="text-xs text-gray-500" th:text="${i.source}"></span>
+                      </th:block>
+                    </td>
+                    <td class="px-6 py-3.5 text-center">
+                      <span th:if="${i.severityScore != null}" class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                        th:classappend="${i.severityLevel == 'Low'} ? 'bg-yellow-50 text-yellow-700' :
+                                        (${i.severityLevel == 'Medium'} ? 'bg-orange-50 text-orange-700' :
+                                        (${i.severityLevel == 'High'} ? 'bg-rose-50 text-rose-700' : 'bg-red-50 text-red-700'))"
+                        th:text="${i.severityScore} + ' · ' + ${i.severityLevel}"></span>
+                      <span th:unless="${i.severityScore != null}" class="text-xs text-gray-400">—</span>
+                    </td>
+                    <td class="px-6 py-3.5 text-sm text-gray-600" th:text="${i.ownerName} ?: '—'"></td>
+                    <td class="px-6 py-3.5 text-sm text-right font-medium text-gray-700" th:text="${i.ageDays} + 'd'"></td>
+                    <td class="px-6 py-3.5 text-sm"
+                      th:classappend="${i.overdue} ? 'text-red-700 font-semibold' : 'text-gray-600'"
+                      th:text="${i.targetDateFormatted} ?: '—'"></td>
+                    <td class="px-6 py-3.5 text-sm">
+                      <span th:if="${i.status != null}" class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                        th:classappend="${i.status.name() == 'REMEDIATED'} ? 'bg-sky-50 text-sky-700' :
+                                        (${i.status.name() == 'IN_REMEDIATION'} ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700')"
+                        th:text="${i.status.displayName}"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm px-6 py-4">
+            <p class="text-xs text-gray-500">
+              Age runs from the date the finding was raised, not from the target date. Issues marked
+              <strong>Remediated</strong> still count as open until someone independent validates the fix.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>
